@@ -450,7 +450,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
 
-    QString str_ver ="1.0.34.142";       //版本号
+    QString str_ver ="1.0.34.142";       //版本号 wsc修改测试git
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
     connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::BlockingQueuedConnection);
