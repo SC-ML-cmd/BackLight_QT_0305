@@ -39,7 +39,7 @@ QString Flag_Running_State="Online";
 struct Dect_Photo
    {
        //测光
-       Mat SideLight_Main;      //主相机测光
+       Mat SideLight_Main;      //主相机侧光
        Mat SideLight_Left;      //左相机测光
        Mat SideLight_Right;
 //       Mat SideLight_Front;
