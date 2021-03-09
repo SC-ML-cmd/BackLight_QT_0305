@@ -450,7 +450,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
 
-    QString str_ver ="1.0.34.142";       //版本号 wsc修改测试git
+    QString str_ver ="1.0.34.147";       //版本号
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
     connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::BlockingQueuedConnection);
@@ -567,6 +567,15 @@ void MainWindow::receiveData(QString e,QString a)
 //    ui->label_54->setText(QString("%1").arg(anjiao_num));
 //    ui->label_63->setText(QString("%1").arg(shaoliao_num));
     ui->label_65->setText(QString("%1").arg(baodeng_num));
+//    ui->label_45->setText(QString("%1").arg(yiwu_num/test_num)+QString("%"));
+//    ui->label_46->setText(QString("%1").arg(white_num/test_num)+QString("%"));
+//    ui->label_53->setText(QString("%1").arg(mura_num/test_num)+QString("%"));
+//    ui->label_54->setText(QString("%1").arg(dengyan_num/test_num)+QString("%"));
+//    ui->label_62->setText(QString("%1").arg(lackline_num/test_num)+QString("%"));
+//    ui->label_63->setText(QString("%1").arg(liangbian_num/test_num)+QString("%"));
+//    ui->label_66->setText(QString("%1").arg(baodeng_num/test_num)+QString("%"));
+//    ui->label_67->setText(QString("%1").arg(scratch_num/test_num)+QString("%"));
+//    ui->label_74->setText(QString("%1").arg(yiwu_num/test_num)+QString("%"));
 
 }
 
@@ -1122,7 +1131,7 @@ int MainWindow::detect_offine()
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     //offline_wsc
-    std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\6453K-B01\\1552\\03_20200927165_1552_";
+    std::string SRC_PATH = "C:\\Users\\Administrator\\Desktop\\tupian\\yiwu\\_20200927165_3410_";
     src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
     src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
     src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
@@ -1225,13 +1234,13 @@ int MainWindow::detect_offine()
     current_date_time =QDateTime::currentDateTime();
     current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     debug_msg("isfinished前"+current_date);
-    if(firstUseFlag == true){
-       firstUseFlag = false;
-       d1FutureWatch.setFuture(d1);
-    }else {
-        d1.waitForFinished();
-        Dect_Result();
-    }
+//    if(firstUseFlag == true){
+//       firstUseFlag = false;
+//       d1FutureWatch.setFuture(d1);
+//    }else {
+//        d1.waitForFinished();
+//        Dect_Result();
+//    }
 //    if(d1FutureWatch.isRunning())
 //    {
 //        QDateTime current_date_time =QDateTime::currentDateTime();
@@ -1266,8 +1275,8 @@ int MainWindow::detect_offine()
 
     d1 =QtConcurrent::run(this,&MainWindow::myFunc1);     //开白底检测线程
 //    d1FutureWatch.setFuture(d1);
-//    d1.waitForFinished();
-//    Dect_Result();
+    d1.waitForFinished();
+    Dect_Result();
     //if(!(d1.isCanceled()))
 //    current_date_time =QDateTime::currentDateTime();
 //    current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
@@ -2004,6 +2013,7 @@ void MainWindow::Dect_Result()
 
             ui->label_71->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_71->setText(QString("%1").arg(wuxian_num));        //异物数目
+
         }
         if(causeColor_1_white=="背光异物")
         {
@@ -2044,7 +2054,6 @@ void MainWindow::Dect_Result()
             DefectNum1++;
             ui->label_36->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_36->setText(QString("%1").arg(white_num));        //异物数目
-
             QDir *dayFolder=new QDir;
             QString Force_savePath_local= Force_savePath;
             Force_savePath_local= Force_savePath_local + "\\white_point";
@@ -2075,6 +2084,7 @@ void MainWindow::Dect_Result()
             DefectNum1++;
             ui->label_38->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_38->setText(QString("%1").arg(mura_num));        //异物数目
+
 
             QDir *dayFolder=new QDir;
             QString Force_savePath_local= Force_savePath;
@@ -2484,7 +2494,15 @@ void MainWindow::Dect_Result()
     ui->label_50->setText( QString("%1").arg(qualified_num));  //合格品总数目
     //String numPersentage = pass_per.ToString("P");
     ui->label_52->setText( QString("%1%").arg(pass_per));       //当前良率
-
+    ui->label_45->setText(QString("%1").arg(QString::number(100*yiwu_num/(test_num), 'f', 2))+QString("%"));
+    ui->label_46->setText(QString("%1").arg(QString::number(100*white_num/(test_num), 'f', 2))+QString("%"));
+    ui->label_74->setText(QString("%1").arg(QString::number(100*wuxian_num/(test_num), 'f', 2))+QString("%"));
+    ui->label_53->setText(QString("%1").arg(QString::number(100*mura_num/(test_num), 'f', 2))+QString("%"));
+    ui->label_62->setText(QString("%1").arg(QString::number(100*lackline_num/(test_num), 'f', 2))+QString("%"));
+    ui->label_67->setText(QString("%1").arg(QString::number(100*scratch_num/(test_num), 'f', 2))+QString("%"));
+    ui->label_54->setText(QString("%1").arg(QString::number(100*dengyan_num/(test_num), 'f', 2))+QString("%"));
+    ui->label_63->setText(QString("%1").arg(QString::number(100*liangbian_num/(test_num), 'f', 2))+QString("%"));
+    ui->label_66->setText(QString("%1").arg(QString::number(100*baodeng_num/(test_num), 'f', 2))+QString("%"));
 //    if(result_white1||result_white2||result_white3)
 //        updata_database("不合格");
 //    else
@@ -4192,6 +4210,15 @@ void MainWindow::on_action_clear_triggered()
         ui->label_57->setText("");
         ui->label_10->setText("");
         ui->label_14->setText("");
+        ui->label_45->setText("0.0%");
+        ui->label_46->setText("0.0%");
+        ui->label_53->setText("0.0%");
+        ui->label_54->setText("0.0%");
+        ui->label_62->setText("0.0%");
+        ui->label_63->setText("0.0%");
+        ui->label_66->setText("0.0%");
+        ui->label_67->setText("0.0%");
+        ui->label_74->setText("0.0%");
         }
     }
 

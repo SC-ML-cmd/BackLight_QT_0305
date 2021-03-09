@@ -2993,7 +2993,7 @@ bool boom_light(Mat white, Mat *mresult, QString *causecolor)
     clahe->apply(img_gray, strong_result);
 
     //Mat edge_img = strong_result(Rect(strong_result.cols - 100, 0, 100, strong_result.rows)).clone();
-    Mat edge_img = strong_result(Rect(0, 0, decter_length, strong_result.rows)).clone();
+    Mat edge_img = strong_result(Rect(0, 100, decter_length, strong_result.rows-200)).clone();
     medianBlur(edge_img, edge_img, 3);
     //Mat ad_result;
     //adaptiveThreshold(edge_img, ad_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 15, 3);
@@ -3014,7 +3014,7 @@ bool boom_light(Mat white, Mat *mresult, QString *causecolor)
     Mat edge_thresold;
     erode(F_result, edge_thresold, structure_element);
     Mat th_result = Mat::zeros(img_gray.size(), img_gray.type());
-    edge_thresold.copyTo(th_result(Rect(0, 0, decter_length, th_result.rows)));
+    edge_thresold.copyTo(th_result(Rect(0, 100, decter_length, th_result.rows-200)));
 
     vector<vector<Point>> contours;
     findContours(th_result, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
@@ -3089,7 +3089,7 @@ bool boom_light(Mat white, Mat *mresult, QString *causecolor)
                 mean_out_gray = mean(tempImage, TempImage_Binary)[0];
                 intensity = mean_out_gray - mean_in_gray;
             }
-            if (intensity > 27)
+            if (intensity > 31)
             {
                 result = true;
                 CvPoint top_lef4 = cvPoint(x_1, y_1);
@@ -6002,7 +6002,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
 
        th_result(Rect(0, 0, 20, th_result.rows)) = uchar(0);            //屏蔽右侧15行，防止灯口误检白点
        th_result(Rect(th_result.cols - 10, 0, 10, th_result.rows)) = uchar(0);            //屏蔽左侧10行，防止头部亮边误检为白点
-
+       th_result(Rect(0, 0, th_result.cols, 10)) = uchar(0);
        Mat th1;
        //做掩膜
        threshold(img_gray, th1, 25, 255, CV_THRESH_BINARY);
