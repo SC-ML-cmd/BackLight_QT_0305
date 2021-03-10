@@ -200,15 +200,15 @@ extern double light_num;//可以点亮的屏幕的数量
 extern double main_light;
 extern double right_light;
 extern double left_light;
-extern double Average_mainlight;
-extern double Average_rightlight;
-extern double Average_leftlight;
-extern double Max_mainlight;
-extern double Min_mainlight;
-extern double Max_rightlight;
-extern double Min_rightlight;
-extern double Max_leftlight;
-extern double Min_leftlight;
+extern int Average_mainlight;
+extern int Average_rightlight;
+extern int Average_leftlight;
+extern int Max_mainlight;
+extern int Min_mainlight;
+extern int Max_rightlight;
+extern int Min_rightlight;
+extern int Max_leftlight;
+extern int Min_leftlight;
 //**************相机亮度参数***************//
 
 extern double main_whitemean;

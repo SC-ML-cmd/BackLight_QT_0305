@@ -6330,7 +6330,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        else
                        {
                            //灰度差限制
-                           if (defect_areath >= defectouterth && spotpeak_temp >= spotpeak && area <= 60|| area > 60 && defect_areath >= 5.5 && spotpeak_temp >= spotpeak)//这里的参数先写成定值
+                           if (defect_areath >= 6 && spotpeak_temp >= 5.8 && area <= 60|| area > 60 && defect_areath >= 5 && spotpeak_temp >= 5.8)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
