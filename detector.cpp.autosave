@@ -6739,13 +6739,14 @@ bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
     //}
 
 //    th1(Rect(0, 0, th1.cols - 1, 100)) = uchar(0);
-//    th1(Rect(0, th1.rows - 100, th1.cols - 1, 100)) = uchar(0); //wsc 2021/03/10 将两边屏蔽像素由100->10,并屏蔽4角
+//    th1(Rect(0, th1.rows - 100, th1.cols - 1, 100)) = uchar(0); //wsc 2021/03/10 将两边屏蔽像素由100->10,并屏蔽4角100*100像素
     th1(Rect(0, 0, th1.cols - 1, 10)) = uchar(0);
     th1(Rect(0, th1.rows - 10, th1.cols - 1, 10)) = uchar(0);
     th1(Rect(0, 0, 100, 100)) = uchar(0);
     th1(Rect(0, th1.rows - 100, 100, 100)) = uchar(0);
     th1(Rect(th1.cols - 100, 0, 100, 100)) = uchar(0);
     th1(Rect(th1.cols - 100, th1.rows - 100, 100, 100)) = uchar(0);
+    
     findContours(th1, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
     std::sort(contours.begin(), contours.end(), compareContourAreas);
 

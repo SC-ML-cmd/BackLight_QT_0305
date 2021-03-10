@@ -450,7 +450,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
 
-    QString str_ver ="1.0.34.147";       //版本号
+    QString str_ver ="1.0.34.148";       //版本号
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
     connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::BlockingQueuedConnection);
@@ -788,11 +788,11 @@ bool MainWindow::write_Modbus(int address,int value)//写入PLC
     while(modbusDevice == nullptr ||  modbusDevice->state() != QModbusDevice::ConnectedState){
         connectToPLC();
     }
-    if(modbusDevice->state() == QModbusDevice::ConnectedState){
-        debug_msg("["+ current_date + "]" + "与plc的连接状态：" + "true");
-    }else {
-        debug_msg("["+ current_date + "]" + "与plc的连接状态：" + "false");
-    }
+//    if(modbusDevice->state() == QModbusDevice::ConnectedState){
+//        debug_msg("["+ current_date + "]" + "与plc的连接状态：" + "true");
+//    }else {
+//        debug_msg("["+ current_date + "]" + "与plc的连接状态：" + "false");
+//    }
     //给QModbusDataUnit赋好值后发送写请求sendWriteRequest，写到相应寄存器中的相应位置
     //如果没有发生错误的话sendWriteRequest将返回一个QModbusReply，否则返回空指针。
     //当reply完成或放弃后reply->isFinished()将返回true
@@ -805,9 +805,9 @@ bool MainWindow::write_Modbus(int address,int value)//写入PLC
         if (auto *reply = modbusDevice->sendWriteRequest(writeUnit, 1))           //1是服务器的地址
             //发送写请求
         {
-            QDateTime current_date_time =QDateTime::currentDateTime();
-            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
-            debug_msg("["+ current_date + "]" + "reply创建对象创建成功");
+//            QDateTime current_date_time =QDateTime::currentDateTime();
+//            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+//            debug_msg("["+ current_date + "]" + "reply创建对象创建成功");
 
             for(int Write_Num=1;Write_Num<=300;Write_Num++)
             {
@@ -837,9 +837,9 @@ bool MainWindow::write_Modbus(int address,int value)//写入PLC
 
                     if (reply->error() == QModbusDevice::NoError)
                     {
-                        QDateTime current_date_time =QDateTime::currentDateTime();
-                        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
-                        debug_msg("["+ current_date + "]" + "reply创建对象创建成功，成功写入PLC信号");
+//                        QDateTime current_date_time =QDateTime::currentDateTime();
+//                        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+//                        debug_msg("["+ current_date + "]" + "reply创建对象创建成功，成功写入PLC信号");
                         ui->label_48->setText("写入成功");
                         delete reply;
                         return true;
@@ -1013,7 +1013,7 @@ void MainWindow::TimerTimeOut()
     if(F)//判断定时器是否运行,执行定时器触发时需要处理的业务
     {
         read_Modbus(1600);//位置到达，开测光《拍测光
-        delay(modbus_time);
+        //delay(modbus_time);
 
         if(Data_Form_Plc==1)
         {
@@ -1443,7 +1443,8 @@ int MainWindow::detect()
 
         ui->label_30->setText("读到平台到达");
         //delay(SideLightOpenTime);                 //等待侧光灯打开延时
-        delay_msec(SideLightOpenTime);                 //等待侧光灯打开延时
+        //delay_msec(SideLightOpenTime);                 //等待侧光灯打开延时
+
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
         debug_msg("开始获取测光图"+current_date);
@@ -1564,7 +1565,7 @@ int MainWindow::detect()
         //================拍摄白底图像========================
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
-        debug_msg("..开始拍摄白底图"+current_date);
+        debug_msg("开始拍摄白底图"+current_date);
 
         QFuture<cv::Mat> c1 =QtConcurrent::run(camera,&HikvisionSDK::saveImage7, int(1));//开线程左侧相机拍照
         QFuture<cv::Mat> c3 =QtConcurrent::run(camera,&HikvisionSDK::saveImage7, int(3));//开线程右侧相机拍照
