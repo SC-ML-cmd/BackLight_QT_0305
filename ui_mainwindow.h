@@ -65,68 +65,68 @@ public:
     QSplitter *splitter;
     QGroupBox *groupBox;
     QGridLayout *gridLayout_9;
-    QGroupBox *groupBox_2;
-    QGridLayout *gridLayout_5;
-    QLabel *label_32;
-    QLabel *label_51;
-    QLabel *label_56;
-    QLabel *label_104;
-    QLabel *label_102;
-    QLabel *label_55;
-    QLabel *label_31;
-    QLabel *label_28;
-    QLabel *label_49;
-    QLabel *label_30;
-    QLabel *label_27;
-    QLabel *label_47;
-    QLabel *label_101;
-    QLabel *label_52;
-    QLabel *label_48;
-    QLabel *label_29;
-    QLabel *label_105;
-    QLabel *label_58;
-    QLabel *label_103;
-    QLabel *label_50;
+    QGroupBox *groupBox_4;
+    QGridLayout *gridLayout_8;
+    QLabel *label_57;
+    QGroupBox *groupBox_6;
+    QGridLayout *gridLayout;
+    QComboBox *comboBox;
     QTabWidget *tabWidget;
     QWidget *widget;
     QGridLayout *gridLayout_7;
-    QLabel *label_38;
-    QLabel *label_65;
-    QLabel *label_36;
-    QLabel *label_33;
-    QLabel *label_34;
-    QLabel *label_54;
-    QLabel *label_69;
-    QLabel *label_63;
-    QLabel *label_62;
-    QLabel *label_37;
-    QLabel *label_40;
-    QLabel *label_66;
-    QLabel *label_41;
-    QLabel *label_44;
-    QLabel *label_53;
-    QLabel *label_71;
-    QLabel *label_35;
-    QLabel *label_46;
-    QLabel *label_43;
-    QLabel *label_68;
-    QLabel *label_39;
-    QLabel *label_42;
     QLabel *label_64;
-    QLabel *label_70;
     QLabel *label_45;
     QLabel *label_67;
+    QLabel *label_63;
+    QLabel *label_44;
+    QLabel *label_62;
+    QLabel *label_38;
+    QLabel *label_68;
+    QLabel *label_65;
+    QLabel *label_37;
+    QLabel *label_53;
+    QLabel *label_54;
+    QLabel *label_39;
+    QLabel *label_41;
+    QLabel *label_33;
+    QLabel *label_34;
+    QLabel *label_40;
+    QLabel *label_42;
+    QLabel *label_69;
+    QLabel *label_36;
+    QLabel *label_70;
+    QLabel *label_66;
+    QLabel *label_43;
+    QLabel *label_35;
+    QLabel *label_71;
+    QLabel *label_46;
     QLabel *label_74;
     QWidget *tab_2;
     QGridLayout *gridLayout_6;
     QLabel *label_72;
     QLabel *label_73;
-    QGroupBox *groupBox_6;
-    QGridLayout *gridLayout;
-    QComboBox *comboBox;
-    QGroupBox *groupBox_4;
-    QGridLayout *gridLayout_8;
-    QLabel *label_57;
+    QGroupBox *groupBox_2;
+    QGridLayout *gridLayout_5;
+    QLabel *label_31;
+    QLabel *label_104;
+    QLabel *label_55;
+    QLabel *label_51;
+    QLabel *label_102;
+    QLabel *label_28;
+    QLabel *label_27;
+    QLabel *label_101;
+    QLabel *label_29;
+    QLabel *label_48;
+    QLabel *label_56;
+    QLabel *label_47;
+    QLabel *label_103;
+    QLabel *label_32;
+    QLabel *label_30;
+    QLabel *label_50;
+    QLabel *label_49;
+    QLabel *label_52;
+    QLabel *label_105;
+    QLabel *label_58;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
     QGridLayout *gridLayout_2;
@@ -362,184 +362,63 @@ public:
         gridLayout_9->setSpacing(6);
         gridLayout_9->setContentsMargins(11, 11, 11, 11);
         gridLayout_9->setObjectName(QString::fromUtf8("gridLayout_9"));
-        groupBox_2 = new QGroupBox(groupBox);
-        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        groupBox_4 = new QGroupBox(groupBox);
+        groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
+        groupBox_4->setMaximumSize(QSize(16777215, 100));
         QFont font;
         font.setFamily(QString::fromUtf8("\351\273\221\344\275\223"));
         font.setPointSize(14);
         font.setBold(false);
         font.setItalic(false);
         font.setWeight(9);
-        groupBox_2->setFont(font);
-        groupBox_2->setStyleSheet(QString::fromUtf8("#groupBox_2{color: rgb(0, 85, 255);font: 75 14pt \"\351\273\221\344\275\223\";}"));
-        gridLayout_5 = new QGridLayout(groupBox_2);
-        gridLayout_5->setSpacing(6);
-        gridLayout_5->setContentsMargins(11, 11, 11, 11);
-        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
-        label_32 = new QLabel(groupBox_2);
-        label_32->setObjectName(QString::fromUtf8("label_32"));
-        label_32->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_32->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_32, 3, 1, 1, 1);
-
-        label_51 = new QLabel(groupBox_2);
-        label_51->setObjectName(QString::fromUtf8("label_51"));
-        label_51->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_51, 6, 0, 1, 1);
-
-        label_56 = new QLabel(groupBox_2);
-        label_56->setObjectName(QString::fromUtf8("label_56"));
-        label_56->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_56, 9, 0, 1, 1);
-
-        label_104 = new QLabel(groupBox_2);
-        label_104->setObjectName(QString::fromUtf8("label_104"));
-        label_104->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_104, 1, 0, 1, 1);
-
-        label_102 = new QLabel(groupBox_2);
-        label_102->setObjectName(QString::fromUtf8("label_102"));
-        label_102->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_102->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_102, 8, 1, 1, 1);
-
-        label_55 = new QLabel(groupBox_2);
-        label_55->setObjectName(QString::fromUtf8("label_55"));
-        label_55->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_55, 7, 0, 1, 1);
-
-        label_31 = new QLabel(groupBox_2);
-        label_31->setObjectName(QString::fromUtf8("label_31"));
-        label_31->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_31->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_31, 2, 1, 1, 1);
-
-        label_28 = new QLabel(groupBox_2);
-        label_28->setObjectName(QString::fromUtf8("label_28"));
-        label_28->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_28, 0, 0, 1, 1);
-
-        label_49 = new QLabel(groupBox_2);
-        label_49->setObjectName(QString::fromUtf8("label_49"));
-        label_49->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_49, 5, 0, 1, 1);
-
-        label_30 = new QLabel(groupBox_2);
-        label_30->setObjectName(QString::fromUtf8("label_30"));
-        label_30->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
+        groupBox_4->setFont(font);
+        groupBox_4->setStyleSheet(QString::fromUtf8("#groupBox_4{color: rgb(0, 85, 255);font: 75 14pt \"\351\273\221\344\275\223\";}\n"
 ""));
-        label_30->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_30, 0, 1, 1, 1);
-
-        label_27 = new QLabel(groupBox_2);
-        label_27->setObjectName(QString::fromUtf8("label_27"));
-        label_27->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_27, 2, 0, 1, 1);
-
-        label_47 = new QLabel(groupBox_2);
-        label_47->setObjectName(QString::fromUtf8("label_47"));
-        label_47->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_47, 4, 0, 1, 1);
-
-        label_101 = new QLabel(groupBox_2);
-        label_101->setObjectName(QString::fromUtf8("label_101"));
-        label_101->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_101->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_101, 7, 1, 1, 1);
-
-        label_52 = new QLabel(groupBox_2);
-        label_52->setObjectName(QString::fromUtf8("label_52"));
-        label_52->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_52->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_52, 6, 1, 1, 1);
-
-        label_48 = new QLabel(groupBox_2);
-        label_48->setObjectName(QString::fromUtf8("label_48"));
-        label_48->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_48->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_48, 4, 1, 1, 1);
-
-        label_29 = new QLabel(groupBox_2);
-        label_29->setObjectName(QString::fromUtf8("label_29"));
-        label_29->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_29, 3, 0, 1, 1);
-
-        label_105 = new QLabel(groupBox_2);
-        label_105->setObjectName(QString::fromUtf8("label_105"));
-        label_105->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
+        gridLayout_8 = new QGridLayout(groupBox_4);
+        gridLayout_8->setSpacing(6);
+        gridLayout_8->setContentsMargins(11, 11, 11, 11);
+        gridLayout_8->setObjectName(QString::fromUtf8("gridLayout_8"));
+        label_57 = new QLabel(groupBox_4);
+        label_57->setObjectName(QString::fromUtf8("label_57"));
+        label_57->setStyleSheet(QString::fromUtf8("font: 44pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(0, 255, 0);\n"
 ""));
-        label_105->setAlignment(Qt::AlignCenter);
+        label_57->setAlignment(Qt::AlignCenter);
 
-        gridLayout_5->addWidget(label_105, 1, 1, 1, 1);
-
-        label_58 = new QLabel(groupBox_2);
-        label_58->setObjectName(QString::fromUtf8("label_58"));
-        label_58->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_5->addWidget(label_58, 8, 0, 1, 1);
-
-        label_103 = new QLabel(groupBox_2);
-        label_103->setObjectName(QString::fromUtf8("label_103"));
-        label_103->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_103->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_103, 9, 1, 1, 1);
-
-        label_50 = new QLabel(groupBox_2);
-        label_50->setObjectName(QString::fromUtf8("label_50"));
-        label_50->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_50->setAlignment(Qt::AlignCenter);
-
-        gridLayout_5->addWidget(label_50, 5, 1, 1, 1);
+        gridLayout_8->addWidget(label_57, 0, 0, 1, 1);
 
 
-        gridLayout_9->addWidget(groupBox_2, 0, 0, 1, 1);
+        gridLayout_9->addWidget(groupBox_4, 3, 0, 1, 1);
+
+        groupBox_6 = new QGroupBox(groupBox);
+        groupBox_6->setObjectName(QString::fromUtf8("groupBox_6"));
+        groupBox_6->setMaximumSize(QSize(16777215, 100));
+        groupBox_6->setFont(font);
+        groupBox_6->setStyleSheet(QString::fromUtf8("#groupBox_6{color: rgb(0, 85, 255);font: 75 14pt \"\351\273\221\344\275\223\";}\n"
+""));
+        gridLayout = new QGridLayout(groupBox_6);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        comboBox = new QComboBox(groupBox_6);
+        comboBox->addItem(QString());
+        comboBox->addItem(QString());
+        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("\351\273\221\344\275\223"));
+        font1.setPointSize(16);
+        font1.setBold(false);
+        font1.setItalic(false);
+        font1.setWeight(9);
+        comboBox->setFont(font1);
+        comboBox->setStyleSheet(QString::fromUtf8("background-color:rgb(0, 0, 0);\n"
+"font: 75 16pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 0);"));
+
+        gridLayout->addWidget(comboBox, 0, 0, 1, 1);
+
+
+        gridLayout_9->addWidget(groupBox_6, 2, 0, 1, 1);
 
         tabWidget = new QTabWidget(groupBox);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
@@ -548,12 +427,12 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(tabWidget->sizePolicy().hasHeightForWidth());
         tabWidget->setSizePolicy(sizePolicy1);
-        QFont font1;
-        font1.setFamily(QString::fromUtf8("\351\273\221\344\275\223"));
-        font1.setPointSize(14);
-        font1.setBold(false);
-        font1.setWeight(50);
-        tabWidget->setFont(font1);
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("\351\273\221\344\275\223"));
+        font2.setPointSize(14);
+        font2.setBold(false);
+        font2.setWeight(50);
+        tabWidget->setFont(font2);
         tabWidget->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         widget = new QWidget();
         widget->setObjectName(QString::fromUtf8("widget"));
@@ -561,211 +440,12 @@ public:
         gridLayout_7->setSpacing(6);
         gridLayout_7->setContentsMargins(11, 11, 11, 11);
         gridLayout_7->setObjectName(QString::fromUtf8("gridLayout_7"));
-        label_38 = new QLabel(widget);
-        label_38->setObjectName(QString::fromUtf8("label_38"));
-        label_38->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_38->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_38, 2, 1, 1, 1);
-
-        label_65 = new QLabel(widget);
-        label_65->setObjectName(QString::fromUtf8("label_65"));
-        label_65->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_65->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_65, 6, 1, 1, 1);
-
-        label_36 = new QLabel(widget);
-        label_36->setObjectName(QString::fromUtf8("label_36"));
-        label_36->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_36->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_36, 1, 1, 1, 1);
-
-        label_33 = new QLabel(widget);
-        label_33->setObjectName(QString::fromUtf8("label_33"));
-        label_33->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_7->addWidget(label_33, 0, 0, 1, 1);
-
-        label_34 = new QLabel(widget);
-        label_34->setObjectName(QString::fromUtf8("label_34"));
-        label_34->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
-""));
-        label_34->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_34, 0, 1, 1, 1);
-
-        label_54 = new QLabel(widget);
-        label_54->setObjectName(QString::fromUtf8("label_54"));
-        label_54->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
-""));
-        label_54->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_54, 3, 2, 1, 1);
-
-        label_69 = new QLabel(widget);
-        label_69->setObjectName(QString::fromUtf8("label_69"));
-        label_69->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_69->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_69, 7, 1, 1, 1);
-
-        label_63 = new QLabel(widget);
-        label_63->setObjectName(QString::fromUtf8("label_63"));
-        label_63->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
-""));
-        label_63->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_63, 5, 2, 1, 1);
-
-        label_62 = new QLabel(widget);
-        label_62->setObjectName(QString::fromUtf8("label_62"));
-        label_62->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
-""));
-        label_62->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_62, 4, 2, 1, 1);
-
-        label_37 = new QLabel(widget);
-        label_37->setObjectName(QString::fromUtf8("label_37"));
-        label_37->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_7->addWidget(label_37, 2, 0, 1, 1);
-
-        label_40 = new QLabel(widget);
-        label_40->setObjectName(QString::fromUtf8("label_40"));
-        label_40->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_40->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_40, 3, 1, 1, 1);
-
-        label_66 = new QLabel(widget);
-        label_66->setObjectName(QString::fromUtf8("label_66"));
-        label_66->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
-""));
-        label_66->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_66, 6, 2, 1, 1);
-
-        label_41 = new QLabel(widget);
-        label_41->setObjectName(QString::fromUtf8("label_41"));
-        label_41->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_7->addWidget(label_41, 4, 0, 1, 1);
-
-        label_44 = new QLabel(widget);
-        label_44->setObjectName(QString::fromUtf8("label_44"));
-        label_44->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
-""));
-        label_44->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_44, 5, 1, 1, 1);
-
-        label_53 = new QLabel(widget);
-        label_53->setObjectName(QString::fromUtf8("label_53"));
-        label_53->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
-""));
-        label_53->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_53, 2, 2, 1, 1);
-
-        label_71 = new QLabel(widget);
-        label_71->setObjectName(QString::fromUtf8("label_71"));
-        label_71->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_71->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_71, 8, 1, 1, 1);
-
-        label_35 = new QLabel(widget);
-        label_35->setObjectName(QString::fromUtf8("label_35"));
-        label_35->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_7->addWidget(label_35, 1, 0, 1, 1);
-
-        label_46 = new QLabel(widget);
-        label_46->setObjectName(QString::fromUtf8("label_46"));
-        label_46->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);\n"
-""));
-        label_46->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_46, 1, 2, 1, 1);
-
-        label_43 = new QLabel(widget);
-        label_43->setObjectName(QString::fromUtf8("label_43"));
-        label_43->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_7->addWidget(label_43, 5, 0, 1, 1);
-
-        label_68 = new QLabel(widget);
-        label_68->setObjectName(QString::fromUtf8("label_68"));
-        label_68->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_7->addWidget(label_68, 7, 0, 1, 1);
-
-        label_39 = new QLabel(widget);
-        label_39->setObjectName(QString::fromUtf8("label_39"));
-        label_39->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_7->addWidget(label_39, 3, 0, 1, 1);
-
-        label_42 = new QLabel(widget);
-        label_42->setObjectName(QString::fromUtf8("label_42"));
-        label_42->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);"));
-        label_42->setAlignment(Qt::AlignCenter);
-
-        gridLayout_7->addWidget(label_42, 4, 1, 1, 1);
-
         label_64 = new QLabel(widget);
         label_64->setObjectName(QString::fromUtf8("label_64"));
         label_64->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
 "color: rgb(255, 255, 255);"));
 
         gridLayout_7->addWidget(label_64, 6, 0, 1, 1);
-
-        label_70 = new QLabel(widget);
-        label_70->setObjectName(QString::fromUtf8("label_70"));
-        label_70->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 255);"));
-
-        gridLayout_7->addWidget(label_70, 8, 0, 1, 1);
 
         label_45 = new QLabel(widget);
         label_45->setObjectName(QString::fromUtf8("label_45"));
@@ -786,6 +466,205 @@ public:
         label_67->setAlignment(Qt::AlignCenter);
 
         gridLayout_7->addWidget(label_67, 7, 2, 1, 1);
+
+        label_63 = new QLabel(widget);
+        label_63->setObjectName(QString::fromUtf8("label_63"));
+        label_63->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+""));
+        label_63->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_63, 5, 2, 1, 1);
+
+        label_44 = new QLabel(widget);
+        label_44->setObjectName(QString::fromUtf8("label_44"));
+        label_44->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+""));
+        label_44->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_44, 5, 1, 1, 1);
+
+        label_62 = new QLabel(widget);
+        label_62->setObjectName(QString::fromUtf8("label_62"));
+        label_62->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+""));
+        label_62->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_62, 4, 2, 1, 1);
+
+        label_38 = new QLabel(widget);
+        label_38->setObjectName(QString::fromUtf8("label_38"));
+        label_38->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_38->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_38, 2, 1, 1, 1);
+
+        label_68 = new QLabel(widget);
+        label_68->setObjectName(QString::fromUtf8("label_68"));
+        label_68->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_7->addWidget(label_68, 7, 0, 1, 1);
+
+        label_65 = new QLabel(widget);
+        label_65->setObjectName(QString::fromUtf8("label_65"));
+        label_65->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_65->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_65, 6, 1, 1, 1);
+
+        label_37 = new QLabel(widget);
+        label_37->setObjectName(QString::fromUtf8("label_37"));
+        label_37->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_7->addWidget(label_37, 2, 0, 1, 1);
+
+        label_53 = new QLabel(widget);
+        label_53->setObjectName(QString::fromUtf8("label_53"));
+        label_53->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+""));
+        label_53->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_53, 2, 2, 1, 1);
+
+        label_54 = new QLabel(widget);
+        label_54->setObjectName(QString::fromUtf8("label_54"));
+        label_54->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+""));
+        label_54->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_54, 3, 2, 1, 1);
+
+        label_39 = new QLabel(widget);
+        label_39->setObjectName(QString::fromUtf8("label_39"));
+        label_39->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_7->addWidget(label_39, 3, 0, 1, 1);
+
+        label_41 = new QLabel(widget);
+        label_41->setObjectName(QString::fromUtf8("label_41"));
+        label_41->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_7->addWidget(label_41, 4, 0, 1, 1);
+
+        label_33 = new QLabel(widget);
+        label_33->setObjectName(QString::fromUtf8("label_33"));
+        label_33->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_7->addWidget(label_33, 0, 0, 1, 1);
+
+        label_34 = new QLabel(widget);
+        label_34->setObjectName(QString::fromUtf8("label_34"));
+        label_34->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+""));
+        label_34->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_34, 0, 1, 1, 1);
+
+        label_40 = new QLabel(widget);
+        label_40->setObjectName(QString::fromUtf8("label_40"));
+        label_40->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_40->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_40, 3, 1, 1, 1);
+
+        label_42 = new QLabel(widget);
+        label_42->setObjectName(QString::fromUtf8("label_42"));
+        label_42->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_42->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_42, 4, 1, 1, 1);
+
+        label_69 = new QLabel(widget);
+        label_69->setObjectName(QString::fromUtf8("label_69"));
+        label_69->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_69->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_69, 7, 1, 1, 1);
+
+        label_36 = new QLabel(widget);
+        label_36->setObjectName(QString::fromUtf8("label_36"));
+        label_36->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_36->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_36, 1, 1, 1, 1);
+
+        label_70 = new QLabel(widget);
+        label_70->setObjectName(QString::fromUtf8("label_70"));
+        label_70->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_7->addWidget(label_70, 8, 0, 1, 1);
+
+        label_66 = new QLabel(widget);
+        label_66->setObjectName(QString::fromUtf8("label_66"));
+        label_66->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+""));
+        label_66->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_66, 6, 2, 1, 1);
+
+        label_43 = new QLabel(widget);
+        label_43->setObjectName(QString::fromUtf8("label_43"));
+        label_43->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_7->addWidget(label_43, 5, 0, 1, 1);
+
+        label_35 = new QLabel(widget);
+        label_35->setObjectName(QString::fromUtf8("label_35"));
+        label_35->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_7->addWidget(label_35, 1, 0, 1, 1);
+
+        label_71 = new QLabel(widget);
+        label_71->setObjectName(QString::fromUtf8("label_71"));
+        label_71->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_71->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_71, 8, 1, 1, 1);
+
+        label_46 = new QLabel(widget);
+        label_46->setObjectName(QString::fromUtf8("label_46"));
+        label_46->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+""));
+        label_46->setAlignment(Qt::AlignCenter);
+
+        gridLayout_7->addWidget(label_46, 1, 2, 1, 1);
 
         label_74 = new QLabel(widget);
         label_74->setObjectName(QString::fromUtf8("label_74"));
@@ -825,57 +704,178 @@ public:
 
         gridLayout_9->addWidget(tabWidget, 1, 0, 1, 1);
 
-        groupBox_6 = new QGroupBox(groupBox);
-        groupBox_6->setObjectName(QString::fromUtf8("groupBox_6"));
-        groupBox_6->setMaximumSize(QSize(16777215, 100));
-        groupBox_6->setFont(font);
-        groupBox_6->setStyleSheet(QString::fromUtf8("#groupBox_6{color: rgb(0, 85, 255);font: 75 14pt \"\351\273\221\344\275\223\";}\n"
+        groupBox_2 = new QGroupBox(groupBox);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        groupBox_2->setFont(font);
+        groupBox_2->setStyleSheet(QString::fromUtf8("#groupBox_2{color: rgb(0, 85, 255);font: 75 14pt \"\351\273\221\344\275\223\";}"));
+        gridLayout_5 = new QGridLayout(groupBox_2);
+        gridLayout_5->setSpacing(6);
+        gridLayout_5->setContentsMargins(11, 11, 11, 11);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        label_31 = new QLabel(groupBox_2);
+        label_31->setObjectName(QString::fromUtf8("label_31"));
+        label_31->setStyleSheet(QString::fromUtf8("font: 10pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_31->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(label_31, 2, 1, 1, 1);
+
+        label_104 = new QLabel(groupBox_2);
+        label_104->setObjectName(QString::fromUtf8("label_104"));
+        label_104->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_104, 1, 0, 1, 1);
+
+        label_55 = new QLabel(groupBox_2);
+        label_55->setObjectName(QString::fromUtf8("label_55"));
+        label_55->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_55, 7, 0, 1, 1);
+
+        label_51 = new QLabel(groupBox_2);
+        label_51->setObjectName(QString::fromUtf8("label_51"));
+        label_51->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_51, 6, 0, 1, 1);
+
+        label_102 = new QLabel(groupBox_2);
+        label_102->setObjectName(QString::fromUtf8("label_102"));
+        label_102->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_102->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(label_102, 8, 1, 1, 1);
+
+        label_28 = new QLabel(groupBox_2);
+        label_28->setObjectName(QString::fromUtf8("label_28"));
+        label_28->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_28, 0, 0, 1, 1);
+
+        label_27 = new QLabel(groupBox_2);
+        label_27->setObjectName(QString::fromUtf8("label_27"));
+        label_27->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_27, 2, 0, 1, 1);
+
+        label_101 = new QLabel(groupBox_2);
+        label_101->setObjectName(QString::fromUtf8("label_101"));
+        label_101->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_101->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(label_101, 7, 1, 1, 1);
+
+        label_29 = new QLabel(groupBox_2);
+        label_29->setObjectName(QString::fromUtf8("label_29"));
+        label_29->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_29, 3, 0, 1, 1);
+
+        label_48 = new QLabel(groupBox_2);
+        label_48->setObjectName(QString::fromUtf8("label_48"));
+        label_48->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_48->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(label_48, 4, 1, 1, 1);
+
+        label_56 = new QLabel(groupBox_2);
+        label_56->setObjectName(QString::fromUtf8("label_56"));
+        label_56->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_56, 9, 0, 1, 1);
+
+        label_47 = new QLabel(groupBox_2);
+        label_47->setObjectName(QString::fromUtf8("label_47"));
+        label_47->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_47, 4, 0, 1, 1);
+
+        label_103 = new QLabel(groupBox_2);
+        label_103->setObjectName(QString::fromUtf8("label_103"));
+        label_103->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_103->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(label_103, 9, 1, 1, 1);
+
+        label_32 = new QLabel(groupBox_2);
+        label_32->setObjectName(QString::fromUtf8("label_32"));
+        label_32->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_32->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(label_32, 3, 1, 1, 1);
+
+        label_30 = new QLabel(groupBox_2);
+        label_30->setObjectName(QString::fromUtf8("label_30"));
+        label_30->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
 ""));
-        gridLayout = new QGridLayout(groupBox_6);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        comboBox = new QComboBox(groupBox_6);
-        comboBox->addItem(QString());
-        comboBox->addItem(QString());
-        comboBox->setObjectName(QString::fromUtf8("comboBox"));
-        QFont font2;
-        font2.setFamily(QString::fromUtf8("\351\273\221\344\275\223"));
-        font2.setPointSize(16);
-        font2.setBold(false);
-        font2.setItalic(false);
-        font2.setWeight(9);
-        comboBox->setFont(font2);
-        comboBox->setStyleSheet(QString::fromUtf8("background-color:rgb(0, 0, 0);\n"
-"font: 75 16pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(255, 255, 0);"));
+        label_30->setAlignment(Qt::AlignCenter);
 
-        gridLayout->addWidget(comboBox, 0, 0, 1, 1);
+        gridLayout_5->addWidget(label_30, 0, 1, 1, 1);
 
+        label_50 = new QLabel(groupBox_2);
+        label_50->setObjectName(QString::fromUtf8("label_50"));
+        label_50->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_50->setAlignment(Qt::AlignCenter);
 
-        gridLayout_9->addWidget(groupBox_6, 2, 0, 1, 1);
+        gridLayout_5->addWidget(label_50, 5, 1, 1, 1);
 
-        groupBox_4 = new QGroupBox(groupBox);
-        groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
-        groupBox_4->setMaximumSize(QSize(16777215, 100));
-        groupBox_4->setFont(font);
-        groupBox_4->setStyleSheet(QString::fromUtf8("#groupBox_4{color: rgb(0, 85, 255);font: 75 14pt \"\351\273\221\344\275\223\";}\n"
+        label_49 = new QLabel(groupBox_2);
+        label_49->setObjectName(QString::fromUtf8("label_49"));
+        label_49->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_49, 5, 0, 1, 1);
+
+        label_52 = new QLabel(groupBox_2);
+        label_52->setObjectName(QString::fromUtf8("label_52"));
+        label_52->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_52->setAlignment(Qt::AlignCenter);
+
+        gridLayout_5->addWidget(label_52, 6, 1, 1, 1);
+
+        label_105 = new QLabel(groupBox_2);
+        label_105->setObjectName(QString::fromUtf8("label_105"));
+        label_105->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
 ""));
-        gridLayout_8 = new QGridLayout(groupBox_4);
-        gridLayout_8->setSpacing(6);
-        gridLayout_8->setContentsMargins(11, 11, 11, 11);
-        gridLayout_8->setObjectName(QString::fromUtf8("gridLayout_8"));
-        label_57 = new QLabel(groupBox_4);
-        label_57->setObjectName(QString::fromUtf8("label_57"));
-        label_57->setStyleSheet(QString::fromUtf8("font: 44pt \"\351\273\221\344\275\223\";\n"
-"color: rgb(0, 255, 0);\n"
-""));
-        label_57->setAlignment(Qt::AlignCenter);
+        label_105->setAlignment(Qt::AlignCenter);
 
-        gridLayout_8->addWidget(label_57, 0, 0, 1, 1);
+        gridLayout_5->addWidget(label_105, 1, 1, 1, 1);
+
+        label_58 = new QLabel(groupBox_2);
+        label_58->setObjectName(QString::fromUtf8("label_58"));
+        label_58->setStyleSheet(QString::fromUtf8("font: 12pt \"\351\273\221\344\275\223\";\n"
+"color: rgb(255, 255, 255);"));
+
+        gridLayout_5->addWidget(label_58, 8, 0, 1, 1);
 
 
-        gridLayout_9->addWidget(groupBox_4, 3, 0, 1, 1);
+        gridLayout_9->addWidget(groupBox_2, 0, 0, 1, 1);
 
         splitter->addWidget(groupBox);
         groupBox_2->raise();
@@ -1732,64 +1732,64 @@ public:
         action_17->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230", nullptr));
         action_18->setText(QApplication::translate("MainWindow", "\346\243\200\346\265\213\347\274\272\351\231\267\351\200\211\346\213\251", nullptr));
         action_clear->setText(QApplication::translate("MainWindow", "\346\270\205\351\233\266", nullptr));
-        groupBox_2->setTitle(QApplication::translate("MainWindow", "\344\272\247\345\223\201\344\277\241\346\201\257", nullptr));
-        label_32->setText(QApplication::translate("MainWindow", "2019.10.19", nullptr));
-        label_51->setText(QApplication::translate("MainWindow", "\345\275\223\345\211\215\350\211\257\347\216\207\357\274\232", nullptr));
-        label_56->setText(QApplication::translate("MainWindow", "\344\270\273\347\233\270\346\234\272\346\234\200\345\260\217\344\272\256\345\272\246", nullptr));
-        label_104->setText(QApplication::translate("MainWindow", "\344\272\247\345\223\201\345\236\213\345\217\267\357\274\232", nullptr));
-        label_102->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_55->setText(QApplication::translate("MainWindow", "\344\270\273\347\233\270\346\234\272\345\271\263\345\235\207\344\272\256\345\272\246\357\274\232", nullptr));
-        label_31->setText(QString());
-        label_28->setText(QApplication::translate("MainWindow", "\346\243\200\346\265\213\346\265\201\347\250\213\357\274\232", nullptr));
-        label_49->setText(QApplication::translate("MainWindow", "\345\220\210\346\240\274\345\223\201\346\225\260\357\274\232", nullptr));
-        label_30->setText(QString());
-        label_27->setText(QApplication::translate("MainWindow", "\344\272\247\345\223\201\346\211\271\346\254\241\357\274\232", nullptr));
-        label_47->setText(QApplication::translate("MainWindow", "\345\267\262\346\243\200\346\200\273\346\225\260\357\274\232", nullptr));
-        label_101->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_52->setText(QApplication::translate("MainWindow", "0%", nullptr));
-        label_48->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_29->setText(QApplication::translate("MainWindow", "\347\224\237\344\272\247\346\227\245\346\234\237\357\274\232", nullptr));
-        label_105->setText(QString());
-        label_58->setText(QApplication::translate("MainWindow", "\344\270\273\347\233\270\346\234\272\346\234\200\345\244\247\344\272\256\345\272\246", nullptr));
-        label_103->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_50->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_38->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_65->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_36->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_33->setText(QApplication::translate("MainWindow", "\345\274\202\347\211\251\357\274\232", nullptr));
-        label_34->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_54->setText(QApplication::translate("MainWindow", "0%", nullptr));
-        label_69->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_63->setText(QApplication::translate("MainWindow", "0%", nullptr));
-        label_62->setText(QApplication::translate("MainWindow", "0%", nullptr));
-        label_37->setText(QApplication::translate("MainWindow", "\347\231\275\345\215\260\357\274\232", nullptr));
-        label_40->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_66->setText(QApplication::translate("MainWindow", "0%", nullptr));
-        label_41->setText(QApplication::translate("MainWindow", "\347\247\273\344\275\215\357\274\232", nullptr));
-        label_44->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_53->setText(QApplication::translate("MainWindow", "0%", nullptr));
-        label_71->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_35->setText(QApplication::translate("MainWindow", "\347\231\275\347\202\271\357\274\232", nullptr));
-        label_46->setText(QApplication::translate("MainWindow", "0%", nullptr));
-        label_43->setText(QApplication::translate("MainWindow", "\344\272\256\350\276\271\357\274\232", nullptr));
-        label_68->setText(QApplication::translate("MainWindow", "\345\210\222\344\274\244\357\274\232", nullptr));
-        label_39->setText(QApplication::translate("MainWindow", "\346\255\273\347\201\257\357\274\232", nullptr));
-        label_42->setText(QApplication::translate("MainWindow", "0", nullptr));
+        groupBox_4->setTitle(QApplication::translate("MainWindow", "\345\256\236\346\227\266\346\243\200\346\265\213\347\273\223\346\236\234", nullptr));
+        label_57->setText(QString());
+        groupBox_6->setTitle(QApplication::translate("MainWindow", "\350\277\220\350\241\214\347\212\266\346\200\201", nullptr));
+        comboBox->setItemText(0, QApplication::translate("MainWindow", "\345\234\250\347\272\277", nullptr));
+        comboBox->setItemText(1, QApplication::translate("MainWindow", "\347\246\273\347\272\277", nullptr));
+
         label_64->setText(QApplication::translate("MainWindow", "\347\210\206\347\201\257\357\274\232", nullptr));
-        label_70->setText(QApplication::translate("MainWindow", "\346\227\240\346\230\276\347\244\272\357\274\232", nullptr));
         label_45->setText(QApplication::translate("MainWindow", "0%", nullptr));
         label_67->setText(QApplication::translate("MainWindow", "0%", nullptr));
+        label_63->setText(QApplication::translate("MainWindow", "0%", nullptr));
+        label_44->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_62->setText(QApplication::translate("MainWindow", "0%", nullptr));
+        label_38->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_68->setText(QApplication::translate("MainWindow", "\345\210\222\344\274\244\357\274\232", nullptr));
+        label_65->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_37->setText(QApplication::translate("MainWindow", "\347\231\275\345\215\260\357\274\232", nullptr));
+        label_53->setText(QApplication::translate("MainWindow", "0%", nullptr));
+        label_54->setText(QApplication::translate("MainWindow", "0%", nullptr));
+        label_39->setText(QApplication::translate("MainWindow", "\346\255\273\347\201\257\357\274\232", nullptr));
+        label_41->setText(QApplication::translate("MainWindow", "\347\247\273\344\275\215\357\274\232", nullptr));
+        label_33->setText(QApplication::translate("MainWindow", "\345\274\202\347\211\251\357\274\232", nullptr));
+        label_34->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_40->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_42->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_69->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_36->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_70->setText(QApplication::translate("MainWindow", "\346\227\240\346\230\276\347\244\272\357\274\232", nullptr));
+        label_66->setText(QApplication::translate("MainWindow", "0%", nullptr));
+        label_43->setText(QApplication::translate("MainWindow", "\344\272\256\350\276\271\357\274\232", nullptr));
+        label_35->setText(QApplication::translate("MainWindow", "\347\231\275\347\202\271\357\274\232", nullptr));
+        label_71->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_46->setText(QApplication::translate("MainWindow", "0%", nullptr));
         label_74->setText(QApplication::translate("MainWindow", "0%", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(widget), QApplication::translate("MainWindow", "\351\253\230\351\242\221\347\274\272\351\231\267", nullptr));
         label_72->setText(QApplication::translate("MainWindow", "\345\205\266\344\273\226\357\274\232", nullptr));
         label_73->setText(QApplication::translate("MainWindow", "0", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "\344\275\216\351\242\221\347\274\272\351\231\267", nullptr));
-        groupBox_6->setTitle(QApplication::translate("MainWindow", "\350\277\220\350\241\214\347\212\266\346\200\201", nullptr));
-        comboBox->setItemText(0, QApplication::translate("MainWindow", "\345\234\250\347\272\277", nullptr));
-        comboBox->setItemText(1, QApplication::translate("MainWindow", "\347\246\273\347\272\277", nullptr));
-
-        groupBox_4->setTitle(QApplication::translate("MainWindow", "\345\256\236\346\227\266\346\243\200\346\265\213\347\273\223\346\236\234", nullptr));
-        label_57->setText(QString());
+        groupBox_2->setTitle(QApplication::translate("MainWindow", "\344\272\247\345\223\201\344\277\241\346\201\257", nullptr));
+        label_31->setText(QString());
+        label_104->setText(QApplication::translate("MainWindow", "\344\272\247\345\223\201\345\236\213\345\217\267\357\274\232", nullptr));
+        label_55->setText(QApplication::translate("MainWindow", "\344\270\273\347\233\270\346\234\272\345\271\263\345\235\207\344\272\256\345\272\246\357\274\232", nullptr));
+        label_51->setText(QApplication::translate("MainWindow", "\345\275\223\345\211\215\350\211\257\347\216\207\357\274\232", nullptr));
+        label_102->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_28->setText(QApplication::translate("MainWindow", "\346\243\200\346\265\213\346\265\201\347\250\213\357\274\232", nullptr));
+        label_27->setText(QApplication::translate("MainWindow", "\344\272\247\345\223\201\346\211\271\346\254\241\357\274\232", nullptr));
+        label_101->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_29->setText(QApplication::translate("MainWindow", "\347\224\237\344\272\247\346\227\245\346\234\237\357\274\232", nullptr));
+        label_48->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_56->setText(QApplication::translate("MainWindow", "\344\270\273\347\233\270\346\234\272\346\234\200\345\260\217\344\272\256\345\272\246", nullptr));
+        label_47->setText(QApplication::translate("MainWindow", "\345\267\262\346\243\200\346\200\273\346\225\260\357\274\232", nullptr));
+        label_103->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_32->setText(QApplication::translate("MainWindow", "2019.10.19", nullptr));
+        label_30->setText(QString());
+        label_50->setText(QApplication::translate("MainWindow", "0", nullptr));
+        label_49->setText(QApplication::translate("MainWindow", "\345\220\210\346\240\274\345\223\201\346\225\260\357\274\232", nullptr));
+        label_52->setText(QApplication::translate("MainWindow", "0%", nullptr));
+        label_105->setText(QString());
+        label_58->setText(QApplication::translate("MainWindow", "\344\270\273\347\233\270\346\234\272\346\234\200\345\244\247\344\272\256\345\272\246", nullptr));
         widget_3->setStyleSheet(QApplication::translate("MainWindow", "background-color: rgb(126, 126, 126);\n"
 "", nullptr));
         label_25->setText(QApplication::translate("MainWindow", "1#\345\267\245\344\275\215", nullptr));

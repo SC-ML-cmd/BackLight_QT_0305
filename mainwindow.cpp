@@ -254,15 +254,15 @@ double light_num = 0.0;//可以点亮的屏幕的数量
 double main_light;
 double right_light;
 double left_light;
-double Average_mainlight = 0.0;  //主相机平均亮度
-double Average_rightlight = 0.0;//右相机平均亮度
-double Average_leftlight = 0.0;//左相机平均亮度
-double Max_mainlight = 0.0;
-double Min_mainlight = 0.0;
-double Max_rightlight = 0.0;
-double Min_rightlight = 0.0;
-double Max_leftlight = 0.0;
-double Min_leftlight = 0.0;
+int Average_mainlight = 0;  //主相机平均亮度
+int Average_rightlight = 0;//右相机平均亮度
+int Average_leftlight = 0;//左相机平均亮度
+int Max_mainlight = 0;
+int Min_mainlight = 0;
+int Max_rightlight = 0;
+int Min_rightlight = 0;
+int Max_leftlight = 0;
+int Min_leftlight = 0;
 //************相机亮度参数*****************//
 
 bool Form_Camera_Show;//相机窗口是否已经存在的标志位
@@ -450,7 +450,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
 
-    QString str_ver ="1.0.34.148";       //版本号
+    QString str_ver ="1.0.34.150";       //版本号
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
     connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::BlockingQueuedConnection);
@@ -2494,16 +2494,70 @@ void MainWindow::Dect_Result()
     ui->label_48->setText( QString("%1").arg(test_num));       //已经检测总数目
     ui->label_50->setText( QString("%1").arg(qualified_num));  //合格品总数目
     //String numPersentage = pass_per.ToString("P");
-    ui->label_52->setText( QString("%1%").arg(pass_per));       //当前良率
+    ui->label_52->setText( QString("%1%").arg(QString::number(pass_per, 'f', 2)));       //当前良率
+
     ui->label_45->setText(QString("%1").arg(QString::number(100*yiwu_num/(test_num), 'f', 2))+QString("%"));
+    if(yiwu_num/test_num>=0.03){
+        ui->label_45->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(yiwu_num/test_num>=0.01){
+        ui->label_45->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
+
     ui->label_46->setText(QString("%1").arg(QString::number(100*white_num/(test_num), 'f', 2))+QString("%"));
+    if(white_num/test_num>=0.03){
+        ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(white_num/test_num>=0.01){
+        ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
+
     ui->label_74->setText(QString("%1").arg(QString::number(100*wuxian_num/(test_num), 'f', 2))+QString("%"));
+    if(wuxian_num/test_num>=0.03){
+        ui->label_74->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(wuxian_num/test_num>=0.01){
+        ui->label_74->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
+
     ui->label_53->setText(QString("%1").arg(QString::number(100*mura_num/(test_num), 'f', 2))+QString("%"));
+    if(mura_num/test_num>=0.03){
+        ui->label_53->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(mura_num/test_num>=0.01){
+        ui->label_53->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
+
     ui->label_62->setText(QString("%1").arg(QString::number(100*lackline_num/(test_num), 'f', 2))+QString("%"));
+    if(lackline_num/test_num>=0.03){
+        ui->label_62->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(lackline_num/test_num>=0.01){
+        ui->label_62->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
+
     ui->label_67->setText(QString("%1").arg(QString::number(100*scratch_num/(test_num), 'f', 2))+QString("%"));
+    if(scratch_num/test_num>=0.03){
+        ui->label_67->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(scratch_num/test_num>=0.01){
+        ui->label_67->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
+
     ui->label_54->setText(QString("%1").arg(QString::number(100*dengyan_num/(test_num), 'f', 2))+QString("%"));
+    if(dengyan_num/test_num>=0.03){
+        ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(dengyan_num/test_num>=0.01){
+        ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
+
     ui->label_63->setText(QString("%1").arg(QString::number(100*liangbian_num/(test_num), 'f', 2))+QString("%"));
+    if(liangbian_num/test_num>=0.03){
+        ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(liangbian_num/test_num>=0.01){
+        ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
+
     ui->label_66->setText(QString("%1").arg(QString::number(100*baodeng_num/(test_num), 'f', 2))+QString("%"));
+    if(baodeng_num/test_num>=0.03){
+        ui->label_66->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }else if(baodeng_num/test_num>=0.01){
+        ui->label_66->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }
 //    if(result_white1||result_white2||result_white3)
 //        updata_database("不合格");
 //    else
@@ -4174,15 +4228,15 @@ void MainWindow::on_action_clear_triggered()
         wuxian_num = 0;
 
         light_num = 0.0;//可以点亮的屏幕的数量
-        Average_mainlight = 0.0;  //主相机平均亮度
-        Average_rightlight = 0.0;//右相机平均亮度
-        Average_leftlight = 0.0;//左相机平均亮度
-        Max_mainlight = 0.0;
-        Min_mainlight = 0.0;
-        Max_rightlight = 0.0;
-        Min_rightlight = 0.0;
-        Max_leftlight = 0.0;
-        Min_leftlight = 0.0;
+        Average_mainlight = 0;  //主相机平均亮度
+        Average_rightlight = 0;//右相机平均亮度
+        Average_leftlight = 0;//左相机平均亮度
+        Max_mainlight = 0;
+        Min_mainlight = 0;
+        Max_rightlight = 0;
+        Min_rightlight = 0;
+        Max_leftlight = 0;
+        Min_leftlight = 0;
 
         ui->label_48->setText("0");
         ui->label_50->setText("0");
