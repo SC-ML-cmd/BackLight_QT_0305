@@ -450,7 +450,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
 
-    QString str_ver ="1.0.34.150";       //版本号
+    QString str_ver ="1.0.34.155";       //版本号
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
     connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::BlockingQueuedConnection);
@@ -800,7 +800,7 @@ bool MainWindow::write_Modbus(int address,int value)//写入PLC
     QModbusDataUnit writeUnit(QModbusDataUnit::Coils, address, 1); //往address里面写入一个数字。注意只写一个数字
     writeUnit.setValue(0, value);                         //将value写入地址中，其中value是一个十六进制的数值
     //这里先建好QModbusDataUnit
-    for(int i=0;i<3;i++)
+    for(int i=0;i<5;i++)
     {
         if (auto *reply = modbusDevice->sendWriteRequest(writeUnit, 1))           //1是服务器的地址
             //发送写请求
@@ -809,7 +809,7 @@ bool MainWindow::write_Modbus(int address,int value)//写入PLC
 //            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
 //            debug_msg("["+ current_date + "]" + "reply创建对象创建成功");
 
-            for(int Write_Num=1;Write_Num<=300;Write_Num++)
+            for(int Write_Num=1;Write_Num<=100;Write_Num++)
             {
                 if(Write_Num % 100 == 0){
                     if(modbusDevice->state() == QModbusDevice::ConnectedState){
@@ -866,7 +866,7 @@ bool MainWindow::write_Modbus(int address,int value)//写入PLC
             return false;
         }
     }
-    ui->label_48->setText("三次写入都失败");
+    ui->label_48->setText("五次写入都失败");
     current_date_time =QDateTime::currentDateTime();
     current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     debug_msg("["+ current_date + "]" + "写入PLC信号已经失败，将重复写入++++++++++++++");
@@ -1013,7 +1013,7 @@ void MainWindow::TimerTimeOut()
     if(F)//判断定时器是否运行,执行定时器触发时需要处理的业务
     {
         read_Modbus(1600);//位置到达，开测光《拍测光
-        //delay(modbus_time);
+        delay(modbus_time);
 
         if(Data_Form_Plc==1)
         {
@@ -1131,7 +1131,7 @@ int MainWindow::detect_offine()
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     //offline_wsc
-    std::string SRC_PATH = "C:\\Users\\Administrator\\Desktop\\tupian\\yiwu\\_20200927165_3410_";
+    std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\0311\\36\\_20200927165_36_";
     src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
     src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
     src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
@@ -1443,7 +1443,7 @@ int MainWindow::detect()
 
         ui->label_30->setText("读到平台到达");
         //delay(SideLightOpenTime);                 //等待侧光灯打开延时
-        //delay_msec(SideLightOpenTime);                 //等待侧光灯打开延时
+        delay_msec(SideLightOpenTime);                 //等待侧光灯打开延时
 
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");

@@ -2722,7 +2722,7 @@ bool BoomDead_light(Mat white, Mat ceguang, Mat *mresult, QString *causecolor)
 * 输出：主相机白底下检测结果图和result
 * 其他：
 ======================================================================*/
-bool Dead_light(Mat white, Mat *mresult, QString *causecolor)
+bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
 {
     double meanValue = mean(white)[0];
     int boder = 5;
@@ -2768,7 +2768,7 @@ bool Dead_light(Mat white, Mat *mresult, QString *causecolor)
     }
     else
     {
-        if(meanGray >= 130)
+        if (meanGray >= 130)
             threshold(maskR1, maskR1_Binary, meanGray - 45, 255, CV_THRESH_BINARY);
         else
             threshold(maskR1, maskR1_Binary, meanGray - 35, 255, CV_THRESH_BINARY);
@@ -2814,7 +2814,7 @@ bool Dead_light(Mat white, Mat *mresult, QString *causecolor)
             }
         }
     }
-    maskR2 = img_gray(Rect(0, img_gray.rows-100, 100, 100));
+    maskR2 = img_gray(Rect(0, img_gray.rows - 100, 100, 100));
     threshold(maskR2, maskR2_Binary, 30, 255, CV_THRESH_BINARY);
     meanGray = mean(maskR2, maskR2_Binary)[0];
     if (meanGray <= 50)
@@ -2870,11 +2870,11 @@ bool Dead_light(Mat white, Mat *mresult, QString *causecolor)
         }
     }
     binaryationR1 = th_result(Rect(0, 0, 100, 100));
-    binaryationR2 = th_result(Rect(0, img_gray.rows-100, 100, 100));
+    binaryationR2 = th_result(Rect(0, img_gray.rows - 100, 100, 100));
     bitwise_and(maskR1_Binary, binaryationR1, binaryationR1);
     bitwise_and(maskR2_Binary, binaryationR2, binaryationR2);
 
-    Mat BinaryWhite(th_result.size(), th_result.type(),Scalar(255));
+    Mat BinaryWhite(th_result.size(), th_result.type(), Scalar(255));
     maskR1_Binary.copyTo(BinaryWhite(Rect(0, 0, 100, 100)));
     maskR2_Binary.copyTo(BinaryWhite(Rect(0, img_gray.rows - 100, 100, 100)));
 
@@ -2894,17 +2894,26 @@ bool Dead_light(Mat white, Mat *mresult, QString *causecolor)
             Mat temp_mask = Mat::zeros(th_result.rows, th_result.cols, CV_8UC1);
             drawContours(temp_mask, contours, i, 255, FILLED, 8);
             boundRect[i] = boundingRect(Mat(contours[i]));
+
+
+
             float w = boundRect[i].width;
             float h = boundRect[i].height;
             int X_1 = boundRect[i].tl().x;//矩形左上角X坐标值
             int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
             int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
             int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
+
+            //获取矩形的中心点
+            int centerX = X_1 + int(w) / 2; //55       <= 100
+            int centerY = Y_1 + int(h) / 2; //1423     <= 100 || >= 1400
+
             int x_1 = X_1;//矩形左上角X坐标值
             int y_1 = Y_1;//矩形左上角Y坐标值
             int x_2 = X_2;//矩形右下角X坐标值
             int y_2 = Y_2;//矩形右下角Y坐标值
-            if (max(w / h, h / w) <= 8)// wsc 长宽比由4调整为8 2021/03/10
+            double maxVal = max(w / h, h / w);
+            if (max(w / h, h / w) <= 7) //wsc将长宽比 由4--> 6.5 --> 7
             {
                 //                //排除R角干扰
                 //                if (area >= 1800 && area <= 2800 && ((X_1 == 0 && Y_1 == 0) || (X_1 == 0 && Y_2 >= temp_mask.rows - 1)))
@@ -2953,8 +2962,8 @@ bool Dead_light(Mat white, Mat *mresult, QString *causecolor)
                     threshold(tempImage, TempImage_Binary, 30, 255, CV_THRESH_BINARY);
                     mean_out_gray = mean(tempImage, TempImage_Binary)[0];
                     intensity = mean_out_gray - mean_in_gray;
-                }
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || (intensity >= 28)) //0303 wsc intensity20.5 --> 28
+                } //wsc 0311 21.5-->19 intensity
+                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || intensity >= 26 || (intensity >= 19 && centerY>100 &&centerY<1400)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(x_1, y_1);
@@ -2973,7 +2982,6 @@ bool Dead_light(Mat white, Mat *mresult, QString *causecolor)
     }
     return result;
 }
-
 /*====================================================================
 * 函 数 名: boom_light
 * 功能描述: 爆灯检测  屏幕左侧发光LED管损坏，呈现局部发亮
@@ -6330,7 +6338,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        else
                        {
                            //灰度差限制
-                           if (defect_areath >= 6 && spotpeak_temp >= 5.8 && area <= 60|| area > 60 && defect_areath >= 5 && spotpeak_temp >= 5.8)//这里的参数先写成定值
+                           if (defect_areath >= defectouterth && spotpeak_temp >= spotpeak && area <= 60|| area > 60 && defect_areath >= 5.5 && spotpeak_temp >= spotpeak)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
@@ -6739,13 +6747,14 @@ bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
     //}
 
 //    th1(Rect(0, 0, th1.cols - 1, 100)) = uchar(0);
-//    th1(Rect(0, th1.rows - 100, th1.cols - 1, 100)) = uchar(0); //wsc 2021/03/10 将两边屏蔽像素由100->10,并屏蔽4角
+//    th1(Rect(0, th1.rows - 100, th1.cols - 1, 100)) = uchar(0); //wsc 2021/03/10 将两边屏蔽像素由100->10,并屏蔽4角100*100像素
     th1(Rect(0, 0, th1.cols - 1, 10)) = uchar(0);
     th1(Rect(0, th1.rows - 10, th1.cols - 1, 10)) = uchar(0);
     th1(Rect(0, 0, 100, 100)) = uchar(0);
     th1(Rect(0, th1.rows - 100, 100, 100)) = uchar(0);
     th1(Rect(th1.cols - 100, 0, 100, 100)) = uchar(0);
     th1(Rect(th1.cols - 100, th1.rows - 100, 100, 100)) = uchar(0);
+    
     findContours(th1, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
     std::sort(contours.begin(), contours.end(), compareContourAreas);
 
