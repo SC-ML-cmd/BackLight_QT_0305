@@ -6048,7 +6048,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
                int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
                int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
-               if ((X_1<10&&Y_1<10)|| (X_1 < 10 && Y_2> 1490) || (X_2 > 2990 && Y_1 < 10) || (X_2 > 2990 && Y_2 > 1490)) {
+               if ((X_1<=25&&Y_1<=15)|| (X_1 <= 20 && Y_2> 1490) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 >= 2985 && Y_2 > 1490)) {
                    continue;
                }
                RotatedRect rect = minAreaRect(contours[i]);
@@ -6342,7 +6342,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        else
                        {
                            //灰度差限制
-                           if (defect_areath >= defectouterth && spotpeak_temp >= spotpeak && area <= 60|| area > 60 && defect_areath >= 5.5 && spotpeak_temp >= spotpeak)//这里的参数先写成定值
+                           if (defect_areath >= 6 && spotpeak_temp >= 5 && area <= 60|| area > 60 && defect_areath >= 5 && spotpeak_temp >= 5)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
