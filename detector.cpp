@@ -7478,6 +7478,11 @@ bool Leakage(Mat image_black, Mat *mresult, QString *causecolor)
 bool Scratch(Mat white, Mat ceguang, Mat* mresult, QString* causecolor)
 {
     bool result = false;
+    double val1 = mean(white)[0];
+    qDebug()<<"--------------"<<val1<<"--------------";
+    double val2 = mean(ceguang)[0];
+    qDebug()<<"--------------"<<val2<<"--------------";
+
     int length = 100;
     Mat img_gray = white.clone();
     Mat img_ceguang = ceguang.clone();
@@ -7619,12 +7624,14 @@ bool Scratch(Mat white, Mat ceguang, Mat* mresult, QString* causecolor)
             cv::Mat stdDev1;
             cv::meanStdDev(tempGray, meanGray1, stdDev1, ~mask_bubble);
 
+            //获取当前区域长宽比，用于得到相对于长宽比的标准差 wsc 0312
+            double virtualRadio = max((x_rt - x_lt) / (y_rt - y_lt), (y_rt - y_lt)/ (x_rt - x_lt));
             double stddev1 = stdDev1.at<double>(0, 0);    // 30
-            if (stddev1 >= scratchbubbleth1 && (stddev1 / radio * 4) >= scratchbubbleth1)
+            double val = stddev1 / radio * virtualRadio;
+            if (stddev1 >= scratchbubbleth1 && (stddev1 / virtualRadio * 9) >= scratchbubbleth1) //将长宽比相对标准差对应系数改为5
             {
                 continue;
             }
-
             Mat tempImage_Binary;
             double mean_In = mean(tempGray, tempBinary)[0];
             threshold(tempGray, tempImage_Binary, 30, 255, CV_THRESH_BINARY);
@@ -9398,7 +9405,6 @@ bool white_defect1(Mat white,Mat mainfilter,Mat leftfilter,Mat rightfilter,Mat c
             {
                 result=Scratch(rightfilter,ceguangright,&Mresult_1_white,&causeColor_1_white);
             }
-            //throw 1;
             current_date_time =QDateTime::currentDateTime();
             current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
             debug_msg1("划伤检测完毕"+current_date);
