@@ -4885,7 +4885,9 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
                Y_1 = boundRect_area[i].tl().y;//矩形左上角Y坐标值
                X_2 = boundRect_area[i].br().x;//矩形右下角X坐标值
                Y_2 = boundRect_area[i].br().y;//矩形右下角Y坐标值
-
+               if ((X_1<10&&Y_1<10)|| (X_1 < 10 && Y_2> 1490) || (X_2 > 2990 && Y_1 < 10) || (X_2 > 2990 && Y_2 > 1490)) {
+                   continue;
+               }
                double longShortRatio = max(h / w, w / h);
                if (longShortRatio < 5 && min(w, h) >= 2 && max(w, h) < 120)	//对异物最大最小直径,长宽之比做限制50
                {
@@ -6046,7 +6048,9 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
                int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
                int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
-
+               if ((X_1<10&&Y_1<10)|| (X_1 < 10 && Y_2> 1490) || (X_2 > 2990 && Y_1 < 10) || (X_2 > 2990 && Y_2 > 1490)) {
+                   continue;
+               }
                RotatedRect rect = minAreaRect(contours[i]);
                double mw = rect.size.height;
                double mh = rect.size.width;
