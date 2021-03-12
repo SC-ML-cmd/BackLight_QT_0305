@@ -5584,6 +5584,7 @@ bool Mura_Decter(Mat imageGray, Mat *mresult, QString *causecolor)
     bool result = false;
 
     int length = 80;
+    int left_length = 50; //wsc 0312 改变左侧边区域使用不同自适应阈值的宽度
     Mat th_result;
     Mat img_gray = imageGray.clone();
     adaptiveThreshold(img_gray, th_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 97, -3);
@@ -5593,7 +5594,7 @@ bool Mura_Decter(Mat imageGray, Mat *mresult, QString *causecolor)
     //针对边界位置取原图的边界
     Mat img_top = img_gray(Rect(0, 0, img_gray.cols - 1, length));
     Mat img_bottom = img_gray(Rect(0, img_gray.rows - length, img_gray.cols - 1, length));
-    Mat img_left = img_gray(Rect(0, 0, length, img_gray.rows - 1));
+    Mat img_left = img_gray(Rect(0, 0, length + left_length, img_gray.rows - 1));
     Mat img_right = img_gray(Rect(img_gray.cols - length, 0, length, img_gray.rows - 1));
     Mat img_right_light = img_gray(Rect(img_gray.cols - 150, part, 150, shuidi_length * 2));
     Mat img_tl_R = img_gray(Rect(0, 0, 150, 150));
@@ -5628,7 +5629,7 @@ bool Mura_Decter(Mat imageGray, Mat *mresult, QString *causecolor)
     //针对边界位置深拷贝
     top_th.copyTo(th_result(Rect(0, 0, th_result.cols - 1, length)));                    //上边界
     bottom_th.copyTo(th_result(Rect(0, th_result.rows - length, th_result.cols - 1, length)));     //下边界
-    left_th.copyTo(th_result(Rect(0, 0, length, th_result.rows - 1)));                   //左边界
+    left_th.copyTo(th_result(Rect(0, 0, length + left_length, th_result.rows - 1)));                   //左边界
     right_th.copyTo(th_result(Rect(th_result.cols - length, 0, length, th_result.rows - 1)));      //右边界
     img_right_light_th.copyTo(th_result(Rect(img_gray.cols - 150, part, 150, shuidi_length * 2)));      //右边界
     img_tl_R_th.copyTo(th_result(Rect(0, 0, 150, 150)));                    //上边界
