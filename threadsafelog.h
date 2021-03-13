@@ -1,0 +1,4 @@
+#ifndef THREADSAFELOG_H
+#define THREADSAFELOG_H
+
+#endif // THREADSAFELOG_H
