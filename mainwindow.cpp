@@ -451,7 +451,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.162";       //版本号
+    QString str_ver ="1.0.34.163";       //版本号
 
 
 

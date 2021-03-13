@@ -2760,7 +2760,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
     erode(F_result, edge_thresold, structure_element);
     Mat th_result = Mat::zeros(img_gray.size(), img_gray.type());
     edge_thresold.copyTo(th_result(Rect(0, 0, 100, th_result.rows)));
-    bitwise_or(th_result, compensateMat, th_result);
+    //bitwise_or(th_result, compensateMat, th_result); 暂时不使用二值化与Sobel滤波特征或操作 0313
 
     Mat maskR1, maskR1_Binary, maskR2, maskR2_Binary, binaryationR1, binaryationR2, stdDev, Mean;
     maskR1 = img_gray(Rect(0, 0, 100, 100));
