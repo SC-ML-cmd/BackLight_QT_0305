@@ -6014,6 +6014,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
        th_result(Rect(0, 0, 20, th_result.rows)) = uchar(0);            //屏蔽右侧15行，防止灯口误检白点
        th_result(Rect(th_result.cols - 10, 0, 10, th_result.rows)) = uchar(0);            //屏蔽左侧10行，防止头部亮边误检为白点
        th_result(Rect(0, 0, th_result.cols, 10)) = uchar(0);
+       th_result(Rect(0, th_result.rows-10, th_result.cols, 10)) = uchar(0);
        Mat th1;
        //做掩膜
        threshold(img_gray, th1, 25, 255, CV_THRESH_BINARY);
@@ -6049,7 +6050,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
                int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
                int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
-               if ((X_1<=25&&Y_1<=15)|| (X_1 <= 20 && Y_2> 1490) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 >= 2985 && Y_2 > 1490)) {
+               if ((X_1<=25&&Y_1<=15)|| (X_1 <= 25 && Y_2> 1485) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 >= 2985 && Y_2 > 1485)) {
                    continue;
                }
                RotatedRect rect = minAreaRect(contours[i]);
