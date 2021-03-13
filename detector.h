@@ -5,6 +5,9 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include<iostream>
 #include<QString>
+#include "threadsafelog.h"
+
+
 using namespace cv;
 using namespace std;
 extern QString causeColor;
@@ -54,6 +57,7 @@ extern bool isFrontBack;
 extern bool isArea_1 ;
 extern bool isArea_2 ;
 extern bool isColor ;
+extern ThreadSafelog *logPtr;
 
 Mat Gabor9(Mat img_1);
 Mat Gabor7(Mat img_1);

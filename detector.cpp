@@ -5,6 +5,7 @@
 #include"qdatetime.h"
 #include <QFileDialog>
 #include "QDebug"
+
 using namespace czy;
 using namespace cv;
 Point2f CrossPointReturn(Mat src, int x, int y , int width, int height);
@@ -18,16 +19,12 @@ Mat mura_imgL,mura_imgR;
 int screenLength = 2900;  //屏幕长度
 int screenWidth = 1400;   //屏幕宽度
 int Whiteprint_Detect_Flag;
+ThreadSafelog *logPtr = new ThreadSafelog;
+
 
 void debug_msg1(QVariant msg)
 {
-    QFile file("D:\\thread_time_after.txt");
-
-    file.open(QFile::WriteOnly | QFile::Append | QFile::Text);
-
-    file.write(msg.toString().toStdString().c_str());
-    file.write(QString("\n").toStdString().c_str());
-    file.close();
+    logPtr->printLog(msg);
 }
 
 /*=========================================================
