@@ -2734,8 +2734,14 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
     //Mat edge_img = strong_result(Rect(strong_result.cols - 100, 0, 100, strong_result.rows)).clone();
     Mat edge_img = strong_result(Rect(0, 0, 100, strong_result.rows)).clone();
     medianBlur(edge_img, edge_img, 3);
-    //Mat ad_result;
+
+    Mat ad_result, compensateMat;
+
+    threshold(white, ad_result, meanValue - 15, 255, CV_THRESH_BINARY);
     //adaptiveThreshold(edge_img, ad_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 15, 3);
+    compensateMat = ~ad_result;
+    compensateMat(Rect(100, 0, compensateMat.cols - 100, compensateMat.rows)) = uchar(0); //wsc 0313 添加阈值补偿
+
 
     Mat edge_img_X;
     Mat edge_img_Y;
@@ -2754,6 +2760,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
     erode(F_result, edge_thresold, structure_element);
     Mat th_result = Mat::zeros(img_gray.size(), img_gray.type());
     edge_thresold.copyTo(th_result(Rect(0, 0, 100, th_result.rows)));
+    bitwise_or(th_result, compensateMat, th_result);
 
     Mat maskR1, maskR1_Binary, maskR2, maskR2_Binary, binaryationR1, binaryationR2, stdDev, Mean;
     maskR1 = img_gray(Rect(0, 0, 100, 100));
@@ -2875,6 +2882,8 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
     maskR1_Binary.copyTo(BinaryWhite(Rect(0, 0, 100, 100)));
     maskR2_Binary.copyTo(BinaryWhite(Rect(0, img_gray.rows - 100, 100, 100)));
 
+
+
     th_result(Rect(0, 0, 10, th_result.rows)) = uchar(0);            //屏蔽右侧10行，防止误检
     th_result(Rect(th_result.cols - 10, 0, 10, th_result.rows)) = uchar(0);            //屏蔽左侧10行，防止头部误检
 
@@ -2910,7 +2919,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
             int x_2 = X_2;//矩形右下角X坐标值
             int y_2 = Y_2;//矩形右下角Y坐标值
             double maxVal = max(w / h, h / w);
-            if (max(w / h, h / w) <= 7) //wsc将长宽比 由4--> 6.5 --> 7
+            if (max(w / h, h / w) <= 7) //wsc将长宽比 由4--> 6.5
             {
                 //                //排除R角干扰
                 //                if (area >= 1800 && area <= 2800 && ((X_1 == 0 && Y_1 == 0) || (X_1 == 0 && Y_2 >= temp_mask.rows - 1)))
@@ -2959,8 +2968,8 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                     threshold(tempImage, TempImage_Binary, 30, 255, CV_THRESH_BINARY);
                     mean_out_gray = mean(tempImage, TempImage_Binary)[0];
                     intensity = mean_out_gray - mean_in_gray;
-                } //wsc 0311 21.5-->19 intensity
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || intensity >= 26 || (intensity >= 19 && centerY>100 &&centerY<1400)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
+                }
+                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || intensity >= 24 || (intensity >= 19.5 && centerY>100 &&centerY<1400)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(x_1, y_1);
@@ -6726,7 +6735,7 @@ bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
     th1(Rect(0, 0, 10, th1.rows)) = uchar(0);           //wsc 2021/03/05 防止漏检
     //创建2400*1100的纯黑模板
     Mat th_result = Mat::zeros(th1.rows - 2 * 200, th1.cols - 2 * 500, img_gray.type());
-    //将自适应二值化的中间位置2400*1100涂黑
+    //将自适应二值化的中间位置2000*1100涂黑
     th_result.copyTo(th1(Rect(500, 200, th1.cols - 2 * 500, th1.rows - 2 * 200)));
     vector<vector<Point>> contours;
 
@@ -6739,6 +6748,14 @@ bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
     //th1(Rect(0, 0, 4, th1.rows - 1)) = uchar(0);
     //th1(Rect(th1.cols - 4, 0,4, th1.rows - 1)) = uchar(0);
 
+    th1(Rect(0, 0, th1.cols - 1, 10)) = uchar(0);
+    th1(Rect(0, th1.rows - 10, th1.cols - 1, 10)) = uchar(0);
+
+    th1(Rect(0, 0, 100, 100)) = uchar(0);
+    th1(Rect(0, th1.rows - 100, 100, 100)) = uchar(0);
+    th1(Rect(th1.cols - 100, 0, 100, 100)) = uchar(0);
+    th1(Rect(th1.cols - 100, th1.rows - 100, 100, 100)) = uchar(0);
+
     //将
     //if (num == 0)
     //{
@@ -6749,15 +6766,9 @@ bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
     //	th1(Rect(0, th1.rows - 50, th1.cols - 1, 50)) = uchar(0);
     //}
 
-//    th1(Rect(0, 0, th1.cols - 1, 100)) = uchar(0);
-//    th1(Rect(0, th1.rows - 100, th1.cols - 1, 100)) = uchar(0); //wsc 2021/03/10 将两边屏蔽像素由100->10,并屏蔽4角100*100像素
-    th1(Rect(0, 0, th1.cols - 1, 10)) = uchar(0);
-    th1(Rect(0, th1.rows - 10, th1.cols - 1, 10)) = uchar(0);
-    th1(Rect(0, 0, 100, 100)) = uchar(0);
-    th1(Rect(0, th1.rows - 100, 100, 100)) = uchar(0);
-    th1(Rect(th1.cols - 100, 0, 100, 100)) = uchar(0);
-    th1(Rect(th1.cols - 100, th1.rows - 100, 100, 100)) = uchar(0);
-    
+    //th1(Rect(0, 0, th1.cols - 1, 100)) = uchar(0);
+    //th1(Rect(0, th1.rows - 100, th1.cols - 1, 100)) = uchar(0);
+
     findContours(th1, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
     std::sort(contours.begin(), contours.end(), compareContourAreas);
 
@@ -6767,12 +6778,30 @@ bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
     for (vector<int>::size_type i = 0; i < contours.size(); i++)
     {
         double area = contourArea(contours[i]);
+        Mat temp_mask = Mat::zeros(th1.rows, th1.cols, CV_8UC1);
+        drawContours(temp_mask, contours, i, 255, FILLED, 8);
         if (area > 200 && area < 80000)
         {
             Mat temp_mask = Mat::zeros(th1.rows, th1.cols, CV_8UC1);
             drawContours(temp_mask, contours, i, 255, FILLED, 8);
 
             boundRect[i] = boundingRect(Mat(contours[i]));
+
+            cv::Mat tempGray = white(boundRect[i]);
+            cv::Mat meanGray1;
+            cv::Mat stdDev1;
+            cv::meanStdDev(tempGray, meanGray1, stdDev1);
+
+            //获取当前区域长宽比，用于得到相对于长宽比的标准差 0313 去除因水滴刘海屏导致误检
+            double virtualRadio = max(boundRect[i].width / boundRect[i].height, boundRect[i].height / boundRect[i].width);
+            double stddev1 = stdDev1.at<double>(0, 0);    // 65
+            double val = stddev1 / virtualRadio * 9;
+            if (stddev1 >= 13 && (stddev1 / virtualRadio * 9) >= 15) //将长宽比相对标准差对应系数改为9
+            {
+                continue;
+            }
+
+
             box[i] = minAreaRect(Mat(contours[i]));
             box[i].points(rect);
             float Width = sqrt(abs(rect[0].x - rect[1].x) * abs(rect[0].x - rect[1].x) + abs(rect[0].y - rect[1].y) * abs(rect[0].y - rect[1].y));
