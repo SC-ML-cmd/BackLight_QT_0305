@@ -1,4 +1,4 @@
-#include "detector.h"
+﻿#include "detector.h"
 #include "Ployfit.h"
 #include"global_variable.h"
 #include<QDebug>
@@ -4876,6 +4876,21 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
        vector<Rect> boundRect(contours.size());
        vector<Rect> boundRect_area(contours.size());
 
+       //主相机侧光图全局特征，防止良品误检
+       double cgm = 0.0, cgstd = 0.0;
+       vector<vector<Point>> cgcontours;
+       findContours(gray_ceguang, cgcontours, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+       Mat cgmask, cgtem_m, cgtem_s;
+       cv::threshold(gray_ceguang, cgmask, 10, 255, CV_THRESH_BINARY);
+       cv::meanStdDev(gray_ceguang, cgtem_m, cgtem_s);
+       cgm = cgtem_m.at<double>(0, 0);
+       cgstd = cgtem_s.at<double>(0, 0);
+       cout << cgm << endl;//主相机侧光图全局特征：灰度均值1
+       cout  << cgstd << endl;//主相机侧光图全局特征：标准差1
+       cout << cgstd / cgm << endl;//主相机侧光图全局特征：变异系数1
+       if (cgm < 170 && cgstd < 65)
+           return result;
+
        float w, h;
        int X_1, Y_1, X_2, Y_2;//矩形左上角X坐标值
 
@@ -4891,9 +4906,13 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
                Y_1 = boundRect_area[i].tl().y;//矩形左上角Y坐标值
                X_2 = boundRect_area[i].br().x;//矩形右下角X坐标值
                Y_2 = boundRect_area[i].br().y;//矩形右下角Y坐标值
-               if ((X_1<10&&Y_1<10)|| (X_1 < 10 && Y_2> 1490) || (X_2 > 2990 && Y_1 < 10) || (X_2 > 2990 && Y_2 > 1490)) {
+
+               //防止R角位置误检
+               if ((X_1<10&&Y_1<10)|| (X_1 < 10 && Y_2> 1490) || (X_2 > 2990 && Y_1 < 10) || (X_2 > 2990 && Y_2 > 1490))
+               {
                    continue;
                }
+
                double longShortRatio = max(h / w, w / h);
                if (longShortRatio < 5 && min(w, h) >= 2 && max(w, h) < 120)	//对异物最大最小直径,长宽之比做限制50
                {
@@ -6020,7 +6039,6 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
        th_result(Rect(0, 0, 20, th_result.rows)) = uchar(0);            //屏蔽右侧15行，防止灯口误检白点
        th_result(Rect(th_result.cols - 10, 0, 10, th_result.rows)) = uchar(0);            //屏蔽左侧10行，防止头部亮边误检为白点
        th_result(Rect(0, 0, th_result.cols, 10)) = uchar(0);
-       th_result(Rect(0, th_result.rows-10, th_result.cols, 10)) = uchar(0);
        Mat th1;
        //做掩膜
        threshold(img_gray, th1, 25, 255, CV_THRESH_BINARY);
@@ -6056,7 +6074,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
                int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
                int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
-               if ((X_1<=25&&Y_1<=15)|| (X_1 <= 25 && Y_2> 1485) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 >= 2985 && Y_2 > 1485)) {
+               if ((X_1<=25&&Y_1<=15)|| (X_1 <= 20 && Y_2> 1490) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 >= 2985 && Y_2 > 1490)) {
                    continue;
                }
                RotatedRect rect = minAreaRect(contours[i]);
