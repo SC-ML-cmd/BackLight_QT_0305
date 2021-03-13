@@ -251,7 +251,8 @@ HEADERS += \
     detector_choose.h \
     excelhepler.h \
     history_batchfind.h \
-    history_data.h
+    history_data.h \
+    threadsafelog.h
 
 FORMS += \
         mainwindow.ui \

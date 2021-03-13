@@ -1,6 +1,5 @@
 #include "model_query.h"
 #include "ui_model_query.h"
-
 #include<QDebug>
 #include <QMessageBox>
 #include <QSqlRecord>

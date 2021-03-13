@@ -11,6 +11,7 @@
 #include <QHostInfo>
 #include<hikvisionsdk.h>
 #include<save_images.h>
+#include "threadsafelog.h"
 
 class QModbusClient;
 extern QString production_lot_code;
@@ -163,6 +164,8 @@ private:
     bool F=true;
     void initial();
     bool firstUseFlag;
+
+
 };
 
 #endif // MAINWINDOW_H
