@@ -4877,19 +4877,19 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
        vector<Rect> boundRect_area(contours.size());
 
        //主相机侧光图全局特征，防止良品误检
-       double cgm = 0.0, cgstd = 0.0;
-       vector<vector<Point>> cgcontours;
-       findContours(gray_ceguang, cgcontours, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-       Mat cgmask, cgtem_m, cgtem_s;
-       cv::threshold(gray_ceguang, cgmask, 10, 255, CV_THRESH_BINARY);
-       cv::meanStdDev(gray_ceguang, cgtem_m, cgtem_s);
-       cgm = cgtem_m.at<double>(0, 0);
-       cgstd = cgtem_s.at<double>(0, 0);
-       cout << cgm << endl;//主相机侧光图全局特征：灰度均值1
-       cout  << cgstd << endl;//主相机侧光图全局特征：标准差1
-       cout << cgstd / cgm << endl;//主相机侧光图全局特征：变异系数1
-       if (cgm < 170 && cgstd < 65)
-           return result;
+       //       double cgm = 0.0, cgstd = 0.0;
+       //       vector<vector<Point>> cgcontours;
+       //       findContours(gray_ceguang, cgcontours, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+       //       Mat cgmask, cgtem_m, cgtem_s;
+       //       cv::threshold(gray_ceguang, cgmask, 10, 255, CV_THRESH_BINARY);
+       //       cv::meanStdDev(gray_ceguang, cgtem_m, cgtem_s);
+       //       cgm = cgtem_m.at<double>(0, 0);
+       //       cgstd = cgtem_s.at<double>(0, 0);
+       //       cout << cgm << endl;//主相机侧光图全局特征：灰度均值1
+       //       cout  << cgstd << endl;//主相机侧光图全局特征：标准差1
+       //       cout << cgstd / cgm << endl;//主相机侧光图全局特征：变异系数1
+       //       if (cgm < 170 && cgstd < 65)
+       //           return result;
 
        float w, h;
        int X_1, Y_1, X_2, Y_2;//矩形左上角X坐标值
