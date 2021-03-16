@@ -451,7 +451,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.164";       //版本号
+    QString str_ver ="1.0.34.165";       //版本号
 
 
 
@@ -3182,7 +3182,7 @@ void MainWindow::myFunc1()
         //==========================主相机白底侧光透视变换矩阵计算====================
         ui->label_30->setText("白色");
         //RoiWhite_Arcangle(src_white1,-2,10,70,&M_white_1,&M_black_1,&M_louguang_1,1);//黑白相机ROI变换矩阵
-        Ext_Result_BlackWhite=f_MainCam_PersTransMatCal(src_white1, -2, 20, &M_white_1, &M_biankuang, &M_white_abshow, 1, Model_Mod_type);
+        Ext_Result_BlackWhite=f_MainCam_PersTransMatCal(src_white1, -2, 20, &M_white_1, &M_biankuang, &M_white_abshow, 1, Model_Mod_type, 1);
 
         qDebug() << QString::number(mean(src_white1)[0]);
 

@@ -946,7 +946,7 @@ bool Form_Camera::Adaptive_exposure_main_ROI(int C_index)
                roi_white(src_L1,-2,0,70,&M_white_black,&M_black_1,&M_louguang_1,&M_abshow_white,1);
            else if(Product_type_Selected=="R角水滴屏")
                //RoiWhite_Arcangle(src_L1,-2,0,70,&M_white_black,&M_black_1,&M_louguang_1,1);
-           f_MainCam_PersTransMatCal(src_L1, 0, 10, &M_white_black, &M_biankuang, &M_white_abshow, 1, Product_type_Selected);
+           f_MainCam_PersTransMatCal(src_L1, 0, 10, &M_white_black, &M_biankuang, &M_white_abshow, 1, Product_type_Selected, 1);
            //ui->spinBox_2->setValue(int(1000));
 
        }
