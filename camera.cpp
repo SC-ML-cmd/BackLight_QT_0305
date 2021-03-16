@@ -935,7 +935,7 @@ bool Form_Camera::Adaptive_exposure_main_ROI(int C_index)
                roi_ceshi(src_L1,-10,&M_L);
            else if(Product_type_Selected=="R角水滴屏")
                //RoiSide_Arcangle(src_L1, -10, &M_L,&M_L_E);
-           f_LeftRightCam_PersTransMatCal(src_L1, &M_L, &M_L_1_E, Product_type_Selected,15);
+           f_LeftRightCam_PersTransMatCal(src_L1, &M_L, &M_L_1_E, Product_type_Selected, 1, 15);
            //cv::imwrite("D:\\ML.bmp",M_L);
            //ui->spinBox_1->setValue(int(1000));
        }
@@ -957,7 +957,7 @@ bool Form_Camera::Adaptive_exposure_main_ROI(int C_index)
                roi_ceshi(src_L1,-10,&M_R);
            else if(Product_type_Selected=="R角水滴屏")
                //RoiSide_Arcangle(src_L1, -10, &M_R,&M_R_E);
-           f_LeftRightCam_PersTransMatCal(src_L1, &M_R, &M_R_E, Product_type_Selected,15);
+           f_LeftRightCam_PersTransMatCal(src_L1, &M_R, &M_R_E, Product_type_Selected, 1, 15);
            Flag_ROI_Finished=true;  //背光源三个相机
            //ui->spinBox_3->setValue(int(1000));
        }

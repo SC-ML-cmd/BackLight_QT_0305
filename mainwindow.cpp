@@ -451,7 +451,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.163";       //版本号
+    QString str_ver ="1.0.34.164";       //版本号
 
 
 
@@ -1130,23 +1130,23 @@ int MainWindow::detect_offine()
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
 
 
-//    //offline_wsc
-//    std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\0311\\36\\_20200927165_36_";
+    //offline_wsc
+    std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\xinxinghaoYWWJ\\xianyi1";
 //    src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
 //    src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
 //    src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
 
 
 //      std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\6212\\0311\\huashang1";
-//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
-//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
-//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
-
-      //offline-pjn
-      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
       src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
       src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
       src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
+
+//      //offline-pjn
+//      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
+//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
+//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
+//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
 
 //    //离线陈
 //    src_ceguang1_Temp = cv::imread("G:\\2\\10_20200927165_2_210.bmp", -1);
@@ -1205,13 +1205,13 @@ int MainWindow::detect_offine()
 //    src_white1_Temp = cv::imread(SRC_PATH + "212.bmp", -1);
 //    src_R1_Temp=cv::imread(SRC_PATH + "112.bmp", -1);
 //    src_L1_Temp=cv::imread(SRC_PATH + "012.bmp", -1);
-//    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
-//    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
-//    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
-    //offline-pjn
     src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
     src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
     src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
+//    //offline-pjn
+//    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
+//    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
+//    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
 //    //离线陈
 //    src_white1_Temp = cv::imread("G:\\2\\10_20200927165_2_212.bmp", -1);
 //    src_R1_Temp= cv::imread("G:\\2\\10_20200927165_2_112.bmp", -1);
@@ -2641,7 +2641,7 @@ void MainWindow::Dect_Result()
             if (file.exists())
             {
                 Mat temp_Mat = cv::imread(save_ceguang1,-1);
-                save_ceguang1_1 = "\\00_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
+                save_ceguang1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
                 save_ceguang1_1=savePath+save_ceguang1_1;
                 save_ceguang1=save_ceguang1_1.toStdString();
                 imwrite(save_ceguang1,temp_Mat);//主相机侧光灯图像
@@ -2651,7 +2651,7 @@ void MainWindow::Dect_Result()
             if (file1.exists())
             {
                 Mat temp_Mat = cv::imread(save_ceguang_left,-1);
-                save_ceguang_left1 = "\\00_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
+                save_ceguang_left1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
                 save_ceguang_left1 = savePath + save_ceguang_left1;
                 save_ceguang_left=save_ceguang_left1.toStdString();
                 imwrite(save_ceguang_left,temp_Mat);//左相机侧光灯图像
@@ -2661,7 +2661,7 @@ void MainWindow::Dect_Result()
             if (file2.exists())
             {
                 Mat temp_Mat = cv::imread(save_ceguang_right,-1);
-                save_ceguang_right1 = "\\00_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
+                save_ceguang_right1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
                 save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
                 save_ceguang_right=save_ceguang_right1.toStdString();
                 imwrite(save_ceguang_right,temp_Mat);//左相机侧光灯图像
@@ -2672,7 +2672,7 @@ void MainWindow::Dect_Result()
             if (file5.exists())
             {
                 Mat temp_Mat = cv::imread(save_white1,-1);
-                save_white1_1 = "\\00_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
+                save_white1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
                 save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
                 save_white1=save_white1_1.toStdString();
                 imwrite(save_white1,temp_Mat);//左相机侧光灯图像
@@ -2682,7 +2682,7 @@ void MainWindow::Dect_Result()
             if (file6.exists())
             {
                 Mat temp_Mat = cv::imread(save_L1,-1);
-                save_L1_1 = "\\00_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
+                save_L1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
                 save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
                 save_L1=save_L1_1.toStdString();
                 imwrite(save_L1,temp_Mat);//左相机侧光灯图像
@@ -2692,7 +2692,7 @@ void MainWindow::Dect_Result()
             if (file7.exists())
             {
                 Mat temp_Mat = cv::imread(save_R1,-1);
-                save_R1_1 = "\\00_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
+                save_R1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
                 save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
                 save_R1=save_R1_1.toStdString();
                 imwrite(save_R1,temp_Mat);//左相机侧光灯图像
@@ -3224,8 +3224,8 @@ void MainWindow::myFunc1()
         debug_msg("主相机ROI提取完毕"+current_date);
 
         //==========================侧左右相机ROI提取==============================
-        Ext_Result_Left=f_LeftRightCam_PersTransMatCal(src_L1, &M_L_1, &M_L_1_E, Model_Mod_type,15);
-        Ext_Result_Right=f_LeftRightCam_PersTransMatCal(src_R1, &M_R_1, &M_R_1_E, Model_Mod_type,15);
+        Ext_Result_Left=f_LeftRightCam_PersTransMatCal(src_L1, &M_L_1, &M_L_1_E, Model_Mod_type, 1, 15);
+        Ext_Result_Right=f_LeftRightCam_PersTransMatCal(src_R1, &M_R_1, &M_R_1_E, Model_Mod_type, 1, 15);
 
         ceL1=toushi_white(src_L1,M_L_1,-5,pixel_num,1500);                       //左相机校正后图像
         ceR1=toushi_white(src_R1,M_R_1,-5,pixel_num,1500);                       //右相机校正后图像

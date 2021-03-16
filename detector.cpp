@@ -828,7 +828,7 @@ bool f_MainCam_PersTransMatCal(InputArray _src, int border_white, int border_bia
 }
 
 /*=========================================================
-*@函 数 名:              f_LeftRightCam_PersTransMatCal
+*@函 数 名:              f_LeftRightCam_PersTransMatCal1
 *@功能描述:              左右相机R角透视变换矩阵计算函数
 *@param _src             输入灰度/彩色图像
 *@param Mwhite           白底透视变换矩阵
@@ -1086,10 +1086,11 @@ bool f_LeftRightCam_PersTransMatCal1(InputArray _src, Mat *Mwhite, QString Scree
 *@param _src             输入灰度/彩色图像
 *@param Mwhite           白底透视变换矩阵
 *@ScreenType_Flag        屏幕类型
-*@编制时间：		     2020年8月20日
+*@leftRightWhiteFlag     白底左右相机标志位
+*@编制时间：		     2021年03月15日
 *@备注说明              use
 =========================================================*/
-bool f_LeftRightCam_PersTransMatCal(InputArray _src, Mat *Mwhite,Mat *M_R_1_E, QString ScreenType_Flag,int border_white)
+bool f_LeftRightCam_PersTransMatCal(InputArray _src, Mat* Mwhite, Mat* M_R_1_E, QString ScreenType_Flag, int leftRightWhiteFlag, int border_white)
 {
     bool Ext_Result_Left_Right;                                                     //提取屏幕成功标志位
     Mat src = _src.getMat();                                                        //输入源图像
@@ -1097,6 +1098,42 @@ bool f_LeftRightCam_PersTransMatCal(InputArray _src, Mat *Mwhite,Mat *M_R_1_E, Q
         src = src.clone();															//拷贝原图
     else
         cvtColor(src, src, CV_BGR2GRAY);										    //灰度化彩色图
+
+    //空洞预处理 针对于左右相机
+    if (leftRightWhiteFlag == 1)
+    {
+        Mat src_copy = src.clone();
+        Mat threshold_output;
+        vector<vector<Point> > preContours;
+        vector<Vec4i> hierarchy;
+
+        /// Detect edges using Threshold
+        threshold(src, threshold_output, 100, 255, THRESH_BINARY);
+
+        /// Find contours
+        findContours(threshold_output, preContours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+
+        /// Find the convex hull object for each contour
+        vector<vector<Point> >hull(preContours.size());
+
+        for (size_t i = 0; i < preContours.size(); i++)
+        {
+            convexHull(Mat(preContours[i]), hull[i], false);
+        }
+
+        /// Draw contours + hull results
+        Mat drawing = Mat::zeros(threshold_output.size(), CV_8UC1);
+        for (size_t i = 0; i < preContours.size(); i++)
+        {
+            double area = contourArea(preContours[i]);
+            if (area > 100000)
+            {
+                drawContours(drawing, preContours, i, Scalar(255), -1, 8, vector<Vec4i>(), 0, Point());
+                drawContours(drawing, hull, i, Scalar(255), -1, 8, vector<Vec4i>(), 0, Point());
+            }
+        }
+        src = drawing.clone();
+    }
     CV_Assert(src.depth() == CV_8U);                                                //8位无符号
     Mat binaryImage = Mat::zeros(src.size(), CV_8UC1);                              //二值图像
     threshold(src, binaryImage, 40, 255, CV_THRESH_BINARY);							//二值化(有问题)
