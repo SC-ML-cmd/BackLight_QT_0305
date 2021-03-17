@@ -2774,11 +2774,13 @@ bool BoomDead_light(Mat white, Mat ceguang, Mat *mresult, QString *causecolor)
 ======================================================================*/
 bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
 {
-    double meanValue = mean(white)[0];
+    double meanValue = mean(white)[0]; //134 //143 144
     int boder = 5;
 
     bool result = false;
     Mat img_gray = white.clone();
+    Mat mat_queryThreshold = white(Rect(2800, 0, 50, white.rows));
+    double stdThreshold = mean(mat_queryThreshold)[0];
 
     Mat strong_result;
     Ptr<CLAHE> clahe = createCLAHE(5.0, Size(3, 3));
@@ -2790,11 +2792,11 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
 
     Mat ad_result, compensateMat;
 
-    threshold(white, ad_result, meanValue - 15, 255, CV_THRESH_BINARY);
-    //adaptiveThreshold(edge_img, ad_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 15, 3);
+    threshold(white, ad_result, stdThreshold, 255, CV_THRESH_BINARY);
+    //adaptiveThreshold(white, ad_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 25, 3);
     compensateMat = ~ad_result;
-    compensateMat(Rect(100, 0, compensateMat.cols - 100, compensateMat.rows)) = uchar(0); //wsc 0313 添加阈值补偿
-
+    compensateMat(Rect(100, 0, compensateMat.cols - 100, compensateMat.rows)) = uchar(0);
+    compensateMat(Rect(0, 0, 10, compensateMat.rows)) = uchar(0);
 
     Mat edge_img_X;
     Mat edge_img_Y;
@@ -2813,7 +2815,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
     erode(F_result, edge_thresold, structure_element);
     Mat th_result = Mat::zeros(img_gray.size(), img_gray.type());
     edge_thresold.copyTo(th_result(Rect(0, 0, 100, th_result.rows)));
-    //bitwise_or(th_result, compensateMat, th_result); 暂时不使用二值化与Sobel滤波特征或操作 0313
+    bitwise_or(th_result, compensateMat, th_result);
 
     Mat maskR1, maskR1_Binary, maskR2, maskR2_Binary, binaryationR1, binaryationR2, stdDev, Mean;
     maskR1 = img_gray(Rect(0, 0, 100, 100));
@@ -2972,7 +2974,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
             int x_2 = X_2;//矩形右下角X坐标值
             int y_2 = Y_2;//矩形右下角Y坐标值
             double maxVal = max(w / h, h / w);
-            if (max(w / h, h / w) <= 7) //wsc将长宽比 由4--> 6.5
+            if (max(w / h, h / w) <= 8) //wsc将长宽比 由4--> 6.5 -->7 -->13 0313将长宽比修改为--> 8
             {
                 //                //排除R角干扰
                 //                if (area >= 1800 && area <= 2800 && ((X_1 == 0 && Y_1 == 0) || (X_1 == 0 && Y_2 >= temp_mask.rows - 1)))
@@ -3022,7 +3024,14 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                     mean_out_gray = mean(tempImage, TempImage_Binary)[0];
                     intensity = mean_out_gray - mean_in_gray;
                 }
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || intensity >= 24 || (intensity >= 19.5 && centerY>100 &&centerY<1400)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
+                //阈值自动变动值 使灯头区域的阈值自动变化，越靠近中间阈值越小
+                double intensitySub = 0.0;
+                if (centerY>100&&centerY<1400)
+                {
+                    intensitySub = (double)min(centerY - 100, 1400 - centerY) / 650 * 8;
+                }
+
+                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || intensity >= 24 || (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)||(intensity >= 20 && meanValue < 135)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(x_1, y_1);
