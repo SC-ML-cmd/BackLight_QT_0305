@@ -451,7 +451,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.163";       //版本号
+    QString str_ver ="1.0.34.166";       //版本号
 
 
 
@@ -2529,6 +2529,8 @@ void MainWindow::Dect_Result()
         ui->label_45->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(yiwu_num/test_num>=0.01){
         ui->label_45->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_45->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 
     ui->label_46->setText(QString("%1").arg(QString::number(100*white_num/(test_num), 'f', 2))+QString("%"));
@@ -2536,6 +2538,8 @@ void MainWindow::Dect_Result()
         ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(white_num/test_num>=0.01){
         ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 
     ui->label_74->setText(QString("%1").arg(QString::number(100*wuxian_num/(test_num), 'f', 2))+QString("%"));
@@ -2543,6 +2547,8 @@ void MainWindow::Dect_Result()
         ui->label_74->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(wuxian_num/test_num>=0.01){
         ui->label_74->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_74->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 
     ui->label_53->setText(QString("%1").arg(QString::number(100*mura_num/(test_num), 'f', 2))+QString("%"));
@@ -2550,6 +2556,8 @@ void MainWindow::Dect_Result()
         ui->label_53->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(mura_num/test_num>=0.01){
         ui->label_53->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_53->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 
     ui->label_62->setText(QString("%1").arg(QString::number(100*lackline_num/(test_num), 'f', 2))+QString("%"));
@@ -2557,6 +2565,8 @@ void MainWindow::Dect_Result()
         ui->label_62->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(lackline_num/test_num>=0.01){
         ui->label_62->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_62->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 
     ui->label_67->setText(QString("%1").arg(QString::number(100*scratch_num/(test_num), 'f', 2))+QString("%"));
@@ -2564,6 +2574,8 @@ void MainWindow::Dect_Result()
         ui->label_67->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(scratch_num/test_num>=0.01){
         ui->label_67->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_67->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 
     ui->label_54->setText(QString("%1").arg(QString::number(100*dengyan_num/(test_num), 'f', 2))+QString("%"));
@@ -2571,6 +2583,8 @@ void MainWindow::Dect_Result()
         ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(dengyan_num/test_num>=0.01){
         ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 
     ui->label_63->setText(QString("%1").arg(QString::number(100*liangbian_num/(test_num), 'f', 2))+QString("%"));
@@ -2578,6 +2592,8 @@ void MainWindow::Dect_Result()
         ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(liangbian_num/test_num>=0.01){
         ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 
     ui->label_66->setText(QString("%1").arg(QString::number(100*baodeng_num/(test_num), 'f', 2))+QString("%"));
@@ -2585,6 +2601,8 @@ void MainWindow::Dect_Result()
         ui->label_66->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }else if(baodeng_num/test_num>=0.01){
         ui->label_66->setStyleSheet("QLabel{background-color:rgb(255,255,0);}");
+    }else{
+        ui->label_66->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     }
 //    if(result_white1||result_white2||result_white3)
 //        updata_database("不合格");
