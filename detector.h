@@ -78,7 +78,7 @@ bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat *mresult, QStri
 bool GrayDotLeft(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *causecolor);
 bool Frame(Mat src_img, Mat *mresult, String *causecolor);
 bool LessMaterial(Mat src_img, Mat *mresult, String *causecolor);
-bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num);
+bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_white, Mat& right_white);
 bool Mura_Decter(Mat imageGray, Mat *mresult, QString *causecolor);
 Mat fanzhuan(Mat src, int width, int height, int direction);
 bool seban(Mat image_white_src,Mat *mresult,QString *causecolor);
@@ -120,7 +120,7 @@ Mat fitR(Mat right);
 Mat Ployfit_Col7_1(Mat img_col, int poly_n, bool isSaveOrNot, double Scoral);
 bool white_defect1(Mat white,Mat mainfilter,Mat leftfilter,Mat rightfilter,Mat ceguang,Mat ceguangleft,Mat ceguangright,int num,Mat biankuangfilter);
 bool white_defect2(Mat white,Mat mainfilter,Mat ceguang,Mat biankuangfilter,Mat photomainwhite);
-bool white_defect3(Mat white_abshow1,Mat mainfilter,Mat leftfilter,Mat rightfilter,Mat ceguangleft,Mat ceguangright,int num);
+bool white_defect3(Mat white_abshow1,Mat mainfilter,Mat leftfilter,Mat rightfilter,Mat ceguangleft,Mat ceguangright, Mat left_mask, Mat right_mask, int num);
 void delay(int MSecs);
 void delay_msec(int msec);
 bool display_defect(Mat src_white);

@@ -3041,7 +3041,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                     intensitySub = (double)min(centerY - 100, 1400 - centerY) / 650 * 8;
                 }
 
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || (intensity >= 24 && area > 350 && ratio < 5)|| (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
+                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || (intensity >= 24.3 && area > 500 && ratio < 5)|| (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
                     ||(intensity >= 20 && meanValue < 135)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
                 {
                     result = true;
@@ -6775,7 +6775,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
 * 输出：主相机白底下检测结果图和result
 * 其他：
 ======================================================================*/
-bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
+bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_white, Mat& right_white)
 {
     bool result = false;
 
@@ -9656,7 +9656,7 @@ bool white_defect2(Mat white,Mat mainfilter,Mat ceguang,Mat biankuangfilter,Mat 
 * 时间
 * 其他：
 ======================================================================*/
-bool white_defect3(Mat white_abshow1,Mat mainfilter,Mat leftfilter,Mat rightfilter,Mat ceguangleft,Mat ceguangright,int num)
+bool white_defect3(Mat white_abshow1,Mat mainfilter,Mat leftfilter,Mat rightfilter,Mat ceguangleft,Mat ceguangright, Mat left_mask, Mat right_mask, int num)
 {
     bool result=false;
 
@@ -9681,10 +9681,10 @@ bool white_defect3(Mat white_abshow1,Mat mainfilter,Mat leftfilter,Mat rightfilt
     if(result==false&&Abshow_White_Detect_Checked)
     {
 //        result=Abshow_White_Detect(white_abshow1,&Mresult_3_white,&causeColor_3_white);//主黑白相机白底显异检测
-        result = Shifting(leftfilter, &Mresult_3_white, &causeColor_3_white,1);
+        result = Shifting(leftfilter, &Mresult_3_white, &causeColor_3_white, 1, left_mask, right_mask);
         if (!result)
         {
-            result = Shifting(rightfilter, &Mresult_3_white, &causeColor_3_white,0);
+        result = Shifting(leftfilter, &Mresult_3_white, &causeColor_3_white, 0, left_mask, right_mask);
         }
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
