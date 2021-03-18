@@ -2947,10 +2947,20 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
     std::sort(contours.begin(), contours.end(), compareContourAreas);
 
     vector<Rect> boundRect(contours.size());
+    vector<RotatedRect> minboundRect(contours.size());
     for (vector<int>::size_type i = 0; i < contours.size(); i++)
     {
         double area = contourArea(contours[i]);
-        if (area > 300 && area < 150000)
+        //获取其最小外接矩形及其长宽比
+        Point2f minRectPoint[4];
+        minboundRect[i] = minAreaRect(contours[i]);
+        minboundRect[i].points(minRectPoint);
+        float width = sqrt(abs(minRectPoint[0].x - minRectPoint[1].x) * abs(minRectPoint[0].x - minRectPoint[1].x)
+            + abs(minRectPoint[0].y - minRectPoint[1].y) * abs(minRectPoint[0].y - minRectPoint[1].y));
+        float height = sqrt(abs(minRectPoint[1].x - minRectPoint[2].x) * abs(minRectPoint[1].x - minRectPoint[2].x)
+            + abs(minRectPoint[1].y - minRectPoint[2].y) * abs(minRectPoint[1].y - minRectPoint[2].y));
+        float ratio = max(width / height, height / width);
+        if (area > 300 && area < 150000 && area/ratio)
         {
             Mat temp_mask = Mat::zeros(th_result.rows, th_result.cols, CV_8UC1);
             drawContours(temp_mask, contours, i, 255, FILLED, 8);
@@ -3031,7 +3041,8 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                     intensitySub = (double)min(centerY - 100, 1400 - centerY) / 650 * 8;
                 }
 
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || intensity >= 24 || (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)||(intensity >= 20 && meanValue < 135)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
+                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || (intensity >= 24 && area > 350 && ratio < 5)|| (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
+                    ||(intensity >= 20 && meanValue < 135)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(x_1, y_1);
@@ -6804,13 +6815,45 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
 bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
 {
     bool result = false;
+
+    vector<vector<Point>> doubtContours;
+    findContours(left_white, doubtContours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
+    std::sort(doubtContours.begin(), doubtContours.end(), compareContourAreas);
+
+    vector<Rect> doubtBoundRect(doubtContours.size());
+
+    for (int i = 0; i < doubtContours.size(); i++)
+    {
+        double area = contourArea(doubtContours[i]); //363
+        doubtBoundRect[i] = boundingRect(Mat(doubtContours[i]));
+
+        //获取区域中心
+        int centerX = doubtBoundRect[i].tl().x + doubtBoundRect[i].width/2;
+        int centerY = doubtBoundRect[i].tl().y + doubtBoundRect[i].height / 2;
+
+        Mat temp_mask = Mat::zeros(white.rows, white.cols, CV_8UC1);
+        drawContours(temp_mask, doubtContours, i, 255, FILLED, 8);
+        //判断边角出现较大像素区域则认定为出现移位
+        if ((centerX < 100 || centerX>2900) && (centerY < 100 || centerY>1400) && (area > 80 && area < 1000)||
+            centerY > 1480 && area>500 && area <5000)
+        {
+            CvPoint top_lef4 = cvPoint(doubtBoundRect[i].tl().x, doubtBoundRect[i].tl().y);
+            CvPoint bottom_right4 = cvPoint(doubtBoundRect[i].br().x, doubtBoundRect[i].br().y);
+            rectangle(left_white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
+            *mresult = white;
+            *causecolor = "移位";
+            return true;
+        }
+    }
+
+
+
     //拷贝一张主相机白底图
     Mat img_gray = white.clone();
 
     Mat ad_result, th1, th2, ImageBinary;
-    //adaptiveThreshold(img_gray, ad_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 15, 3);
 
-    adaptiveThresholdCustom(img_gray, th1, 255, ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 51, 5.5, 1);
+    adaptiveThresholdCustom(img_gray, th1, 255, ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 27, 5.5, 1);
     //屏蔽灯口10行
     th1(Rect(0, 0, 10, th1.rows)) = uchar(0);           //wsc 2021/03/05 防止漏检
     //创建2400*1100的纯黑模板
@@ -6823,11 +6866,7 @@ bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
     threshold(img_gray, ImageBinary, 30, 255, CV_THRESH_BINARY);
     bitwise_and(ImageBinary, th1, th2);
 
-    //th1(Rect(0, 0, th1.cols - 1, 4)) = uchar(0);
-    //th1(Rect(0, th1.rows-4, th1.cols - 1, 4)) = uchar(0);
-    //th1(Rect(0, 0, 4, th1.rows - 1)) = uchar(0);
-    //th1(Rect(th1.cols - 4, 0,4, th1.rows - 1)) = uchar(0);
-
+    //涂黑上下
     th1(Rect(0, 0, th1.cols - 1, 10)) = uchar(0);
     th1(Rect(0, th1.rows - 10, th1.cols - 1, 10)) = uchar(0);
 
@@ -6872,7 +6911,7 @@ bool Shifting(Mat white, Mat *mresult, QString *causecolor,int num)
             cv::Mat stdDev1;
             cv::meanStdDev(tempGray, meanGray1, stdDev1);
 
-            //获取当前区域长宽比，用于得到相对于长宽比的标准差 0313 去除因水滴刘海屏导致误检
+            //获取当前区域长宽比，用于得到相对于长宽比的标准差
             double virtualRadio = max(boundRect[i].width / boundRect[i].height, boundRect[i].height / boundRect[i].width);
             double stddev1 = stdDev1.at<double>(0, 0);    // 65
             double val = stddev1 / virtualRadio * 9;
