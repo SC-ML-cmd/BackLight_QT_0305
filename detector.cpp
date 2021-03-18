@@ -3090,7 +3090,7 @@ bool boom_light(Mat white, Mat* mresult, QString* causecolor)
     for (vector<int>::size_type i = 0; i < contours.size(); i++)
     {
         double area = contourArea(contours[i]);
-        if (area > 1000 && area < 150000)
+        if (area > 400 && area < 150000)
         {
             boundRect[i] = boundingRect(Mat(contours[i]));
             float w = boundRect[i].width;
@@ -3129,7 +3129,7 @@ bool boom_light(Mat white, Mat* mresult, QString* causecolor)
             double intensity = mean_in_gray - mean_out_gray;
             Mat TempImage_Binary;
 
-            if (intensity > 40)
+            if (intensity > 38)
             {
                 result = true;
                 CvPoint top_lef4 = cvPoint(x_1, y_1);
@@ -6378,7 +6378,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        if (img_gray.cols - x_rt < corewholeth)
                        {
                            //灰度差限制
-                           if (defect_areath >= siecevariance && spotpeak_temp >= spotpeak && area <= 80|| area > 80 && defect_areath >= 4.8 && spotpeak_temp >= spotpeak)//这里的参数先写成定值
+                           if (defect_areath >= 4 && spotpeak_temp >= 4 && area <= 80|| area > 80 && defect_areath >= 3.8 && spotpeak_temp >= 4)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
@@ -6393,7 +6393,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        else
                        {
                            //灰度差限制
-                           if (defect_areath >= 6 && spotpeak_temp >= 5 && area <= 60|| area > 60 && defect_areath >= 5 && spotpeak_temp >= 5)//这里的参数先写成定值
+                           if (defect_areath >= 4.5 && spotpeak_temp >= 4 && area <= 60|| area > 60 && defect_areath >= 4 && spotpeak_temp >= 4)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
