@@ -3068,40 +3068,30 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
 * 输出：主相机白底下检测结果图和result
 * 其他：
 ======================================================================*/
-bool boom_light(Mat white, Mat *mresult, QString *causecolor)
+bool boom_light(Mat white, Mat* mresult, QString* causecolor)
 {
     int boder = 5;
     int decter_length = 200;
     bool result = false;
     Mat img_gray = white.clone();
 
+    //Mat th_resul;
+    //threshold(img_gray, th_resul, 210, 255, CV_THRESH_BINARY);
+    //double mean_all = mean(img_gray, th_resul)[0];
+    //threshold(img_gray, th_resul, mean_all+20 , 255, CV_THRESH_BINARY);
     Mat strong_result;
     Ptr<CLAHE> clahe = createCLAHE(5.0, Size(3, 3));
     clahe->apply(img_gray, strong_result);
 
     //Mat edge_img = strong_result(Rect(strong_result.cols - 100, 0, 100, strong_result.rows)).clone();
-    Mat edge_img = strong_result(Rect(0, 100, decter_length, strong_result.rows-200)).clone();
+    Mat edge_img = strong_result(Rect(0, 50, decter_length, strong_result.rows-100)).clone();
     medianBlur(edge_img, edge_img, 3);
-    //Mat ad_result;
-    //adaptiveThreshold(edge_img, ad_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 15, 3);
-
-    Mat edge_img_X;
-    Mat edge_img_Y;
-    Mat edge_img_result;
-    Mat sobel_result;
-    Mat structure_element = getStructuringElement(MORPH_RECT, Size(5, 5));
-    Sobel(edge_img, edge_img_X, CV_16S, 0, 1, 3, 1, 2, BORDER_DEFAULT);
-    convertScaleAbs(edge_img_X, edge_img_X);
-    Sobel(edge_img, edge_img_Y, CV_16S, 1, 0, 3, 1, 2, BORDER_DEFAULT);
-    convertScaleAbs(edge_img_Y, edge_img_Y);
-    addWeighted(edge_img_X, 0.5, edge_img_Y, 0.5, 0, edge_img_result);
-    clahe->apply(edge_img_result, edge_img_result);
-    threshold(edge_img_result, sobel_result, 30, 255, CV_THRESH_BINARY);
-    Mat F_result = ~sobel_result;
-    Mat edge_thresold;
-    erode(F_result, edge_thresold, structure_element);
+    Mat a;
+    threshold(edge_img, a,100,255, CV_THRESH_BINARY);
+    double m = mean(edge_img, a)[0];
+    threshold(edge_img, edge_img, m+50, 255, CV_THRESH_BINARY);
     Mat th_result = Mat::zeros(img_gray.size(), img_gray.type());
-    edge_thresold.copyTo(th_result(Rect(0, 100, decter_length, th_result.rows-200)));
+    edge_img.copyTo(th_result(Rect(0, 50, decter_length, th_result.rows - 100)));
 
     vector<vector<Point>> contours;
     findContours(th_result, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
@@ -3111,7 +3101,7 @@ bool boom_light(Mat white, Mat *mresult, QString *causecolor)
     for (vector<int>::size_type i = 0; i < contours.size(); i++)
     {
         double area = contourArea(contours[i]);
-        if (area > 150 && area < 150000)
+        if (area > 400 && area < 150000)
         {
             boundRect[i] = boundingRect(Mat(contours[i]));
             float w = boundRect[i].width;
@@ -3121,43 +3111,23 @@ bool boom_light(Mat white, Mat *mresult, QString *causecolor)
             double h1 = rect.size.width;
             int X_1 = boundRect[i].tl().x;//矩形左上角X坐标值
             int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
-            int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
+            int X_2 = 200;//矩形右下角X坐标值
             int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
             int x_1 = X_1;//矩形左上角X坐标值
             int y_1 = Y_1;//矩形左上角Y坐标值
             int x_2 = X_2;//矩形右下角X坐标值
             int y_2 = Y_2;//矩形右下角Y坐标值
-            if (max(w1 / h1, h1 / w1) <= 4)//4
-            {
-                X_1 = X_1 - boder - int(w);
-                Y_1 = Y_1 - boder - int(h);
-                X_2 = X_2 + boder + int(w);
-                Y_2 = Y_2 + boder + int(h);
-                if (X_1 < 0)
-                {
-                    X_1 = 0;
-                }
-                if (Y_1 < 0)
-                {
-                    Y_1 = 0;
-                }
-                if (X_2 > decter_length - 1)
-                {
-                    X_2 = decter_length - 1;
-                }
-                if (Y_2 > th_result.rows - 1)
-                {
-                    Y_2 = th_result.rows - 1;
-                }
-            }
-
+            //if (max(w1 / h1, h1 / w1) > 8)
+            //{
+            //    continue;
+            //}
             Mat imagedoubt = img_gray(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1));
             Mat mask = th_result(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1));
             Mat temp_mask1;
             Mat temp_mask2;
             threshold(imagedoubt, temp_mask1, 30, 255, CV_THRESH_BINARY);
             double mean_all = mean(imagedoubt, temp_mask1)[0];
-            threshold(imagedoubt, temp_mask1, mean_all-20, 255, CV_THRESH_BINARY);
+            threshold(imagedoubt, temp_mask1, mean_all - 20, 255, CV_THRESH_BINARY);
             bitwise_and(temp_mask1, mask, temp_mask1);
             double mean_in_gray = mean(imagedoubt, temp_mask1)[0];
             if (mean_in_gray <= 70)
@@ -3169,20 +3139,14 @@ bool boom_light(Mat white, Mat *mresult, QString *causecolor)
             double mean_out_gray = mean(imagedoubt, temp_mask2)[0];
             double intensity = mean_in_gray - mean_out_gray;
             Mat TempImage_Binary;
-            if (mean_in_gray >= 180 && mean_out_gray >= 180 && intensity <= 23)
-            {
-                Mat tempImage = img_gray(Rect(img_gray.cols - 500, 0, 300, img_gray.rows)).clone();
-                threshold(tempImage, TempImage_Binary, 30, 255, CV_THRESH_BINARY);
-                mean_out_gray = mean(tempImage, TempImage_Binary)[0];
-                intensity = mean_out_gray - mean_in_gray;
-            }
-            if (intensity > 31)
+
+            if (intensity > 38)
             {
                 result = true;
                 CvPoint top_lef4 = cvPoint(x_1, y_1);
                 CvPoint bottom_right4 = cvPoint(x_2, y_2);
                 rectangle(white, top_lef4, bottom_right4, Scalar(0), 5, 8, 0);
-                break;
+                //break;
             }
         }
     }
@@ -3194,7 +3158,6 @@ bool boom_light(Mat white, Mat *mresult, QString *causecolor)
     }
     return result;
 }
-
 void dividedLinearStrength(cv::Mat& matInput, cv::Mat& matOutput, float fStart, float fEnd,
     float fSout, float fEout)
 {
@@ -6147,7 +6110,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
                int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
                int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
-               if ((X_1<=25&&Y_1<=15)|| (X_1 <= 20 && Y_2> 1490) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 >= 2985 && Y_2 > 1490)) {
+               if ((X_1<=25&&Y_1<=15)|| (X_1 <= 20 && Y_2> 1490) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 >= 2985 && Y_2 > 1490)|| (Y_1 < 12 && Y_2 > 16) || (Y_1 > 1485 && Y_2 >= 1489) || (X_1 < 22 && X_2 < 28) || (X_1 > 2985 && X_2 <= 2990)) {
                    continue;
                }
                RotatedRect rect = minAreaRect(contours[i]);
@@ -6426,7 +6389,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        if (img_gray.cols - x_rt < corewholeth)
                        {
                            //灰度差限制
-                           if (defect_areath >= siecevariance && spotpeak_temp >= spotpeak && area <= 80|| area > 80 && defect_areath >= 4.8 && spotpeak_temp >= spotpeak)//这里的参数先写成定值
+                           if (defect_areath >= 4 && spotpeak_temp >= 4 && area <= 80|| area > 80 && defect_areath >= 3.8 && spotpeak_temp >= 4)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
@@ -6441,7 +6404,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        else
                        {
                            //灰度差限制
-                           if (defect_areath >= 6 && spotpeak_temp >= 5 && area <= 60|| area > 60 && defect_areath >= 5 && spotpeak_temp >= 5)//这里的参数先写成定值
+                           if (defect_areath >= 4.5 && spotpeak_temp >= 4 && area <= 60|| area > 60 && defect_areath >= 4 && spotpeak_temp >= 4)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
