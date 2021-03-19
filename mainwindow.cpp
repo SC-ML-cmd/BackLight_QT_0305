@@ -453,7 +453,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QString str_ver ="1.0.34.170";       //版本号
 
-
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
     connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::BlockingQueuedConnection);
@@ -3200,17 +3199,10 @@ void MainWindow::myFunc1()
         ui->label_30->setText("白色");
         //RoiWhite_Arcangle(src_white1,-2,10,70,&M_white_1,&M_black_1,&M_louguang_1,1);//黑白相机ROI变换矩阵
         Ext_Result_BlackWhite=f_MainCam_PersTransMatCal(src_white1, -2, 20, &M_white_1, &M_biankuang, &M_white_abshow, 1, Model_Mod_type, 1);
-
-        qDebug() << QString::number(mean(src_white1)[0]);
-
-        qDebug() << QString(QLatin1String("M_white_1:")) + QString::number(mean(src_white1)[0]);
         white1=toushi_white(src_white1,M_white_1,-1,pixel_num,1500);                     //透视变换校正后的黑白白底图
-
-        qDebug() << QString(QLatin1String("2915:")) + QString::number(mean(white1)[0]);
 
         white_biankuang=toushi_white(src_white1,M_biankuang,-1,pixel_num,1500);
 
-        qDebug() << QString::number(mean(src_white1)[0]);
         ceguang1=toushi_white(src_ceguang1,M_white_1,-1,pixel_num,1500);                 //透视变换校正后的黑白测光图
         //imwrite("D:\\white1.bmp",white1);
         //imwrite("D:\\ceguang1.bmp",ceguang1);
@@ -3232,7 +3224,7 @@ void MainWindow::myFunc1()
         if(Flag_Running_State=="Online")
         ui->label_2->setFixedSize(543,806);
         image2=image2.scaled(ui->label_2->size(),Qt::KeepAspectRatio);  //按图片真实比例显示
-        //ui->label_2->setScaledContents(true);
+
         ui->label_2->setAlignment(Qt::AlignCenter);
         ui->label_2->setPixmap(QPixmap::fromImage(image2));
 
@@ -3253,20 +3245,10 @@ void MainWindow::myFunc1()
         LeftCeGuang_enlarge=toushi_white(src_ceguang_left,M_L_1_E,-5,pixel_num,1500);
         RightCeGuang_enlarge=toushi_white(src_ceguang_right,M_R_1_E,-5,pixel_num,1500);
 
-//        cvtColor(ceL1,ceL1,CV_BGR2GRAY);
-//        cvtColor(ceR1,ceR1,CV_BGR2GRAY);
-//        cvtColor(ceL1_Enlarge,ceL1_Enlarge,CV_BGR2GRAY);
-//        cvtColor(ceR1_Enlarge,ceR1_Enlarge,CV_BGR2GRAY);
-//        cvtColor(LeftCeGuang,LeftCeGuang,CV_BGR2GRAY);
-//        cvtColor(RightCeGuang,RightCeGuang,CV_BGR2GRAY);
-//        cvtColor(LeftCeGuang_enlarge,LeftCeGuang_enlarge,CV_BGR2GRAY);
-//        cvtColor(RightCeGuang_enlarge,RightCeGuang_enlarge,CV_BGR2GRAY);
 
         Mat src_L1_gray,src_R1_gray;
         src_L1_gray = src_L1.clone();
         src_R1_gray = src_R1.clone();
-//        cvtColor(src_L1,src_L1_gray,CV_BGR2GRAY);
-//        cvtColor(src_R1,src_R1_gray,CV_BGR2GRAY);
 
         Mat th2,th3;
         threshold(src_L1_gray, th2, 20, 255, CV_THRESH_BINARY);
@@ -3375,6 +3357,10 @@ void MainWindow::myFunc1()
     img_white3.append(rightfilter);
     img_white3.append(LeftCeGuang);
     img_white3.append(RightCeGuang);
+    img_white3.append(left_mask);
+    img_white3.append(right_mask);
+
+
 
     Flag_White1_Finish=false;
     Flag_White2_Finish=false;
@@ -3512,8 +3498,13 @@ void MainWindow::White_Thread3(QList <Mat> img_white3)
     Mat rightfilter=img_white3.at(3);
     Mat ceguangleft=img_white3.at(4);
     Mat ceguangright=img_white3.at(5);
+
+    //左右相机白底以20像素的二值化灰度图，为移位中分层算法使用
+    Mat left_mask = img_white3.at(6);
+    Mat right_mask = img_white3.at(6);
+
     result_white3=false;
-    result_white3=white_defect3(white_abshow1,mainfilter,leftfilter,rightfilter,ceguangleft,ceguangright,1);
+    result_white3=white_defect3(white_abshow1,mainfilter,leftfilter,rightfilter,ceguangleft,ceguangright,left_mask, right_mask, 1);
 
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
