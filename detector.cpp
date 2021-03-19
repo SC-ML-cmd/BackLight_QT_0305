@@ -6032,8 +6032,8 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
        Mat img_left = img_gray(Rect(0, 0, 60, img_gray.rows - 1));
        Mat img_right = img_gray(Rect(img_gray.cols - 40, 0, 40, img_gray.rows - 1));
        Mat img_right_light = img_gray(Rect(img_gray.cols - 15, 0, 15, img_gray.rows - 1));
-       Mat img_tl_R = img_gray(Rect(0, 0, 150, 150));
-       Mat img_bl_R = img_gray(Rect(0, 1350, 150, 150));
+       Mat img_tl_R = img_gray(Rect(0, 0, 200, 150));
+       Mat img_bl_R = img_gray(Rect(0, 1350, 200, 150));
        Mat img_tr_R = img_gray(Rect(2850, 0, 150, 150));
        Mat img_br_R = img_gray(Rect(2849, 1349, 150, 150));
 
@@ -6067,8 +6067,8 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
        left_th.copyTo(th_result(Rect(0, 0, 60, th_result.rows - 1)));                   //左边界
        right_th.copyTo(th_result(Rect(th_result.cols - 40, 0, 40, th_result.rows - 1)));      //右边界
        img_right_light_th.copyTo(th_result(Rect(img_gray.cols - 15, 0, 15, img_gray.rows - 1)));      //右边界
-       img_tl_R_th.copyTo(th_result(Rect(0, 0, 150, 150)));                    //上边界
-       img_bl_R_th.copyTo(th_result(Rect(0, 1350, 150, 150)));     //下边界
+       img_tl_R_th.copyTo(th_result(Rect(0, 0, 200, 150)));                    //上边界
+       img_bl_R_th.copyTo(th_result(Rect(0, 1350, 200, 150)));     //下边界
        img_tr_R_th.copyTo(th_result(Rect(2850, 0, 150, 150)));                   //左边界
        img_br_R_th.copyTo(th_result(Rect(2849, 1349, 150, 150)));      //右边界
 

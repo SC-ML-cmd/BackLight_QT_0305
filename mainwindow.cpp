@@ -451,7 +451,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.170";       //版本号
+    QString str_ver ="1.0.34.171";       //版本号
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
