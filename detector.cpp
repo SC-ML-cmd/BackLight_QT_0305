@@ -652,8 +652,8 @@ void convexSetPretreatment(Mat& _src){
     vector<vector<Point> > preContours;
     vector<Vec4i> hierarchy;
 
-    /// Detect edges using Threshold
-    threshold(_src, threshold_output, 100, 255, THRESH_BINARY);
+    /// Detect edges using Threshold 修改原图二值化阈值，可以使提取更准确
+    threshold(_src, threshold_output, 30, 255, THRESH_BINARY);
 
     /// Find contours
     findContours(threshold_output, preContours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
