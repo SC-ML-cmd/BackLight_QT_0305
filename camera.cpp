@@ -845,6 +845,9 @@ void Form_Camera::Adaptive_exposure()
             exposure_value_last=exposure_value;
             int Num_Wait=0;
             // 控制函数运行
+            QDateTime current_date_time =QDateTime::currentDateTime();
+            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+            MainWindow::debug_msg("二分法调整曝光值前"+QString::number(index)+current_date);
             for(Adaptive_Num=0;qAbs(Mean_gray_value-Set_exposure_value)>Range_Error&&Flag_adap==true;Adaptive_Num++)
             {
                 Mean_gray_value=GetMeanGrayValue(index+1);
@@ -854,6 +857,7 @@ void Form_Camera::Adaptive_exposure()
                     {
                         exposure_value=Half_Control(Mean_gray_value,Set_exposure_value,exposure_value);
                         Num_Wait=0;
+                        MainWindow::debug_msg("二分法后曝光值"+QString::number(exposure_value)+current_date);
                     }
                     else
                     {
@@ -901,6 +905,7 @@ void Form_Camera::Adaptive_exposure()
             }
             qDebug()<<"调整次数:"<<Adaptive_Num<<endl;
             qDebug()<<"自适应曝光值:"<<exposure_value<<endl;
+            MainWindow::debug_msg("调整次数:"+QString::number(Adaptive_Num)+current_date);
     }
     if(camera->m_stDevList.nDeviceNum!=0)
     {

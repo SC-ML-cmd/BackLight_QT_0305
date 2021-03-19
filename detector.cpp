@@ -6013,7 +6013,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
        medianBlur(img_gray, img_gray, 3); //中值滤波滤除椒盐噪声,缺点耗时26毫秒 奇数半径越大效果越强
        Mat th_result;
        //adaptiveThresholdCustom_whitedot(img_gray, th_result, 255, ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, whitePoint_step, -3, 1);
-       adaptiveThreshold(img_gray, th_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, whitePoint_step, -3);
+       adaptiveThreshold(img_gray, th_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 45, -3);
 
        //针对边界位置取原图的边界
        Mat img_top = img_gray(Rect(0, 0, img_gray.cols - 1, 40));
@@ -6331,7 +6331,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        {
                            for (int j = 0; j < maskGray.rows; j++)
                            {
-                               if (maskGray.at<uchar>(j, i) > 0)
+                               if (maskGray.at<uchar>(j, i) > 100)
                                {
                                    grayValueSum += maskGray.at<uchar>(j, i);
                                    pixelsNum++;
@@ -6347,7 +6347,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        {
                            for (int j = 0; j < maskGray.rows; j++)
                            {
-                               if (maskGray.at<uchar>(j, i) > 0)
+                               if (maskGray.at<uchar>(j, i) > 100)
                                {
                                    grayValueSum += maskGray.at<uchar>(j, i);
                                    pixelsNum++;
@@ -6362,7 +6362,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        {
                            for (int j = 0; j < temp_gray.rows; j++)
                            {
-                               if (temp_gray.at<uchar>(j, i) > 0)
+                               if (temp_gray.at<uchar>(j, i) > 100)
                                {
                                    grayValueSum += temp_gray.at<uchar>(j, i);
                                    pixelsNum++;
@@ -6378,7 +6378,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        if (img_gray.cols - x_rt < corewholeth)
                        {
                            //灰度差限制
-                           if (defect_areath >= 4 && spotpeak_temp >= 4 && area <= 80|| area > 80 && defect_areath >= 3.8 && spotpeak_temp >= 4)//这里的参数先写成定值
+                           if (defect_areath >= 3.2 && spotpeak_temp >= 2.8 && area <= 80|| area > 80 && defect_areath >= 3 && spotpeak_temp >= 2.8)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
@@ -6393,7 +6393,7 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
                        else
                        {
                            //灰度差限制
-                           if (defect_areath >= 4.5 && spotpeak_temp >= 4 && area <= 60|| area > 60 && defect_areath >= 4 && spotpeak_temp >= 4)//这里的参数先写成定值
+                           if (defect_areath >= 3.5 && spotpeak_temp >= 2.8 && area <= 60|| area > 60 && defect_areath >= 3 && spotpeak_temp >= 2.8)//这里的参数先写成定值
                            {
                                result = true;
                                CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
