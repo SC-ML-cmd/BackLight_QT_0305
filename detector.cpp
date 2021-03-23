@@ -5303,7 +5303,13 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
 //                                   bitwise_and(TempCeguang0, ~TempImage0, TempCeguang1);
                                    double ceguang1_Out = mean(TempCeguang0, ~TempImage0)[0];
                                    double differ = ceguang1_Out - ceguang1_In;
-                                   if (area < 130 && area >= 50 && differ <= 6.6 || area < 50 && area >= 10 && differ < 3.1 || area > 0 && area < 10 && differ < 1.8 || area >= 130 || Luminaceth > 11.2 && area > 80)
+
+                                   if ( (area < 130 && area >= 50 && differ <= 6.6)
+                                     || (area < 50 && area >= 10 && differ < 3.1)
+                                     || (area > 0 && area < 10 && differ < 1.8)
+                                     || (area >= 130)
+                                     || (Luminaceth > 11.2 && area > 80)
+                                     || (area<50 && area>=10 && differ > 8 && differ <11.2))
                                    {
                                        //double area7 = countNonZero(Crop_Image_last);
 
@@ -6805,7 +6811,7 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
             CvPoint top_lef4 = cvPoint(doubtBoundRect[i].tl().x, doubtBoundRect[i].tl().y);
             CvPoint bottom_right4 = cvPoint(doubtBoundRect[i].br().x, doubtBoundRect[i].br().y);
             rectangle(left_white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
-            *mresult = white;
+            *mresult = left_white;
             *causecolor = "移位";
             return true;
         }
