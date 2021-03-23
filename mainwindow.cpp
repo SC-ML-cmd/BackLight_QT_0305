@@ -42,24 +42,10 @@ struct Dect_Photo
        Mat SideLight_Main;      //主相机侧光
        Mat SideLight_Left;      //左相机测光
        Mat SideLight_Right;
-//       Mat SideLight_Front;
-//       Mat SideLight_Back;
        //白底
        Mat White_Main;
        Mat White_Left;
        Mat White_Right;
-       //Mat White_Front;
-//       Mat White_Back;
-//       Mat White_Color;
-//       //黑底
-//       Mat Black_Main;
-//       Mat Black_Color;
-//       //灰底
-//       Mat Gray_Main;
-//       Mat Gray_Left;
-//       Mat Gray_Right;
-//       Mat Gray_Color1;
-//       Mat Gray_Color2;
    };
 
 QQueue<Dect_Photo> Pic;       //定义一个结构体队列
@@ -451,7 +437,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.171";       //版本号
+    QString str_ver ="1.0.34.175test";       //版本号
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 

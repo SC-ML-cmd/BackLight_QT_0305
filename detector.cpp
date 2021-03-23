@@ -653,7 +653,7 @@ void convexSetPretreatment(Mat& _src){
     vector<Vec4i> hierarchy;
 
     /// Detect edges using Threshold 修改原图二值化阈值，可以使提取更准确
-    threshold(_src, threshold_output, 30, 255, THRESH_BINARY);
+    threshold(_src, threshold_output, 25, 255, THRESH_BINARY);
 
     /// Find contours
     findContours(threshold_output, preContours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
@@ -2815,7 +2815,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
     erode(F_result, edge_thresold, structure_element);
     Mat th_result = Mat::zeros(img_gray.size(), img_gray.type());
     edge_thresold.copyTo(th_result(Rect(0, 0, 100, th_result.rows)));
-    bitwise_or(th_result, compensateMat, th_result);
+    //bitwise_or(th_result, compensateMat, th_result);
 
     Mat maskR1, maskR1_Binary, maskR2, maskR2_Binary, binaryationR1, binaryationR2, stdDev, Mean;
     maskR1 = img_gray(Rect(0, 0, 100, 100));
@@ -3041,8 +3041,10 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                     intensitySub = (double)min(centerY - 100, 1400 - centerY) / 650 * 8;
                 }
 
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || (intensity >= 24.3 && area > 500 && ratio < 5)|| (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
-                    ||(intensity >= 20 && meanValue < 135)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
+                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15)
+                    ||(intensity >= 24.3 && area > 500 && ratio < 5)
+                    || (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
+                    ||(intensity >= 20 && meanValue < 135) || (meanValue <= 90)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21 22.8 //23 22.20 22.2 21.4 22.37 21.65
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(x_1, y_1);
