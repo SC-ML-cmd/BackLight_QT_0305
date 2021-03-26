@@ -3041,10 +3041,15 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                     intensitySub = (double)min(centerY - 100, 1400 - centerY) / 650 * 8;
                 }
 
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15)
+/*                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15)
                     ||(intensity >= 24.3 && area > 500 && ratio < 5)
                     || (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
-                    ||(intensity >= 20 && meanValue < 135) || (meanValue <= 90)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21 22.8 //23 22.20 22.2 21.4 22.37 21.65
+                    ||(intensity >= 20 && meanValue < 135) || (meanValue <= 90))*/
+                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 25)
+                    ||(intensity >= 27 && area > 500 && ratio < 5)
+                    || (intensity >= (27-intensitySub)&& centerY>100 &&centerY<1400)
+                    ||(intensity >= 27 && meanValue < 135)
+                    || (meanValue <= 80))
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(x_1, y_1);
