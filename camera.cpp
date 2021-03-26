@@ -813,6 +813,8 @@ void Form_Camera::on_pushButton_Adaptive_exposure_clicked()
 void Form_Camera::Adaptive_exposure()
 {
     pixel_num=3000;
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     for(index=0;index<camera->m_stDevList.nDeviceNum;index++)
     {
             Set_exposure_value=(int)Set_exposure_value_all[index][Num_background];
@@ -841,19 +843,18 @@ void Form_Camera::Adaptive_exposure()
             Mean_gray_value=-100;
 
             Left_exposure=100;
-            Right_exposure=1000000;
+            Right_exposure=100000;
             exposure_value_last=exposure_value;
             int Num_Wait=0;
             // 控制函数运行
-            QDateTime current_date_time =QDateTime::currentDateTime();
-            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+
             MainWindow::debug_msg("二分法调整曝光值前"+QString::number(index)+current_date);
             for(Adaptive_Num=0;qAbs(Mean_gray_value-Set_exposure_value)>Range_Error&&Flag_adap==true;Adaptive_Num++)
             {
                 Mean_gray_value=GetMeanGrayValue(index+1);
                 if(qAbs(Mean_gray_value-Set_exposure_value)>Range_Error) //精确到灰度小数点后两位不同才认为曝光值改变
                 {
-                    if(int(Mean_gray_value_last*100)!=int(Mean_gray_value*100)||Num_Wait>=2)  //曝光设定等待时间一般不会超过4s，防止过曝或过暗，背光源曝光值要低
+                    if(((int)(Mean_gray_value_last*100)!=(int)(Mean_gray_value*100))||Num_Wait>=2)  //曝光设定等待时间一般不会超过4s，防止过曝或过暗，背光源曝光值要低
                     {
                         exposure_value=Half_Control(Mean_gray_value,Set_exposure_value,exposure_value);
                         Num_Wait=0;
@@ -907,8 +908,10 @@ void Form_Camera::Adaptive_exposure()
             qDebug()<<"自适应曝光值:"<<exposure_value<<endl;
             MainWindow::debug_msg("调整次数:"+QString::number(Adaptive_Num)+current_date);
     }
+    MainWindow::debug_msg("发送前:"+current_date);
     if(camera->m_stDevList.nDeviceNum!=0)
     {
+        MainWindow::debug_msg("发送:"+current_date);
         emit send();
     }
 }
@@ -940,7 +943,7 @@ bool Form_Camera::Adaptive_exposure_main_ROI(int C_index)
                roi_ceshi(src_L1,-10,&M_L);
            else if(Product_type_Selected=="R角水滴屏")
                //RoiSide_Arcangle(src_L1, -10, &M_L,&M_L_E);
-           f_LeftRightCam_PersTransMatCal(src_L1, &M_L, &M_L_1_E, Product_type_Selected, 1, 15);
+               f_LeftRightCam_PersTransMatCal(src_L1, &M_L, &M_L_1_E, Product_type_Selected, 1, 15);
            //cv::imwrite("D:\\ML.bmp",M_L);
            //ui->spinBox_1->setValue(int(1000));
        }
@@ -951,7 +954,7 @@ bool Form_Camera::Adaptive_exposure_main_ROI(int C_index)
                roi_white(src_L1,-2,0,70,&M_white_black,&M_black_1,&M_louguang_1,&M_abshow_white,1);
            else if(Product_type_Selected=="R角水滴屏")
                //RoiWhite_Arcangle(src_L1,-2,0,70,&M_white_black,&M_black_1,&M_louguang_1,1);
-           f_MainCam_PersTransMatCal(src_L1, 0, 10, &M_white_black, &M_biankuang, &M_white_abshow, 1, Product_type_Selected, 1);
+               f_MainCam_PersTransMatCal(src_L1, 0, 10, &M_white_black, &M_biankuang, &M_white_abshow, 1, Product_type_Selected, 1);
            //ui->spinBox_2->setValue(int(1000));
 
        }
@@ -960,9 +963,9 @@ bool Form_Camera::Adaptive_exposure_main_ROI(int C_index)
            //右侧相机黑白ROI提取
            if(Product_type_Selected=="矩形屏")
                roi_ceshi(src_L1,-10,&M_R);
-           else if(Product_type_Selected=="R角水滴屏")
-               //RoiSide_Arcangle(src_L1, -10, &M_R,&M_R_E);
-           f_LeftRightCam_PersTransMatCal(src_L1, &M_R, &M_R_E, Product_type_Selected, 1, 15);
+           else if(Product_type_Selected=="R角水滴屏"){
+               f_LeftRightCam_PersTransMatCal(src_L1, &M_R, &M_R_E, Product_type_Selected, 1, 15);
+           }
            Flag_ROI_Finished=true;  //背光源三个相机
            //ui->spinBox_3->setValue(int(1000));
        }
@@ -1327,17 +1330,17 @@ double Form_Camera::GetMeanGrayValue(int cameraNum)
 double Form_Camera::Half_Control(double meangray,int Set_gray,double Current)
 {
     double result_half;
-    if(meangray>=Set_gray)
+    if(meangray>=(double)Set_gray)
     {
-        Left_exposure=Left_exposure;
+        //Left_exposure=Left_exposure;
         Right_exposure=Current;
     }
     else
     {
         Left_exposure=Current;
-        Right_exposure=Right_exposure;
+        //Right_exposure=Right_exposure;
     }
-     result_half=(Right_exposure+Left_exposure)/2;
+    result_half=(Right_exposure+Left_exposure)/2.0;
     return result_half;
 }
 

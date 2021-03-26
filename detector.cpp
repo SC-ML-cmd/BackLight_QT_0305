@@ -6016,418 +6016,397 @@ bool WhiteDot_BackSide(Mat white_yiwu, Mat ceguang, Mat *mresult, QString *cause
 * 修改时间：2020年12月15日
 * 其他：
 =========================================================*/
-   bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat *mresult, QString *causecolor)//灰度检测  Mat white_middle
-   {
-       bool result = false;
-       Mat img_gray = white_yiwu.clone();
-       Mat img_ceguang = ceguang.clone();
-       medianBlur(img_gray, img_gray, 3); //中值滤波滤除椒盐噪声,缺点耗时26毫秒 奇数半径越大效果越强
-       Mat th_result;
-       //adaptiveThresholdCustom_whitedot(img_gray, th_result, 255, ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, whitePoint_step, -3, 1);
-       adaptiveThreshold(img_gray, th_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 45, -3);
+bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat* mresult, QString* causecolor)//灰度检测  Mat white_middle
+{
+    bool result = false;
+    Mat img_gray = white_yiwu.clone();
+    Mat img_ceguang = ceguang.clone();
+    medianBlur(img_gray, img_gray, 3); //中值滤波滤除椒盐噪声,缺点耗时26毫秒 奇数半径越大效果越强
+    Mat th_result;
+    //Mat a;
+    //threshold(img_gray, a, 100, 255, CV_THRESH_BINARY);
+    //bitwise_and(img_gray, a, img_gray);
+    //adaptiveThresholdCustom_whitedot(img_gray, th_result, 255, ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, whitePoint_step, -3, 1);
+    adaptiveThreshold(img_gray, th_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 39, -3);
+    //针对边界位置取原图的边界
+    Mat img_top = img_gray(Rect(0, 0, img_gray.cols - 1, 40));
+    Mat img_bottom = img_gray(Rect(0, img_gray.rows - 40, img_gray.cols - 1, 40));
+    Mat img_left = img_gray(Rect(0, 0, 60, img_gray.rows - 1));
+    Mat img_right = img_gray(Rect(img_gray.cols - 40, 0, 40, img_gray.rows - 1));
+    Mat img_right_light = img_gray(Rect(img_gray.cols - 15, 0, 15, img_gray.rows - 1));
+    Mat img_tl_R = img_gray(Rect(0, 0, 200, 150));
+    Mat img_bl_R = img_gray(Rect(0, 1350, 200, 150));
+    Mat img_tr_R = img_gray(Rect(2850, 0, 150, 150));
+    Mat img_br_R = img_gray(Rect(2849, 1349, 150, 150));
+    Mat img_tm = img_gray(Rect(500, 0, 2300, 40));
+    Mat img_bm = img_gray(Rect(500, 1460, 2300, 40));
 
-       //针对边界位置取原图的边界
-       Mat img_top = img_gray(Rect(0, 0, img_gray.cols - 1, 40));
-       Mat img_bottom = img_gray(Rect(0, img_gray.rows - 40, img_gray.cols - 1, 40));
-       Mat img_left = img_gray(Rect(0, 0, 60, img_gray.rows - 1));
-       Mat img_right = img_gray(Rect(img_gray.cols - 40, 0, 40, img_gray.rows - 1));
-       Mat img_right_light = img_gray(Rect(img_gray.cols - 15, 0, 15, img_gray.rows - 1));
-       Mat img_tl_R = img_gray(Rect(0, 0, 200, 150));
-       Mat img_bl_R = img_gray(Rect(0, 1350, 200, 150));
-       Mat img_tr_R = img_gray(Rect(2850, 0, 150, 150));
-       Mat img_br_R = img_gray(Rect(2849, 1349, 150, 150));
+    Mat top_th, top_th1, bottom_th, bottom_th1, left_th, right_th, img_tl_R_th, img_bl_R_th, img_tr_R_th, img_br_R_th, img_right_light_th, img_tm_th, img_bm_th;
 
-       Mat top_th, top_th1, bottom_th, bottom_th1, left_th, right_th, img_tl_R_th, img_bl_R_th, img_tr_R_th, img_br_R_th, img_right_light_th;
+    //针对边界位置设置参数
+    adaptiveThreshold(img_top, top_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 3, -1);
+    adaptiveThreshold(img_bottom, bottom_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 3, -1);
+    //adaptiveThreshold(img_left, left_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 3, -1);
+    adaptiveThreshold(img_left, left_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 17, -3);
+    adaptiveThreshold(img_right, right_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 17, -3);
+    adaptiveThreshold(img_right_light, img_right_light_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 9, -3);
+    adaptiveThreshold(img_tl_R, img_tl_R_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 17, -3);
+    adaptiveThreshold(img_bl_R, img_bl_R_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 17, -3);
+    adaptiveThreshold(img_tr_R, img_tr_R_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 21, -3);
+    adaptiveThreshold(img_br_R, img_br_R_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 21, -3);
+    adaptiveThreshold(img_tm, img_tm_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 11, -3);
+    adaptiveThreshold(img_bm, img_bm_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 11, -3);
 
-       //针对边界位置设置参数
-       adaptiveThreshold(img_top, top_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 3, -1);
-       adaptiveThreshold(img_bottom, bottom_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 3, -1);
-       //adaptiveThreshold(img_left, left_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 3, -1);
-       adaptiveThreshold(img_left, left_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 17, -3);
-       adaptiveThreshold(img_right, right_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 17, -3);
-       adaptiveThreshold(img_right_light, img_right_light_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 9, -3);
-       adaptiveThreshold(img_tl_R, img_tl_R_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 17, -3);
-       adaptiveThreshold(img_bl_R, img_bl_R_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 17, -3);
-       adaptiveThreshold(img_tr_R, img_tr_R_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 21, -3);
-       adaptiveThreshold(img_br_R, img_br_R_th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 21, -3);
+    threshold(img_top, top_th1, 30, 255, CV_THRESH_BINARY);
+    double meanTop = mean(img_top, top_th1)[0];
+    threshold(img_top, top_th1, meanTop, 255, CV_THRESH_BINARY);
+    bitwise_and(top_th1, top_th, top_th);
 
-       threshold(img_top, top_th1, 30, 255, CV_THRESH_BINARY);
-       double meanTop = mean(img_top, top_th1)[0];
-       threshold(img_top, top_th1, meanTop, 255, CV_THRESH_BINARY);
-       bitwise_and(top_th1, top_th, top_th);
+    threshold(img_bottom, bottom_th1, 30, 255, CV_THRESH_BINARY);
+    double meanBottom = mean(img_bottom, bottom_th1)[0];
+    threshold(img_bottom, bottom_th1, meanBottom, 255, CV_THRESH_BINARY);
+    bitwise_and(bottom_th1, bottom_th, bottom_th);
 
-       threshold(img_bottom, bottom_th1, 30, 255, CV_THRESH_BINARY);
-       double meanBottom = mean(img_bottom, bottom_th1)[0];
-       threshold(img_bottom, bottom_th1, meanBottom, 255, CV_THRESH_BINARY);
-       bitwise_and(bottom_th1, bottom_th, bottom_th);
+    //针对边界位置深拷贝
+    top_th.copyTo(th_result(Rect(0, 0, th_result.cols - 1, 40)));                    //上边界
+    bottom_th.copyTo(th_result(Rect(0, th_result.rows - 40, th_result.cols - 1, 40)));     //下边界
+    left_th.copyTo(th_result(Rect(0, 0, 60, th_result.rows - 1)));                   //左边界
+    right_th.copyTo(th_result(Rect(th_result.cols - 40, 0, 40, th_result.rows - 1)));      //右边界
+    img_right_light_th.copyTo(th_result(Rect(img_gray.cols - 15, 0, 15, img_gray.rows - 1)));      //右边界
+    img_tl_R_th.copyTo(th_result(Rect(0, 0, 200, 150)));                    //上边界
+    img_bl_R_th.copyTo(th_result(Rect(0, 1350, 200, 150)));     //下边界
+    img_tr_R_th.copyTo(th_result(Rect(2850, 0, 150, 150)));                   //左边界
+    img_br_R_th.copyTo(th_result(Rect(2849, 1349, 150, 150)));      //右边界
 
-       //针对边界位置深拷贝
-       top_th.copyTo(th_result(Rect(0, 0, th_result.cols - 1, 40)));                    //上边界
-       bottom_th.copyTo(th_result(Rect(0, th_result.rows - 40, th_result.cols - 1, 40)));     //下边界
-       left_th.copyTo(th_result(Rect(0, 0, 60, th_result.rows - 1)));                   //左边界
-       right_th.copyTo(th_result(Rect(th_result.cols - 40, 0, 40, th_result.rows - 1)));      //右边界
-       img_right_light_th.copyTo(th_result(Rect(img_gray.cols - 15, 0, 15, img_gray.rows - 1)));      //右边界
-       img_tl_R_th.copyTo(th_result(Rect(0, 0, 200, 150)));                    //上边界
-       img_bl_R_th.copyTo(th_result(Rect(0, 1350, 200, 150)));     //下边界
-       img_tr_R_th.copyTo(th_result(Rect(2850, 0, 150, 150)));                   //左边界
-       img_br_R_th.copyTo(th_result(Rect(2849, 1349, 150, 150)));      //右边界
+    //img_tm_th.copyTo(th_result(Rect(500, 0, 2300, 40)));
+    //img_bm_th.copyTo(th_result(Rect(500, 1460, 2300, 40)));
 
-       th_result(Rect(0, 0, 20, th_result.rows)) = uchar(0);            //屏蔽右侧15行，防止灯口误检白点
-       th_result(Rect(th_result.cols - 10, 0, 10, th_result.rows)) = uchar(0);            //屏蔽左侧10行，防止头部亮边误检为白点
-       th_result(Rect(0, 0, th_result.cols, 10)) = uchar(0);
-       Mat th1;
-       //做掩膜
-       threshold(img_gray, th1, 25, 255, CV_THRESH_BINARY);
-       bitwise_and(th1, img_gray, img_gray);
-       //闭运算,弥合内部空洞,连接相距很近的区域
-       Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));//闭操作结构元素
-       morphologyEx(th_result, th_result, CV_MOP_CLOSE, element);   //闭运算形态学操作。可以减少噪点
-                                                                    //th_result(Rect(th_result.cols - 261, th_result.rows - 351, 260, 350)) = uchar(0);//易撕贴部分设置右下角
-       vector<vector<Point>> contours;
-       findContours(th_result, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
-       vector<Rect> boundRect(contours.size());
-       for (vector<int>::size_type i = 0; i < contours.size(); i++)
-       {
-//           boundRect[i] = boundingRect(Mat(contours[i]));
-//           int w = boundRect[i].width;
-//           int h = boundRect[i].height;
-//           int X_1 = boundRect[i].tl().x;//矩形左上角X坐标值
-//           int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
-//           int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
-//           int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
-//           Mat Crop_Image_last = th_result(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1));
-//           double area = countNonZero(Crop_Image_last);
-           //int x_point, y_point;
+    th_result(Rect(0, 0, 20, th_result.rows)) = uchar(0);            //屏蔽右侧15行，防止灯口误检白点
+    th_result(Rect(th_result.cols - 10, 0, 10, th_result.rows)) = uchar(0);            //屏蔽左侧10行，防止头部亮边误检为白点
+    //th_result(Rect(0, 0, th_result.cols, 10)) = uchar(0);
+    //th_result(Rect(0, th_result.rows - 10, th_result.cols, 10)) = uchar(0);
 
-           double area = contourArea(contours[i]);
+    //Mat img_top1, img_bottom1;
+    //threshold(img_tm, img_top1, 110, 255, CV_THRESH_BINARY);
+    //threshold(img_bm, img_bottom1, 110, 255, CV_THRESH_BINARY);
+    //bitwise_and(img_tm, img_top1, img_tm);
+    //bitwise_and(img_bm, img_bottom1, img_bm);
 
-           if (area >= whitePoint_lowerArea && area < 600)
-           {
-               boundRect[i] = boundingRect(Mat(contours[i]));
-               int w = boundRect[i].width;
-               int h = boundRect[i].height;
-               int X_1 = boundRect[i].tl().x;//矩形左上角X坐标值
-               int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
-               int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
-               int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
-               if ((X_1<=25&&Y_1<=15)|| (X_1 <= 20 && Y_2> 1490) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 >= 2985 && Y_2 > 1490)|| (Y_1 < 12 && Y_2 > 16) || (Y_1 > 1485 && Y_2 >= 1489) || (X_1 < 22 && X_2 < 28) || (X_1 > 2985 && X_2 <= 2990)) {
-                   continue;
-               }
-               RotatedRect rect = minAreaRect(contours[i]);
-               double mw = rect.size.height;
-               double mh = rect.size.width;
-               double radio = max(mw / mh, mh / mw);
+    Mat th1;
+    //做掩膜
+    threshold(img_gray, th1, 25, 255, CV_THRESH_BINARY);
+    bitwise_and(th1, img_gray, img_gray);
+    //闭运算,弥合内部空洞,连接相距很近的区域
+    Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));//闭操作结构元素
+    morphologyEx(th_result, th_result, CV_MOP_CLOSE, element);   //闭运算形态学操作。可以减少噪点
+                                                                 //th_result(Rect(th_result.cols - 261, th_result.rows - 351, 260, 350)) = uchar(0);//易撕贴部分设置右下角
+    vector<vector<Point>> contours;
+    findContours(th_result, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
+    std::sort(contours.begin(), contours.end(), compareContourAreas);
+    vector<Rect> boundRect(contours.size());
+    for (vector<int>::size_type i = 0; i < contours.size(); i++)
+    {
+        double area = contourArea(contours[i]);
+        Mat temp_mask = Mat::zeros(th_result.rows, th_result.cols, CV_8UC1);
+        drawContours(temp_mask, contours, i, 255, FILLED, 8);
+        if (area >= whitePoint_lowerArea && area < whitePoint_higherArea)
+        {
+            boundRect[i] = boundingRect(Mat(contours[i]));
+            int w = boundRect[i].width;
+            int h = boundRect[i].height;
+            int X_1 = boundRect[i].tl().x;//矩形左上角X坐标值
+            int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
+            int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
+            int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
+            if ((X_1 <= 25 && Y_1 <= 15) || (X_1 <= 25 && Y_2 > 1485) || (X_2 >= 2985 && Y_1 <= 15) || (X_2 > 2985 && Y_2 > 1485) || (Y_1 < 12 && Y_2 > 16) || (Y_1 > 1485 && Y_2 >= 1489) || (X_1 < 22 && X_2 < 28) || (X_1 > 2985 && X_2 <= 2990)) {
+                continue;
+            }
+            RotatedRect rect = minAreaRect(contours[i]);
+            double mw = rect.size.height;
+            double mh = rect.size.width;
+            double radio = max(mw / mh, mh / mw);
 
-               //长宽比排除
-               if (radio > whitePoint_w_h)
-               {
-                   continue;
-               }
+            //长宽比排除
+            if (radio > whitePoint_w_h)
+            {
+                continue;
+            }
 
-               int x = boundRect[i].x + w / 2;
-               int y = boundRect[i].y + h / 2;
+            int x = boundRect[i].x + w / 2;
+            int y = boundRect[i].y + h / 2;
 
-               //Moments m = moments(contours[i]);//查找轮廓的重心
-               //x_point = int(m.m10 / m.m00);
-               //y_point = int(m.m01 / m.m00);
-               //if (x_point > 840 && x_point < 930 && y_point > 730 && y_point < 830)
-               //{
-               // int A = 0;
-               //}
-               if (true)
-               {
-                   //粗筛选白点缺陷
-                   int border = 15;
-                   int x_lt = X_1 - border;
-                   if (x_lt < 0)
-                   {
-                       x_lt = 0;
-                   }
-                   int y_lt = Y_1 - border;
-                   if (y_lt < 0)
-                   {
-                       y_lt = 0;
-                   }
-                   int x_rt = X_2 + border;
-                   if (x_rt > img_gray.size[1] - 1)
-                   {
-                       x_rt = img_gray.size[1] - 1;
-                   }
-                   int y_rt = Y_2 + border;
-                   if (y_rt > img_gray.size[0] - 1)
-                   {
-                       y_rt = img_gray.size[0] - 1;
-                   }
-                   //排除屏幕上划痕的干扰,侧光图上检测
-                   Mat temp_ceguang = img_ceguang(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
-                   //Mat mask_ceguang = th_result(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
-                   //double mean_in_ceguang = mean(temp_ceguang, mask_ceguang)[0];
-                   //double mean_out_ceguang = mean(temp_ceguang, ~mask_ceguang)[0];
-                   //double ceguang_th = mean_in_ceguang - mean_out_ceguang;
-                   int Qnum1 = 0;
-                   double mean_temp1 = mean(temp_ceguang)[0];
-                   double ceguang_th, stddev;
+            //Moments m = moments(contours[i]);//查找轮廓的重心
+            //x_point = int(m.m10 / m.m00);
+            //y_point = int(m.m01 / m.m00);
+            //if (x_point > 840 && x_point < 930 && y_point > 730 && y_point < 830)
+            //{
+            // int A = 0;
+            //}
+            if (true)
+            {
+                //粗筛选白点缺陷
+                int border = 15;
+                int x_lt = X_1 - border;
+                if (x_lt < 0)
+                {
+                    x_lt = 0;
+                }
+                int y_lt = Y_1 - border;
+                if (y_lt < 0)
+                {
+                    y_lt = 0;
+                }
+                int x_rt = X_2 + border;
+                if (x_rt > img_gray.size[1] - 1)
+                {
+                    x_rt = img_gray.size[1] - 1;
+                }
+                int y_rt = Y_2 + border;
+                if (y_rt > img_gray.size[0] - 1)
+                {
+                    y_rt = img_gray.size[0] - 1;
+                }
+                //排除屏幕上划痕的干扰,侧光图上检测
+                Mat temp_ceguang = img_ceguang(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
+                int Qnum1 = 0;
+                double mean_temp1 = mean(temp_ceguang)[0];
+                double ceguang_th, stddev;
 
-                   //Mat  col, row;
-                   //double m, n, p, o, r;
-                   //ofstream oFile;
-                   //oFile.open("D:\\Users\\秦立峰\\Desktop\\test.csv", ios::out | ios::trunc);
-                   //////列灰度均值
-                   ////for (int col_line = 0; col_line < temp_ceguang.cols; col_line++)//列进行编列
-                   ////{
-                   ////	col = temp_ceguang.colRange(col_line, col_line + 1).clone();
-                   ////	m = mean(col)[0];
+                //上下边缘时排灰尘与气泡
+                if (y_rt < 40 || (img_gray.rows - y_lt < 40))
+                {
+                    Mat  col, row;
+                    double m, n, p;
+                    for (int col_line = 0; col_line < temp_ceguang.cols; col_line++)//列进行编列  行遍历
+                    {
+                        col = temp_ceguang.colRange(col_line, col_line + 1).clone();
+                        m = mean(col)[0];
 
-                   ////	oFile << m << "," << endl;
-                   ////}
-                   ////oFile << " " << "," << endl;
-                   ////行灰度均值
-                   //for (int row_line = 0; row_line < temp_ceguang.rows; row_line++)//列进行编列
-                   //{
-                   // row = temp_ceguang.rowRange(row_line, row_line + 1).clone();
-                   // m = mean(col)[0];
+                        p = m - mean_temp1;
 
-                   // oFile << m << "," << endl;
-                   //}
-                   //oFile << " " << "," << endl;
-                   ////一次差分
-                   //for (int col_line = 5; col_line < white1.cols - 10; col_line++)//列进行编列
-                   //{
-                   // col = white1.colRange(col_line, col_line + 5).clone();
-                   // m = mean(col)[0];
+                        if (p > 4)
+                            Qnum1++;
+                    }
+                }
 
-                   // col = white1.colRange(col_line + 5, col_line + 10).clone();
-                   // n = mean(col)[0];
+                //左右边缘时排灰尘与气泡
+                if (x_rt < 40 || (img_gray.cols - x_rt < 40))
+                {
+                    Mat  col, row;
+                    double m, n, p;
+                    for (int row_line = 0; row_line < temp_ceguang.rows; row_line++)//列进行编列  行遍历
+                    {
+                        row = temp_ceguang.rowRange(row_line, row_line + 1).clone();
+                        m = mean(row)[0];
 
-                   // p = n - m;
+                        p = m - mean_temp1;
 
-                   // oFile << p << "," << endl;
-                   //}
-                   //oFile << " " << "," << endl;
+                        if (p > 4)
+                            Qnum1++;
+                    }
+                }
 
+                //屏幕内部时排灰尘与气泡
+                if ((y_rt >= 40 && (img_gray.rows - y_lt >= 40 && x_rt >= 40 && (img_gray.cols - x_rt >= 40))) || (Qnum1 > 0))
+                {
+                    Mat mask_ceguang = th_result(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
+                    double mean_in_ceguang = mean(temp_ceguang, mask_ceguang)[0];
+                    double mean_out_ceguang = mean(temp_ceguang, ~mask_ceguang)[0];
+                    ceguang_th = mean_in_ceguang - mean_out_ceguang;
 
-                   //上下边缘时排灰尘与气泡
-                   if (y_rt < 40 || (img_gray.rows - y_lt < 40))
-                   {
-                       Mat  col, row;
-                       double m, n, p;
-                       for (int col_line = 0; col_line < temp_ceguang.cols; col_line++)//列进行编列  行遍历
-                       {
-                           col = temp_ceguang.colRange(col_line, col_line + 1).clone();
-                           m = mean(col)[0];
-
-                           p = m - mean_temp1;
-
-                           if (p > 4)
-                               Qnum1++;
-                       }
-                   }
-
-                   //左右边缘时排灰尘与气泡
-                   if (x_rt < 40 || (img_gray.cols - x_rt<40))
-                   {
-                       Mat  col, row;
-                       double m, n, p;
-                       for (int row_line = 0; row_line < temp_ceguang.rows; row_line++)//列进行编列  行遍历
-                       {
-                           row = temp_ceguang.rowRange(row_line, row_line + 1).clone();
-                           m = mean(row)[0];
-
-                           p = m - mean_temp1;
-
-                           if (p > 4)
-                               Qnum1++;
-                       }
-                   }
-
-                   //屏幕内部时排灰尘与气泡
-                   if ((y_rt >= 40 && (img_gray.rows - y_lt >= 40 && x_rt >= 40 && (img_gray.cols - x_rt >= 40))) || (Qnum1>0))
-                   {
-                       Mat mask_ceguang = th_result(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
-                       double mean_in_ceguang = mean(temp_ceguang, mask_ceguang)[0];
-                       double mean_out_ceguang = mean(temp_ceguang, ~mask_ceguang)[0];
-                       ceguang_th = mean_in_ceguang - mean_out_ceguang;
-
-                       //侧光图上的灰度均值方差排除气泡等干扰
-                       cv::Mat meanGray;
-                       cv::Mat stdDev;
-                       cv::meanStdDev(temp_ceguang, meanGray, stdDev);
-                       double avg = meanGray.at<double>(0, 0);
-                       stddev = stdDev.at<double>(0, 0);
-                   }
-                   else
-                   {
-                       ceguang_th = 0;
-                       stddev = 0;
-                   }
+                    //侧光图上的灰度均值方差排除气泡等干扰
+                    cv::Mat meanGray;
+                    cv::Mat stdDev;
+                    cv::meanStdDev(temp_ceguang, meanGray, stdDev);
+                    double avg = meanGray.at<double>(0, 0);
+                    stddev = stdDev.at<double>(0, 0);
+                }
+                else
+                {
+                    ceguang_th = 0;
+                    stddev = 0;
+                }
 
 
-                   //排除贴膜划痕划痕跳过
-                   if (ceguang_th > scratchth)
-                   {
-                       continue;
-                   }
-                   ////侧光图上的灰度均值方差排除气泡等干扰
-                   //cv::Mat meanGray;
-                   //cv::Mat stdDev;
-                   //cv::meanStdDev(temp_ceguang, meanGray, stdDev);
-                   //double avg = meanGray.at<double>(0, 0);
-                   //double stddev = stdDev.at<double>(0, 0);
-                   //排除贴膜表面气泡等跳过
-                   if (stddev > bubbleth)
-                   {
-                       continue;
-                   }
+                //排除贴膜划痕划痕跳过
+                if (ceguang_th > scratchth)
+                {
+                    continue;
+                }
+                ////侧光图上的灰度均值方差排除气泡等干扰
+                //cv::Mat meanGray;
+                //cv::Mat stdDev;
+                //cv::meanStdDev(temp_ceguang, meanGray, stdDev);
+                //double avg = meanGray.at<double>(0, 0);
+                //double stddev = stdDev.at<double>(0, 0);
+                //排除贴膜表面气泡等跳过
+                if (stddev > bubbleth)
+                {
+                    continue;
+                }
 
-                   //颜色深浅判断2个指标  1:缺陷区域与周围灰度差值(整体性)  2:缺陷中心点与一次缺陷区域灰度差值(局部性)
-                   //Mat temp_gray = img_gray(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
-                   Mat temp_gray = Original(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
-                   Mat mask = th_result(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
+                //颜色深浅判断2个指标  1:缺陷区域与周围灰度差值(整体性)  2:缺陷中心点与一次缺陷区域灰度差值(局部性)
+                //Mat temp_gray = img_gray(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
+                Mat temp_gray = Original(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
+                Mat mask = th_result(Rect(x_lt, y_lt, x_rt - x_lt, y_rt - y_lt));
 
-                   double minp;			//最小灰度值
-                   double maxp;			//最大灰度值
-                   Point low_gray, high_gray;	//正常取时灰度最大最小点
+                double minp;			//最小灰度值
+                double maxp;			//最大灰度值
+                Point low_gray, high_gray;	//正常取时灰度最大最小点
 
-                   minMaxLoc(temp_gray, &minp, &maxp, &low_gray, &high_gray, mask);	//求最大最小灰度点
-                   double spotpeak_temp = maxp - minp;
+                minMaxLoc(temp_gray, &minp, &maxp, &low_gray, &high_gray, mask);	//求最大最小灰度点
+                double spotpeak_temp = maxp - minp;
 
-                   double mean_temp = mean(temp_gray)[0];
+                double mean_temp = mean(temp_gray)[0];
 
-                   double meanOut;//缺陷外围灰度均值
-                   double meanIn;//缺陷区域灰度均值
-                   double meanAll;//整个区域的灰度均值
-                   int Qnum = 0;
+                double meanOut;//缺陷外围灰度均值
+                double meanIn;//缺陷区域灰度均值
+                double meanAll;//整个区域的灰度均值
+                int Qnum = 0;
 
-                   //防止普通边缘误检——上下边缘
-                   if (y_rt < 40 || (img_gray.rows - y_lt < 40))
-                   {
-                       Mat  col, row;
-                       double m, n, p;
-                       for (int col_line = 0; col_line < temp_gray.cols; col_line++)//列进行编列  行遍历
-                       {
-                           col = temp_gray.colRange(col_line, col_line + 1).clone();
-                           m = mean(col)[0];
+                //防止普通边缘误检——上下边缘
+                if (y_rt < 40 || (img_gray.rows - y_lt < 40))
+                {
+                    Mat  col, row;
+                    double m, n, p;
+                    for (int col_line = 0; col_line < temp_gray.cols; col_line++)//列进行编列  行遍历
+                    {
+                        col = temp_gray.colRange(col_line, col_line + 1).clone();
+                        m = mean(col)[0];
 
-                           p = m - mean_temp;
+                        p = m - mean_temp;
 
-                           if (p > 4)
-                               Qnum++;	//真实白点区域
-                       }
-                   }
-                   //左右边缘
-                   if (x_rt < 40 || (img_gray.cols - x_lt<40))
-                   {
-                       Mat  col, row;
-                       double m, n, p;
-                       for (int row_line = 0; row_line < temp_gray.rows; row_line++)//列进行编列  行遍历
-                       {
-                           row = temp_gray.rowRange(row_line, row_line + 1).clone();
-                           m = mean(row)[0];
+                        if (p > 4)
+                            Qnum++;	//真实白点区域
+                    }
+                }
+                //左右边缘
+                if (x_rt < 40 || (img_gray.cols - x_lt < 40))
+                {
+                    Mat  col, row;
+                    double m, n, p;
+                    for (int row_line = 0; row_line < temp_gray.rows; row_line++)//列进行编列  行遍历
+                    {
+                        row = temp_gray.rowRange(row_line, row_line + 1).clone();
+                        m = mean(row)[0];
 
-                           p = m - mean_temp;
+                        p = m - mean_temp;
 
-                           if (p > 4)
-                               Qnum++;	//真实白点区域
-                       }
-                   }
+                        if (p > 4)
+                            Qnum++;	//真实白点区域
+                    }
+                }
 
-                   if (Qnum > 0 || (y_rt >= 40 && (img_gray.rows - y_lt >= 40 && x_rt >= 40 && (img_gray.cols - x_lt >= 40))))//边界处真实白点或屏内区域
-                   {
-                       //防止R角边缘误检
-                       int grayValueSum = 0;
-                       int pixelsNum = 0;
-                       Mat maskGray;
-                       bitwise_and(temp_gray, mask, maskGray);
-                       for (int i = 0; i < maskGray.cols; i++)
-                       {
-                           for (int j = 0; j < maskGray.rows; j++)
-                           {
-                               if (maskGray.at<uchar>(j, i) > 100)
-                               {
-                                   grayValueSum += maskGray.at<uchar>(j, i);
-                                   pixelsNum++;
-                               }
-                           }
-                       }
-                       meanIn = grayValueSum / (float)pixelsNum;
+                if (Qnum > 0 || (y_rt >= 40 && (img_gray.rows - y_lt >= 40 && x_rt >= 40 && (img_gray.cols - x_lt >= 40))))//边界处真实白点或屏内区域
+                {
+                    //防止R角边缘误检
+                    int grayValueSum = 0;
+                    int pixelsNum = 0;
+                    Mat maskGray;
+                    bitwise_and(temp_gray, mask, maskGray);
+                    for (int i = 0; i < maskGray.cols; i++)
+                    {
+                        for (int j = 0; j < maskGray.rows; j++)
+                        {
+                            if (maskGray.at<uchar>(j, i) > 100)
+                            {
+                                grayValueSum += maskGray.at<uchar>(j, i);
+                                pixelsNum++;
+                            }
+                        }
+                    }
+                    if (pixelsNum == 0) {
+                        meanIn = 0;
+                    }
+                    else
+                    {
+                        meanIn = grayValueSum / (float)pixelsNum;
+                    }
 
-                       grayValueSum = 0;
-                       pixelsNum = 0;
-                       bitwise_and(temp_gray, ~mask, maskGray);
-                       for (int i = 0; i < maskGray.cols; i++)
-                       {
-                           for (int j = 0; j < maskGray.rows; j++)
-                           {
-                               if (maskGray.at<uchar>(j, i) > 100)
-                               {
-                                   grayValueSum += maskGray.at<uchar>(j, i);
-                                   pixelsNum++;
-                               }
-                           }
-                       }
-                       meanOut = grayValueSum / (float)pixelsNum;
+                    grayValueSum = 0;
+                    pixelsNum = 0;
+                    bitwise_and(temp_gray, ~mask, maskGray);
+                    for (int i = 0; i < maskGray.cols; i++)
+                    {
+                        for (int j = 0; j < maskGray.rows; j++)
+                        {
+                            if (maskGray.at<uchar>(j, i) > 100)
+                            {
+                                grayValueSum += maskGray.at<uchar>(j, i);
+                                pixelsNum++;
+                            }
+                        }
+                    }
+                    if (pixelsNum == 0) {
+                        meanIn = 0;
+                    }
+                    else
+                    {
+                        meanOut = grayValueSum / (float)pixelsNum;
+                    }
+                    grayValueSum = 0;
+                    pixelsNum = 0;
+                    for (int i = 0; i < temp_gray.cols; i++)
+                    {
+                        for (int j = 0; j < temp_gray.rows; j++)
+                        {
+                            if (temp_gray.at<uchar>(j, i) > 100)
+                            {
+                                grayValueSum += temp_gray.at<uchar>(j, i);
+                                pixelsNum++;
+                            }
+                        }
+                    }
+                    if (pixelsNum == 0) {
+                        meanIn = 0;
+                    }
+                    else
+                    {
+                        meanAll = grayValueSum / (float)pixelsNum;
+                    }
 
-                       grayValueSum = 0;
-                       pixelsNum = 0;
-                       for (int i = 0; i < temp_gray.cols; i++)
-                       {
-                           for (int j = 0; j < temp_gray.rows; j++)
-                           {
-                               if (temp_gray.at<uchar>(j, i) > 100)
-                               {
-                                   grayValueSum += temp_gray.at<uchar>(j, i);
-                                   pixelsNum++;
-                               }
-                           }
-                       }
-                       meanAll = grayValueSum / (float)pixelsNum;
-
-                       double  defect_areath = meanIn - meanOut;//缺陷区域与周围灰度差值(整体性)
-                                                                //double coreth = img_gray.at<uchar>(y_point, x_point) - meanAll;
-                                                                //double coreth = Original.at<uchar>(y_point, x_point) - meanAll;
-
-                       if (img_gray.cols - x_rt < corewholeth)
-                       {
-                           //灰度差限制
-                           if (defect_areath >= 3.2 && spotpeak_temp >= 2.8 && area <= 80|| area > 80 && defect_areath >= 3 && spotpeak_temp >= 2.8)//这里的参数先写成定值
-                           {
-                               result = true;
-                               CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
-                               CvPoint bottom_right4 = cvPoint(X_2 + 20, Y_2 + 20);
-                               rectangle(white_yiwu, top_lef4, bottom_right4, Scalar(0, 0, 0), 5, 8, 0);
-                               /*Point p3(x_point, y_point);
-                               circle(white_yiwu, p3, 12, Scalar(0, 0, 255), 1, 8, 0);*/
-                               string ceghaung = "cegaung:" + to_string(ceguang_th) + " " + "th:" + to_string(defect_areath) + " " /*+ "ceth:" + to_string(coreth) + " "*/ + "area:" + to_string(area) + " " + "stddev:" + to_string(stddev);
-                               putText(white_yiwu, ceghaung, Point(30, 30), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1, 8, 0);
-                           }
-                       }
-                       else
-                       {
-                           //灰度差限制
-                           if (defect_areath >= 3.5 && spotpeak_temp >= 2.8 && area <= 60|| area > 60 && defect_areath >= 3 && spotpeak_temp >= 2.8)//这里的参数先写成定值
-                           {
-                               result = true;
-                               CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
-                               CvPoint bottom_right4 = cvPoint(X_2 + 20, Y_2 + 20);
-                               rectangle(white_yiwu, top_lef4, bottom_right4, Scalar(0, 0, 0), 5, 8, 0);
-                               /*Point p3(x_point, y_point);
-                               circle(white_yiwu, p3, 12, Scalar(0, 0, 255), 1, 8, 0);*/
-                               string ceghaung = "cegaung:" + to_string(ceguang_th) + " " + "th:" + to_string(defect_areath) + " " /*+ "ceth:" + to_string(coreth) + " "*/ + "area:" + to_string(area) + " " + "stddev:" + to_string(stddev);
-                               putText(white_yiwu, ceghaung, Point(30, 30), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1, 8, 0);
-                           }
-                       }
-                   }
-               }
-           }
-       }
-       if (result == true)
-       {
-           *causecolor = "白点";
-           *mresult = white_yiwu;
-       }
-       return result;
-   }
-
+                    double  defect_areath = meanIn - meanOut;//缺陷区域与周围灰度差值(整体性)
+                    if (img_gray.cols - x_rt < corewholeth)
+                    {
+                        //灰度差限制
+                        if (defect_areath >= 4.5 && spotpeak_temp >= 3 && area <= 60 || area > 60 && defect_areath >= 4 && spotpeak_temp >= 4)//这里的参数先写成定值
+                        {
+                            result = true;
+                            CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
+                            CvPoint bottom_right4 = cvPoint(X_2 + 20, Y_2 + 20);
+                            rectangle(white_yiwu, top_lef4, bottom_right4, Scalar(0, 0, 0), 5, 8, 0);
+                            /*Point p3(x_point, y_point);
+                            circle(white_yiwu, p3, 12, Scalar(0, 0, 255), 1, 8, 0);*/
+                            string ceghaung = "cegaung:" + to_string(ceguang_th) + " " + "th:" + to_string(defect_areath) + " " /*+ "ceth:" + to_string(coreth) + " "*/ + "area:" + to_string(area) + " " + "stddev:" + to_string(stddev);
+                            putText(white_yiwu, ceghaung, Point(30, 30), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1, 8, 0);
+                        }
+                    }
+                    else
+                    {
+                        //灰度差限制
+                        if (defect_areath >= 4 && spotpeak_temp >= 3 && area <= 30 || area > 30 && defect_areath >= 3 && spotpeak_temp >= 4/*|| defect_areath >= 8|| spotpeak_temp >= 8*/)//这里的参数先写成定值
+                        {
+                            result = true;
+                            CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
+                            CvPoint bottom_right4 = cvPoint(X_2 + 20, Y_2 + 20);
+                            rectangle(white_yiwu, top_lef4, bottom_right4, Scalar(0, 0, 0), 5, 8, 0);
+                            /*Point p3(x_point, y_point);
+                            circle(white_yiwu, p3, 12, Scalar(0, 0, 255), 1, 8, 0);*/
+                            string ceghaung = "cegaung:" + to_string(ceguang_th) + " " + "th:" + to_string(defect_areath) + " " /*+ "ceth:" + to_string(coreth) + " "*/ + "area:" + to_string(area) + " " + "stddev:" + to_string(stddev);
+                            putText(white_yiwu, ceghaung, Point(30, 30), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1, 8, 0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (result == true)
+    {
+        *causecolor = "白点";
+        *mresult = white_yiwu;
+    }
+    return result;
+}
    /*=========================================================
    *@函 数 名: adaptiveThresholdCustom
    *@功能描述: 自适应阈值分割实现图像二值化
