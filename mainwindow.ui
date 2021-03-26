@@ -920,8 +920,8 @@ color: rgb(255, 255, 255);</string>
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1000</width>
-          <height>974</height>
+          <width>995</width>
+          <height>967</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
@@ -2133,7 +2133,7 @@ font:11pt &quot;黑体&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1275</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <property name="styleSheet">

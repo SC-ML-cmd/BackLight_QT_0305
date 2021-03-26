@@ -652,8 +652,8 @@ void convexSetPretreatment(Mat& _src){
     vector<vector<Point> > preContours;
     vector<Vec4i> hierarchy;
 
-    /// Detect edges using Threshold
-    threshold(_src, threshold_output, 100, 255, THRESH_BINARY);
+    /// Detect edges using Threshold 修改原图二值化阈值，可以使提取更准确
+    threshold(_src, threshold_output, 25, 255, THRESH_BINARY);
 
     /// Find contours
     findContours(threshold_output, preContours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
@@ -2815,7 +2815,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
     erode(F_result, edge_thresold, structure_element);
     Mat th_result = Mat::zeros(img_gray.size(), img_gray.type());
     edge_thresold.copyTo(th_result(Rect(0, 0, 100, th_result.rows)));
-    bitwise_or(th_result, compensateMat, th_result);
+    //bitwise_or(th_result, compensateMat, th_result);
 
     Mat maskR1, maskR1_Binary, maskR2, maskR2_Binary, binaryationR1, binaryationR2, stdDev, Mean;
     maskR1 = img_gray(Rect(0, 0, 100, 100));
@@ -3041,8 +3041,10 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                     intensitySub = (double)min(centerY - 100, 1400 - centerY) / 650 * 8;
                 }
 
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15) || (intensity >= 24.3 && area > 500 && ratio < 5)|| (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
-                    ||(intensity >= 20 && meanValue < 135)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
+                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15)
+                    ||(intensity >= 24.3 && area > 500 && ratio < 5)
+                    || (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
+                    ||(intensity >= 20 && meanValue < 135) || (meanValue <= 90)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21 22.8 //23 22.20 22.2 21.4 22.37 21.65
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(x_1, y_1);
@@ -5301,7 +5303,13 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
 //                                   bitwise_and(TempCeguang0, ~TempImage0, TempCeguang1);
                                    double ceguang1_Out = mean(TempCeguang0, ~TempImage0)[0];
                                    double differ = ceguang1_Out - ceguang1_In;
-                                   if (area < 130 && area >= 50 && differ <= 6.6 || area < 50 && area >= 10 && differ < 3.1 || area > 0 && area < 10 && differ < 1.8 || area >= 130 || Luminaceth > 11.2 && area > 80)
+
+                                   if ( (area < 130 && area >= 50 && differ <= 6.6)
+                                     || (area < 50 && area >= 10 && differ < 3.1)
+                                     || (area > 0 && area < 10 && differ < 1.8)
+                                     || (area >= 130)
+                                     || (Luminaceth > 11.2 && area > 80)
+                                     || (area<50 && area>=10 && differ > 8 && differ <11.2))
                                    {
                                        //double area7 = countNonZero(Crop_Image_last);
 
@@ -6782,7 +6790,7 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
             CvPoint top_lef4 = cvPoint(doubtBoundRect[i].tl().x, doubtBoundRect[i].tl().y);
             CvPoint bottom_right4 = cvPoint(doubtBoundRect[i].br().x, doubtBoundRect[i].br().y);
             rectangle(left_white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
-            *mresult = white;
+            *mresult = left_white;
             *causecolor = "移位";
             return true;
         }
