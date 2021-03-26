@@ -213,7 +213,8 @@ SOURCES += \
     detector_choose.cpp \
     excelhepler.cpp \
     history_batchfind.cpp \
-    history_data.cpp
+    history_data.cpp \
+    deadlightparameter.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -252,7 +253,9 @@ HEADERS += \
     excelhepler.h \
     history_batchfind.h \
     history_data.h \
-    threadsafelog.h
+    threadsafelog.h \
+    deadlightparameter.h \
+    shiftdefectparameter.h
 
 FORMS += \
         mainwindow.ui \

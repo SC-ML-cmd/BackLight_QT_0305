@@ -905,7 +905,7 @@ void Form_Camera::Adaptive_exposure()
             }
             qDebug()<<"调整次数:"<<Adaptive_Num<<endl;
             qDebug()<<"自适应曝光值:"<<exposure_value<<endl;
-            MainWindow::debug_msg("调整次数:"+QString::number(Adaptive_Num)+current_date);
+            MainWindow::debug_msg("调整 次数:"+QString::number(Adaptive_Num)+current_date);
     }
     if(camera->m_stDevList.nDeviceNum!=0)
     {

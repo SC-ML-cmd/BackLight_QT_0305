@@ -1,6 +1,7 @@
 ﻿#include "detector.h"
 #include "Ployfit.h"
-#include"global_variable.h"
+
+
 #include<QDebug>
 #include"qdatetime.h"
 #include <QFileDialog>
@@ -19,8 +20,12 @@ Mat mura_imgL,mura_imgR;
 int screenLength = 2900;  //屏幕长度
 int screenWidth = 1400;   //屏幕宽度
 int Whiteprint_Detect_Flag;
+//创建日志打印对象
 ThreadSafelog *logPtr = new ThreadSafelog;
-
+//创建死灯参数对象
+DeadLightParameter *SDPara = new DeadLightParameter;
+//创建移位参数对象
+ShiftDefectParameter *YWPara = new ShiftDefectParameter;
 
 void debug_msg1(QVariant msg)
 {
@@ -2774,7 +2779,7 @@ bool BoomDead_light(Mat white, Mat ceguang, Mat *mresult, QString *causecolor)
 ======================================================================*/
 bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
 {
-    double meanValue = mean(white)[0]; //134 //143 144
+    double meanValue = mean(white)[0];
     int boder = 5;
 
     bool result = false;
@@ -2948,6 +2953,7 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
 
     vector<Rect> boundRect(contours.size());
     vector<RotatedRect> minboundRect(contours.size());
+
     for (vector<int>::size_type i = 0; i < contours.size(); i++)
     {
         double area = contourArea(contours[i]);
@@ -2960,7 +2966,8 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
         float height = sqrt(abs(minRectPoint[1].x - minRectPoint[2].x) * abs(minRectPoint[1].x - minRectPoint[2].x)
             + abs(minRectPoint[1].y - minRectPoint[2].y) * abs(minRectPoint[1].y - minRectPoint[2].y));
         float ratio = max(width / height, height / width);
-        if (area > 300 && area < 150000 && area/ratio)
+
+        if (area > SDPara->areaDownLimit && area < SDPara->areaUpperLimit)
         {
             Mat temp_mask = Mat::zeros(th_result.rows, th_result.cols, CV_8UC1);
             drawContours(temp_mask, contours, i, 255, FILLED, 8);
@@ -2976,15 +2983,15 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
             int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
 
             //获取矩形的中心点
-            int centerX = X_1 + int(w) / 2; //55       <= 100
-            int centerY = Y_1 + int(h) / 2; //1423     <= 100 || >= 1400
+            int centerX = X_1 + int(w) / 2;
+            int centerY = Y_1 + int(h) / 2;
 
             int x_1 = X_1;//矩形左上角X坐标值
             int y_1 = Y_1;//矩形左上角Y坐标值
             int x_2 = X_2;//矩形右下角X坐标值
             int y_2 = Y_2;//矩形右下角Y坐标值
             double maxVal = max(w / h, h / w);
-            if (max(w / h, h / w) <= 8) //wsc将长宽比 由4--> 6.5 -->7 -->13 0313将长宽比修改为--> 8
+            if (max(w / h, h / w) <= SDPara->lengthWidthRadio) //wsc将长宽比 由4--> 6.5 -->7 -->13 0313将长宽比修改为--> 8
             {
                 //                //排除R角干扰
                 //                if (area >= 1800 && area <= 2800 && ((X_1 == 0 && Y_1 == 0) || (X_1 == 0 && Y_2 >= temp_mask.rows - 1)))
@@ -3015,14 +3022,12 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                 Mat temp_mask1 = BinaryWhite(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1));
                 Mat temp_mask2;
                 double mean_in_gray = mean(imagedoubt, mask1)[0];
-                if (mean_in_gray > 180)
+                if (mean_in_gray > SDPara->doubtAreaInMeanUpLimit)
                 {
                     continue;
                 }
-                //threshold(imagedoubt, temp_mask1, 40, 255, CV_THRESH_BINARY);
-                //double tempMean = mean(imagedoubt, temp_mask1)[0];
-                //if(tempMean >= 20)
-                //	threshold(imagedoubt, temp_mask1, tempMean - 20, 255, CV_THRESH_BINARY);
+
+
                 bitwise_and(temp_mask1, ~mask, temp_mask2);
                 Mat TempImage_Binary;
                 double mean_out_gray = mean(imagedoubt, temp_mask2)[0];
@@ -3040,16 +3045,12 @@ bool Dead_light(Mat white, Mat* mresult, QString* causecolor)
                 {
                     intensitySub = (double)min(centerY - 100, 1400 - centerY) / 650 * 8;
                 }
-
-/*                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 15)
-                    ||(intensity >= 24.3 && area > 500 && ratio < 5)
-                    || (intensity >= (24-intensitySub)&& centerY>100 &&centerY<1400)
-                    ||(intensity >= 20 && meanValue < 135) || (meanValue <= 90))*/
-                if ((mean_out_gray <= 105 && mean_in_gray <= 105 && intensity >= 25)
-                    ||(intensity >= 27 && area > 500 && ratio < 5)
-                    || (intensity >= (27-intensitySub)&& centerY>100 &&centerY<1400)
-                    ||(intensity >= 27 && meanValue < 135)
-                    || (meanValue <= 80))
+                //灰度均值小于90直接认为不良
+                if ((mean_out_gray <= SDPara->doubtAreaOutMean1 && mean_in_gray <= SDPara->doubtAreaInMean1 && intensity >= SDPara->doubtAreaIntensity1)
+                    || (intensity >= SDPara->doubtAreaIntensity2 && area > SDPara->fourAngleArea && ratio < SDPara->fourAngleRadio)
+                    || (intensity >= (SDPara->doubtAreaIntensity2 - intensitySub) && centerY > 100 &&centerY < 1400)
+                    ||(intensity >= SDPara->doubtAreaIntensity3 && meanValue < 135)
+                    || (meanValue <= SDPara->wholeMeanDownlimit)) //0303 wsc intensity20.5 --> 28 // 0311 wsc intensity -> 21   22.8 //23 22.20 22.2 21.4 22.37 21.65
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(x_1, y_1);
@@ -6810,7 +6811,7 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
         Mat temp_mask = Mat::zeros(white.rows, white.cols, CV_8UC1);
         drawContours(temp_mask, doubtContours, i, 255, FILLED, 8);
         //判断边角出现较大像素区域则认定为出现移位
-        if ((centerX < 100 || centerX>2900) && (centerY < 100 || centerY>1400) && (area > 80 && area < 1000)||
+        if ((centerX < 100 || centerX>2900) && (centerY < 100 || centerY>1400) && (area > YWPara->edgeAreaDownLimit && area < YWPara->edgeAreaUpperLimit)||
             centerY > 1480 && area>500 && area <5000)
         {
             CvPoint top_lef4 = cvPoint(doubtBoundRect[i].tl().x, doubtBoundRect[i].tl().y);
@@ -6843,7 +6844,7 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
     bitwise_and(ImageBinary, th1, th2);
 
     //涂黑上下
-    th1(Rect(0, 0, th1.cols - 1, 10)) = uchar(0);
+    th1(Rect(0, 0, th1.cols - 1, YWPara->lightPortShieldWidth)) = uchar(0);
     th1(Rect(0, th1.rows - 10, th1.cols - 1, 10)) = uchar(0);
 
     th1(Rect(0, 0, 100, 100)) = uchar(0);
@@ -6851,18 +6852,6 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
     th1(Rect(th1.cols - 100, 0, 100, 100)) = uchar(0);
     th1(Rect(th1.cols - 100, th1.rows - 100, 100, 100)) = uchar(0);
 
-    //将
-    //if (num == 0)
-    //{
-    //	th1(Rect(0, 0, th1.cols - 1, 50)) = uchar(0);
-    //}
-    //else if (num == 1)
-    //{
-    //	th1(Rect(0, th1.rows - 50, th1.cols - 1, 50)) = uchar(0);
-    //}
-
-    //th1(Rect(0, 0, th1.cols - 1, 100)) = uchar(0);
-    //th1(Rect(0, th1.rows - 100, th1.cols - 1, 100)) = uchar(0);
 
     findContours(th1, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
     std::sort(contours.begin(), contours.end(), compareContourAreas);
@@ -6875,7 +6864,7 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
         double area = contourArea(contours[i]);
         Mat temp_mask = Mat::zeros(th1.rows, th1.cols, CV_8UC1);
         drawContours(temp_mask, contours, i, 255, FILLED, 8);
-        if (area > 200 && area < 80000)
+        if (area > YWPara->areaDownLimit && area < YWPara->areaUpperLimit)
         {
             Mat temp_mask = Mat::zeros(th1.rows, th1.cols, CV_8UC1);
             drawContours(temp_mask, contours, i, 255, FILLED, 8);
@@ -6891,7 +6880,7 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
             double virtualRadio = max(boundRect[i].width / boundRect[i].height, boundRect[i].height / boundRect[i].width);
             double stddev1 = stdDev1.at<double>(0, 0);    // 65
             double val = stddev1 / virtualRadio * 9;
-            if (stddev1 >= 13 && (stddev1 / virtualRadio * 9) >= 15) //将长宽比相对标准差对应系数改为9
+            if (stddev1 >= YWPara->standardDevThres1 && (stddev1 / virtualRadio * 9) >= YWPara->standardDevThres2) //将长宽比相对标准差对应系数改为9
             {
                 continue;
             }
@@ -6908,18 +6897,14 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
             int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
             int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
             int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
-            //int x_point = X_1 + round(w / 2);
-            //int y_point = Y_1 + round(h / 2);
+
             double HeWid = max(Height / Width, Width / Height);
             if ((w < 5 && X_1 >= th1.cols - 4) || (w < 5 && X_2 <= 4))
             {
                 continue;
             }
-            //if (min(Height, Width) >= 200 && ((X_1 == 0 && Y_1 == 0) || (X_1 == 0 && Y_2 >= th1.rows - 1) || (Y_1 == 0 && X_2 >= th1.cols - 1) || (X_2 >= th1.cols - 1 && Y_2 >= th1.rows - 1)))
-            //{
-            //	continue;
-            //}
-            if (HeWid >= 10 && max(Height, Width) >= 40)  // 03/04 wsc HeWid 3.2 -> 10
+
+            if (HeWid >= YWPara->lengthWidthRadioULimit && max(Height, Width) >= 40)  // 03/04 wsc HeWid 3.2 -> 10
             {
                 int border = 25;
                 X_1 = X_1 - border;
@@ -6962,7 +6947,8 @@ bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_w
                     MinmeanIn = mean_all / 2 + 10;
                 else
                     MinmeanIn = mean_all / 2;
-                if (((HeWid <= 8 && differ >= 13) || (HeWid > 8 && differ >= 9.5)) && mean_In >= MinmeanIn)   //日期：2021/3/2 6504:   HeWid :8-->9   differ 13 --> 19
+                if (((HeWid <= YWPara->lengthWidthRadio && differ >= YWPara->doubtAreaIntensity1)
+                    || (HeWid > YWPara->lengthWidthRadio && differ >= YWPara->doubtAreaIntensity2)) && mean_In >= MinmeanIn)   //日期：2021/3/2 6504:   HeWid :8-->9   differ 13 --> 19
                 {
                     result = true;
                     CvPoint top_lef4 = cvPoint(X_1, Y_1);

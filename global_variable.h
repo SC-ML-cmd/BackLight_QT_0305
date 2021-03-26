@@ -5,6 +5,7 @@
 #include <QWidget>
 #include "dbhelper.h"
 #include <QSqlTableModel>
+#include "deadlightparameter.h"
 #include <QDialog>
 
 extern bool isCeshi;
@@ -73,6 +74,8 @@ extern int yiwu_sec_size;
 extern int yiwu_sec_area_lower;
 extern int yiwu_sec_area_upper;
 extern double  yiwu_lighth;
+
+
 
 extern double white_gray_lower;
 extern int black_gray_upper;

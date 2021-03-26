@@ -3944,11 +3944,6 @@ void MainWindow::on_action_11_triggered()
 =========================================================*/
 void MainWindow::on_action_6_triggered()
 {
-    //点击批次设置在log日志中标记
-    QDateTime current_date_time =QDateTime::currentDateTime();
-    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
-    debug_msg("点击批次设置"+current_date);
-
     if(ui->label_9->text()=="正在检测")
     {
         QMessageBox box(QMessageBox::Warning,"提示","正在检测，批次不可修改！");

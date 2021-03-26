@@ -21,6 +21,8 @@
 #include<QSqlError>
 #include<dbhelper.h>
 #include"mainwindow.h"
+#include "deadlightparameter.h"
+
 QString production_lot_code;
 bool addFlag=false;
 QSqlQueryModel *model;
@@ -80,12 +82,12 @@ void production_lot_information_win::on_action_triggered()//新建产品批次
         queryModel->setQuery(query);
         int rows = queryModel->rowCount();
         this->ui->tableView->installEventFilter(this);
-       this->PagingWidget_ = new PagingWidget();
-       this->InitTable(10,rows);
+        this->PagingWidget_ = new PagingWidget();
+        this->InitTable(10,rows);
         //updateData(rows);
 
     }
-     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 /*=========================================================
 * 函 数 名: on_action_2_triggered
@@ -93,66 +95,66 @@ void production_lot_information_win::on_action_triggered()//新建产品批次
 =========================================================*/
 void production_lot_information_win::on_action_2_triggered()//修改产品批次
 {
-//    QSqlQuery query = QSqlQuery(db);
-//    int row;
-//    QItemSelectionModel *model_selection = ui->tableView->selectionModel();//取选择的行数
-//    QModelIndexList IndexList= model_selection->selectedIndexes();
-//    if(IndexList.count()==0)//为提示选择产品批次
-//    {
-//        QMessageBox msg;
-//                msg.setWindowTitle(tr("警告"));
-//                msg.setText("请选择产品批次");
-//                msg.setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
-//                msg.setIcon(QMessageBox::Warning);
-//                msg.addButton(tr("确定"),QMessageBox::ActionRole);
-//                msg.setWindowIcon(QIcon(":/resourse/告警.png"));
-//                msg.exec();
-//    }
-//    else
-//    {
-//        foreach (QModelIndex index, IndexList)
-//        {
-//            row=index.row();
-//            break;
-//        }
-//        modyfy_win=new modify_window;
-//        modyfy_win->setModal(true);
-//        //int row=ui->tableView->currentIndex().row();
-//        qDebug()<<row;
-//        //获取产品批次信息
-//        QString productID=dataModel->item(row,0)->text();
-//        QString productLotCode=dataModel->item(row,1)->text();
-//        QString prodectLot=dataModel->item(row,2)->text();
-//        QString testTime=dataModel->item(row,3)->text();
-//        QString productType=dataModel->item(row,4)->text();
-//        qDebug()<<productID;
-//        qDebug()<<prodectLot;
-//        modyfy_win->setTextEditData(productID,productLotCode,prodectLot,testTime,productType);//传到modyfy界面
-//        modyfy_win->setModal(true);
-//        modyfy_win->show();
-//        if(modyfy_win->exec()==QDialog::Accepted)
-//        {
-//            //更新数据表
-//            QMessageBox msg;
-//                    msg.setWindowTitle(tr("提示"));
-//                    msg.setText("修改成功");
-//                    msg.setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
-//                    msg.setIcon(QMessageBox::Information);
-//                    msg.addButton(tr("确定"),QMessageBox::ActionRole);
-//                    msg.setWindowIcon(QIcon(":/resourse/编辑.png"));
-//                    msg.exec();
-//            QSqlQuery query = QSqlQuery(db);
-//            query.exec("SELECT * FROM productionLot ");
-//            QSqlQueryModel *queryModel = new QSqlQueryModel();
-//            queryModel->setQuery(query);
-//            int rows = queryModel->rowCount();
-//            this->ui->tableView->installEventFilter(this);
-//            this->PagingWidget_ = new PagingWidget();
-//            this->InitTable(10,rows);
-//        }
-//    }
-//     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-//     ui->tableView->selectRow(0);
+    //    QSqlQuery query = QSqlQuery(db);
+    //    int row;
+    //    QItemSelectionModel *model_selection = ui->tableView->selectionModel();//取选择的行数
+    //    QModelIndexList IndexList= model_selection->selectedIndexes();
+    //    if(IndexList.count()==0)//为提示选择产品批次
+    //    {
+    //        QMessageBox msg;
+    //                msg.setWindowTitle(tr("警告"));
+    //                msg.setText("请选择产品批次");
+    //                msg.setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
+    //                msg.setIcon(QMessageBox::Warning);
+    //                msg.addButton(tr("确定"),QMessageBox::ActionRole);
+    //                msg.setWindowIcon(QIcon(":/resourse/告警.png"));
+    //                msg.exec();
+    //    }
+    //    else
+    //    {
+    //        foreach (QModelIndex index, IndexList)
+    //        {
+    //            row=index.row();
+    //            break;
+    //        }
+    //        modyfy_win=new modify_window;
+    //        modyfy_win->setModal(true);
+    //        //int row=ui->tableView->currentIndex().row();
+    //        qDebug()<<row;
+    //        //获取产品批次信息
+    //        QString productID=dataModel->item(row,0)->text();
+    //        QString productLotCode=dataModel->item(row,1)->text();
+    //        QString prodectLot=dataModel->item(row,2)->text();
+    //        QString testTime=dataModel->item(row,3)->text();
+    //        QString productType=dataModel->item(row,4)->text();
+    //        qDebug()<<productID;
+    //        qDebug()<<prodectLot;
+    //        modyfy_win->setTextEditData(productID,productLotCode,prodectLot,testTime,productType);//传到modyfy界面
+    //        modyfy_win->setModal(true);
+    //        modyfy_win->show();
+    //        if(modyfy_win->exec()==QDialog::Accepted)
+    //        {
+    //            //更新数据表
+    //            QMessageBox msg;
+    //                    msg.setWindowTitle(tr("提示"));
+    //                    msg.setText("修改成功");
+    //                    msg.setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
+    //                    msg.setIcon(QMessageBox::Information);
+    //                    msg.addButton(tr("确定"),QMessageBox::ActionRole);
+    //                    msg.setWindowIcon(QIcon(":/resourse/编辑.png"));
+    //                    msg.exec();
+    //            QSqlQuery query = QSqlQuery(db);
+    //            query.exec("SELECT * FROM productionLot ");
+    //            QSqlQueryModel *queryModel = new QSqlQueryModel();
+    //            queryModel->setQuery(query);
+    //            int rows = queryModel->rowCount();
+    //            this->ui->tableView->installEventFilter(this);
+    //            this->PagingWidget_ = new PagingWidget();
+    //            this->InitTable(10,rows);
+    //        }
+    //    }
+    //     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    //     ui->tableView->selectRow(0);
 }
 /*=========================================================
 * 函 数 名: on_action_3_triggered
@@ -171,19 +173,19 @@ void production_lot_information_win::on_action_3_triggered()//删除产品批次
         //多选删除
         foreach (QModelIndex index, IndexList)
         {
-             row=index.row();
-             QString productionID=dataModel->item(row,0)->text();
-             QSqlQuery query1(db);
-             deleteFlag=query1.exec(QString("DELETE FROM productionLot WHERE ID=%1").arg(productionID));
-             //rowMap.insert(index.row(), 0); //QModelIndex 有更多数据可用
-             if(deleteFlag)
-             {
-                 qDebug()<<"删除成功";
-             }
-             else
-             {
-                 qDebug()<<query1.lastError();
-             }
+            row=index.row();
+            QString productionID=dataModel->item(row,0)->text();
+            QSqlQuery query1(db);
+            deleteFlag=query1.exec(QString("DELETE FROM productionLot WHERE ID=%1").arg(productionID));
+            //rowMap.insert(index.row(), 0); //QModelIndex 有更多数据可用
+            if(deleteFlag)
+            {
+                qDebug()<<"删除成功";
+            }
+            else
+            {
+                qDebug()<<query1.lastError();
+            }
         }
         qDebug() << "print : " <<rowMap;
         qDebug() << "acount : " <<rowMap.count() ;
@@ -199,7 +201,7 @@ void production_lot_information_win::on_action_3_triggered()//删除产品批次
         // ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
         ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
         ui->tableView->selectRow(0);
-         //updateData(rows);
+        //updateData(rows);
     }
 }
 /*=========================================================
@@ -388,13 +390,13 @@ void production_lot_information_win::on_pushButton_clicked()
     if(IndexList.count()==0)
     {
         QMessageBox msg;
-                msg.setWindowTitle(tr("警告"));
-                msg.setText("请选择产品批次");
-                msg.setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
-                msg.setIcon(QMessageBox::Warning);
-                msg.addButton(tr("确定"),QMessageBox::ActionRole);
-                msg.setWindowIcon(QIcon(":/resourse/告警.png"));
-                msg.exec();
+        msg.setWindowTitle(tr("警告"));
+        msg.setText("请选择产品批次");
+        msg.setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
+        msg.setIcon(QMessageBox::Warning);
+        msg.addButton(tr("确定"),QMessageBox::ActionRole);
+        msg.setWindowIcon(QIcon(":/resourse/告警.png"));
+        msg.exec();
     }
     else
     {
@@ -403,13 +405,15 @@ void production_lot_information_win::on_pushButton_clicked()
             row=index.row();
             break;
         }
-        qDebug()<<row;
+        //qDebug()<<row;
+
         //全局变量，需要使用区域
         product_ID=dataModel->item(row,0)->text();
         product_Lot=dataModel->item(row,1)->text();
         product_Customize_Lot=dataModel->item(row,2)->text();
         product_Time=dataModel->item(row,3)->text();
         product_Type=dataModel->item(row,4)->text();
+
         //内部产品型号编码
         QSqlQuery query(db);
         QString sq=QString("select * from product_model where 产品型号='%0'").arg(product_Type);
@@ -430,27 +434,27 @@ void production_lot_information_win::on_pushButton_clicked()
         initial_para();
         QString productionName=product_Type+product_Lot;
         bool ok=query.exec(QString("CREATE TABLE '%1' ("
-                           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                           "样本编号 VARCHAR(40) NOT NULL, "
-                           " 生产批次 VARCHAR(40) NOT NULL, "
-                           "生产批次编码 VARCHAR(40) NOT NULL,"
-                           "产品型号 VARCHAR(40) NOT NULL,"
-                           "产品型号编码 VARCHAR(40) NOT NULL,"
-                           "是否缺陷 VARCHAR(40) NOT NULL,"
-                           "缺陷类型编码 VARCHAR(40) NOT NULL,"
-                           "缺陷类型名称 VARCHAR(40) NOT NULL,"
-                           "是否保存样本 VARCHAR(40) NOT NULL)").arg(productionName));
+                                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                                   "样本编号 VARCHAR(40) NOT NULL, "
+                                   " 生产批次 VARCHAR(40) NOT NULL, "
+                                   "生产批次编码 VARCHAR(40) NOT NULL,"
+                                   "产品型号 VARCHAR(40) NOT NULL,"
+                                   "产品型号编码 VARCHAR(40) NOT NULL,"
+                                   "是否缺陷 VARCHAR(40) NOT NULL,"
+                                   "缺陷类型编码 VARCHAR(40) NOT NULL,"
+                                   "缺陷类型名称 VARCHAR(40) NOT NULL,"
+                                   "是否保存样本 VARCHAR(40) NOT NULL)").arg(productionName));
 
         update_alreadyNum();  // 刷新缺陷数值
         emit infoSend(product_Type,product_Lot);
         QMessageBox msg;
-                msg.setWindowTitle(tr("提示"));
-                msg.setText("生产批次及系统参数配置成功！");
-                msg.setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
-                msg.setIcon(QMessageBox::Information);
-                msg.addButton(tr("确定"),QMessageBox::ActionRole);
-                msg.setWindowIcon(QIcon(":/resourse/peizhi.png"));
-                msg.exec();
+        msg.setWindowTitle(tr("提示"));
+        msg.setText("生产批次及系统参数配置成功！");
+        msg.setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
+        msg.setIcon(QMessageBox::Information);
+        msg.addButton(tr("确定"),QMessageBox::ActionRole);
+        msg.setWindowIcon(QIcon(":/resourse/peizhi.png"));
+        msg.exec();
         if(ok)
         {
             qDebug()<<"创建成功";
@@ -467,17 +471,17 @@ void production_lot_information_win::on_pushButton_clicked()
 void production_lot_information_win::on_pushButton_2_clicked()
 {
     QMessageBox *messageBox = new QMessageBox(this);
-        messageBox->setIcon(QMessageBox::Warning);
-        messageBox->setWindowTitle("提示");
-        messageBox->setText("确定取消配置？");
-        messageBox->addButton("取消", QMessageBox::RejectRole); //自定义取消按钮
-        messageBox->addButton("确定", QMessageBox::AcceptRole); //自定义确定按钮
-        if(messageBox->exec() == QDialog::Accepted)
-        { //如果按下确定按钮，则执行清空所有配置
-            pushbotton_Flag=true;
-            this->close();
+    messageBox->setIcon(QMessageBox::Warning);
+    messageBox->setWindowTitle("提示");
+    messageBox->setText("确定取消配置？");
+    messageBox->addButton("取消", QMessageBox::RejectRole); //自定义取消按钮
+    messageBox->addButton("确定", QMessageBox::AcceptRole); //自定义确定按钮
+    if(messageBox->exec() == QDialog::Accepted)
+    { //如果按下确定按钮，则执行清空所有配置
+        pushbotton_Flag=true;
+        this->close();
 
-        }
+    }
 
 
 
@@ -494,20 +498,20 @@ void production_lot_information_win::closeEvent(QCloseEvent* event)
     else
     {
         QMessageBox *messageBox = new QMessageBox(this);
-            messageBox->setIcon(QMessageBox::Warning);
-            messageBox->setWindowTitle("提示");
-            messageBox->setText("确定取消配置？");
-            messageBox->addButton("取消", QMessageBox::RejectRole); //自定义取消按钮
-            messageBox->addButton("确定", QMessageBox::AcceptRole); //自定义确定按钮
-            if(messageBox->exec() == QDialog::Accepted)
-            { //如果按下确定按钮，则执行清空所有配置
-                event->accept();
-                production_lot_information_win_show=false;
-            }
-            else
-            {
-                event->ignore();
-            }
+        messageBox->setIcon(QMessageBox::Warning);
+        messageBox->setWindowTitle("提示");
+        messageBox->setText("确定取消配置？");
+        messageBox->addButton("取消", QMessageBox::RejectRole); //自定义取消按钮
+        messageBox->addButton("确定", QMessageBox::AcceptRole); //自定义确定按钮
+        if(messageBox->exec() == QDialog::Accepted)
+        { //如果按下确定按钮，则执行清空所有配置
+            event->accept();
+            production_lot_information_win_show=false;
+        }
+        else
+        {
+            event->ignore();
+        }
     }
 
 }
@@ -745,6 +749,61 @@ void production_lot_information_win::initial_para()
         }
     }
 
+    /****************************死灯算法参数****************************/
+
+    QString sql = QStringLiteral("SELECT * FROM DeadLightParameter WHERE 产品型号编码 = '%0'")
+            .arg(Model_Code);
+    if(!query.exec(sql)){
+       QMessageBox::about(this, "严重报错", "参数初始化出错!");
+    }else {
+        query.next();
+        //QMap<QString, QVariant> map = query.boundValues();
+        SDPara->detectX1 = query.value("detectX1").toDouble();
+        SDPara->detectY1 = query.value("detectY1").toDouble();
+        SDPara->detectX2 = query.value("detectX2").toDouble();
+        SDPara->detectY2 = query.value("detectY2").toDouble();
+
+        SDPara->areaUpperLimit = query.value("areaUpperLimit").toDouble();
+        SDPara->areaDownLimit = query.value("areaDownLimit").toDouble();
+        SDPara->lengthWidthRadio = query.value("lengthWidthRadio").toDouble();
+        SDPara->doubtAreaInMeanUpLimit = query.value("doubtAreaInMeanUpLimit").toDouble();
+
+        SDPara->doubtAreaOutMean1 = query.value("doubtAreaOutMean1").toDouble();
+        SDPara->doubtAreaInMean1 = query.value("doubtAreaInMean1").toDouble();
+        SDPara->doubtAreaIntensity1 = query.value("doubtAreaIntensity1").toDouble();
+
+        SDPara->doubtAreaIntensity2 = query.value("doubtAreaIntensity2").toDouble();
+        SDPara->fourAngleArea = query.value("fourAngleArea").toDouble();
+        SDPara->fourAngleRadio = query.value("fourAngleRadio").toDouble();
+
+        SDPara->doubtAreaIntensity3 = query.value("doubtAreaIntensity3").toDouble();
+        SDPara->wholeMeanDownlimit = query.value("wholeMeanDownlimit").toDouble();
+    }
+    /*******************************移位算法参数*******************************/
+    sql = QStringLiteral("SELECT * FROM ShiftDefectParameter WHERE 产品型号编码 = '%0'")
+            .arg(Model_Code);
+    if(!query.exec(sql)){
+       QMessageBox::about(this, "严重报错", "参数初始化出错!");
+    }else {
+        query.next();
+        //QMap<QString, QVariant> map = query.boundValues();
+        YWPara->edgeAreaUpperLimit = query.value("edgeAreaUpperLimit").toDouble();
+        YWPara->edgeAreaDownLimit = query.value("edgeAreaDownLimit").toDouble();
+        YWPara->lightPortShieldWidth = query.value("lightPortShieldWidth").toDouble();
+        YWPara->areaUpperLimit = query.value("areaUpperLimit").toDouble();
+        YWPara->areaDownLimit = query.value("areaDownLimit").toDouble();
+
+
+        YWPara->standardDevThres1 = query.value("standardDevThres1").toDouble();
+        YWPara->standardDevThres2 = query.value("standardDevThres2").toDouble();
+
+        YWPara->lengthWidthRadioULimit = query.value("lengthWidthRadioULimit").toDouble();
+        YWPara->lengthWidthRadio = query.value("lengthWidthRadio").toDouble();
+
+        YWPara->doubtAreaIntensity1 = query.value("doubtAreaIntensity1").toDouble();
+        YWPara->doubtAreaIntensity2 = query.value("doubtAreaIntensity2").toDouble();
+    }
+
     //==========================亮点算法参数===========================
     QString sq7=QStringLiteral("select *from lightpoint_para where 产品型号编码='%0'").arg(Model_Code);
     query.exec(sq7);
@@ -879,9 +938,9 @@ void production_lot_information_win::initial_para()
                 for(int i=0;i<parameter.size();i++)
                 {
                     if(parameter[i]!="*")
-                    num_long+=parameter[i];
+                        num_long+=parameter[i];
                     if(parameter[i]=="*")
-                    break;
+                        break;
                 }
                 for(int i=0;i<parameter.size();i++)
                 {
@@ -904,7 +963,7 @@ void production_lot_information_win::initial_para()
                 pixel_num=1500*roi_proportion;
                 if(pixel_num%2!=0)
                     pixel_num++;
-        }
+            }
 
 
         }
