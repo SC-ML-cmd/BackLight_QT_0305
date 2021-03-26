@@ -5303,7 +5303,7 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
 //                                   bitwise_and(TempCeguang0, ~TempImage0, TempCeguang1);
                                    double ceguang1_Out = mean(TempCeguang0, ~TempImage0)[0];
                                    double differ = ceguang1_Out - ceguang1_In;
-                                   if (area < 130 && area >= 50 && differ <= 6.6 || area < 50 && area >= 10 && differ < 3.1 || area > 0 && area < 10 && differ < 1.8 || area >= 130 || Luminaceth > 11.2 && area > 80)
+                                   if (area < 130 && area >= 50 && differ <= 6.6 || area < 50 && area >= 10 && differ < 3.1 || area > 0 && area < 10 && differ < 1.8 || area >= 130 || Luminaceth > 11.2 && area > 80||area<50&&area>=10&&differ<11.2)
                                    {
                                        //double area7 = countNonZero(Crop_Image_last);
 
@@ -8838,8 +8838,8 @@ bool DarkCorner(Mat white,Mat *mresult,QString* causecolor)
 }
 
 /*=========================================================
-* 函 数 名: Light_leakage
-* 功能描述：漏光
+* 函 数 名: Brightedge
+* 功能描述：亮边
 * 函数输入：主彩色相机左右边界外扩后图片
 * 备注说明：2020年9月25日修改
  =========================================================*/
