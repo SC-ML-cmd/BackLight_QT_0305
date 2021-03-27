@@ -437,7 +437,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.175test";       //版本号
+    QString str_ver ="1.0.34.176";       //版本号
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
@@ -446,16 +446,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(Write_Photo_Signal()), this, SLOT(Write_Photo_Finish()), Qt::BlockingQueuedConnection);
     connect(this,SIGNAL(Restart_Timer_Signal()) ,this,SLOT(Restart_Timer()), Qt::BlockingQueuedConnection);
     connect(this,SIGNAL(Dectect_Result()) ,this,SLOT(Dect_Result()), Qt::BlockingQueuedConnection);
-
-    //    connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::DirectConnection);
-    //    connect(this, SIGNAL(write_Modbus_Num(int,int)), this, SLOT(write_Modbus(int,int)), Qt::DirectConnection);
-
-//    connect(&Watcher_White1, SIGNAL(finished()), this, SLOT(White1_Thread_Finish()));
-//    connect(&Watcher_White2, SIGNAL(finished()), this, SLOT(White2_Thread_Finish()));
-//    connect(&Watcher_White3, SIGNAL(finished()), this, SLOT(White3_Thread_Finish()));
-
-//    connect(&Watcher_d1, SIGNAL(finished()), this, SLOT(Restart_Timer()));
-
 
     //数据库读取状态显示在下拉框
     QSqlQuery *sqlQuery = new QSqlQuery;
@@ -1115,16 +1105,33 @@ int MainWindow::detect_offine()
 
 
     //offline_wsc
+<<<<<<< HEAD
     std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\473\\LP_20200927165_473_";
     src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
     src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
     src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
+=======
+    std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\0323yiwei\\YW\\185";
+//    src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
+//    src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
+//    src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
+>>>>>>> 48047cd646e678690bc1ab10343ce2737f810eb2
 
+//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
+//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
+//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
 
+      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\YW_M_C_001.bmp", -1);
+      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\YW_R_C_001.bmp", -1);
+      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\YW_L_C_001.bmp", -1);
+
+<<<<<<< HEAD
 //      std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\6212\\0311\\huashang1";
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
 //      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
 //      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
+=======
+>>>>>>> 48047cd646e678690bc1ab10343ce2737f810eb2
 
 //      //offline-pjn
 //      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
@@ -1186,12 +1193,24 @@ int MainWindow::detect_offine()
     //    src_ceguang_right = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
     //    src_ceguang_left = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
     //offline_wsc
+<<<<<<< HEAD
     src_white1_Temp = cv::imread(SRC_PATH + "212.bmp", -1);
     src_R1_Temp=cv::imread(SRC_PATH + "112.bmp", -1);
     src_L1_Temp=cv::imread(SRC_PATH + "012.bmp", -1);
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
 //    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
+=======
+//    src_white1_Temp = cv::imread(SRC_PATH + "212.bmp", -1);
+//    src_R1_Temp=cv::imread(SRC_PATH + "112.bmp", -1);
+//    src_L1_Temp=cv::imread(SRC_PATH + "012.bmp", -1);
+//    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
+//    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
+//    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
+    src_white1_Temp = cv::imread(SRC_PATH +"\\YW_M_W_001.bmp", -1);
+    src_R1_Temp = cv::imread(SRC_PATH +"\\YW_R_W_001.bmp", -1);
+    src_L1_Temp = cv::imread(SRC_PATH +"\\YW_L_W_001.bmp", -1);
+>>>>>>> 48047cd646e678690bc1ab10343ce2737f810eb2
 //    //offline-pjn
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
