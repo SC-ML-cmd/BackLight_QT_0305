@@ -21,7 +21,6 @@
 #include<QSqlError>
 #include<dbhelper.h>
 #include"mainwindow.h"
-#include "deadlightparameter.h"
 
 QString production_lot_code;
 bool addFlag=false;
@@ -757,7 +756,9 @@ void production_lot_information_win::initial_para()
        QMessageBox::about(this, "严重报错", "参数初始化出错!");
     }else {
         query.next();
-        //QMap<QString, QVariant> map = query.boundValues();
+        SDPara = new DeadLightParameter();
+        QMap<QString, QVariant> map = query.boundValues();
+
         SDPara->detectX1 = query.value("detectX1").toDouble();
         SDPara->detectY1 = query.value("detectY1").toDouble();
         SDPara->detectX2 = query.value("detectX2").toDouble();
@@ -786,6 +787,7 @@ void production_lot_information_win::initial_para()
        QMessageBox::about(this, "严重报错", "参数初始化出错!");
     }else {
         query.next();
+        YWPara = new ShiftDefectParameter();
         //QMap<QString, QVariant> map = query.boundValues();
         YWPara->edgeAreaUpperLimit = query.value("edgeAreaUpperLimit").toDouble();
         YWPara->edgeAreaDownLimit = query.value("edgeAreaDownLimit").toDouble();

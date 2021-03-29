@@ -437,7 +437,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.176";       //版本号
+    QString str_ver ="1.0.34.179dev";       //版本号
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
@@ -1910,14 +1910,9 @@ void MainWindow::Dect_Result()
     ui->label_40->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_42->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_44->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_65->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_67->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_69->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_71->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_100->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
 
     if(result_white_1==true)//白底下存在缺陷
     {
@@ -2400,14 +2395,12 @@ void MainWindow::Dect_Result()
         if(Flag_Running_State=="Online")
         ui->label_2->setFixedSize(543,806);
         image2=image2.scaled(ui->label_2->size(),Qt::KeepAspectRatio);
-        //ui->label_2->setScaledContents(true);
         ui->label_2->setAlignment(Qt::AlignCenter);
         ui->label_2->setPixmap(QPixmap::fromImage(image2));
         ui->label_57->setText(" ");
         ui->label_57->setStyleSheet("color:green;font: 44pt;font: 黑体;");
         ui->label_57->setText("OK");
         qualified_num++;
-        //updata_database("合格");
     }
 
     debug_msg("==========================检测结果逻辑判断=============================="+current_date);
@@ -3400,7 +3393,7 @@ void MainWindow::myFunc1()
     current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     debug_msg("白底检测完成"+current_date);
 
-    debug_msg("该节拍是否为良品"+QString::number(result_white_1));
+    debug_msg("该节拍是否为良品" + result_white_1 ?"是":"否");
 
 //    Dect_Result();
 //    emit(Dectect_Result());

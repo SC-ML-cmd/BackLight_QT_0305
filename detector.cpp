@@ -23,9 +23,9 @@ int Whiteprint_Detect_Flag;
 //创建日志打印对象
 ThreadSafelog *logPtr = new ThreadSafelog;
 //创建死灯参数对象
-DeadLightParameter *SDPara = new DeadLightParameter;
+DeadLightParameter *SDPara;
 //创建移位参数对象
-ShiftDefectParameter *YWPara = new ShiftDefectParameter;
+ShiftDefectParameter *YWPara;
 
 void debug_msg1(QVariant msg)
 {

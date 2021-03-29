@@ -5,7 +5,6 @@
 #include <QWidget>
 #include "dbhelper.h"
 #include <QSqlTableModel>
-#include "deadlightparameter.h"
 #include <QDialog>
 
 extern bool isCeshi;

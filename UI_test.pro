@@ -214,7 +214,8 @@ SOURCES += \
     excelhepler.cpp \
     history_batchfind.cpp \
     history_data.cpp \
-    deadlightparameter.cpp
+    DAL/deadlightparadao.cpp \
+    DAL/sqlhelp.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -254,8 +255,10 @@ HEADERS += \
     history_batchfind.h \
     history_data.h \
     threadsafelog.h \
-    deadlightparameter.h \
-    shiftdefectparameter.h
+    Model/deadlightparameter.h \
+    Model/shiftdefectparameter.h \
+    DAL/deadlightparadao.h \
+    DAL/sqlhelp.h
 
 FORMS += \
         mainwindow.ui \
