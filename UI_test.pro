@@ -78,7 +78,6 @@ LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
 INCLUDEPATH+=D:\Qt\opencvbulid3.40\include
              D:\Qt\opencvbulid3.40\include\opencv
              D:\Qt\opencvbulid3.40\include\opencv2
-
 LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
