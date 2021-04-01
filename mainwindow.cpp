@@ -436,12 +436,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
 
-
-<<<<<<< HEAD
+ 
     QString str_ver ="1.0.34.179";       //版本号
-=======
-    QString str_ver ="1.0.34.176";       //版本号
->>>>>>> 48047cd646e678690bc1ab10343ce2737f810eb2
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
@@ -3948,6 +3944,11 @@ void MainWindow::on_action_11_triggered()
 =========================================================*/
 void MainWindow::on_action_6_triggered()
 {
+    //点击批次设置在log日志中标记
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+    debug_msg("点击批次设置"+current_date);
+
     if(ui->label_9->text()=="正在检测")
     {
         QMessageBox box(QMessageBox::Warning,"提示","正在检测，批次不可修改！");
