@@ -435,7 +435,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QDateTime time = QDateTime::currentDateTime();
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
-    QString str_ver ="1.0.34.179";       //版本号
+    QString str_ver ="1.0.34.180";       //版本号
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
@@ -1107,7 +1107,10 @@ int MainWindow::detect_offine()
     src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
     src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
     src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 875722c41bd7027000a04f3ba588acdbd6efe343
 
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
 //      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
@@ -1118,6 +1121,14 @@ int MainWindow::detect_offine()
       src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\YW_L_C_001.bmp", -1);
 
 
+<<<<<<< HEAD
+=======
+//      std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\6212\\0311\\huashang1";
+//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
+//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
+//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
+
+>>>>>>> 875722c41bd7027000a04f3ba588acdbd6efe343
 
 //      //offline-pjn
 //      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
@@ -1187,6 +1198,16 @@ int MainWindow::detect_offine()
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
 //    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
 
+<<<<<<< HEAD
+=======
+//    src_white1_Temp = cv::imread(SRC_PATH + "212.bmp", -1);
+//    src_R1_Temp=cv::imread(SRC_PATH + "112.bmp", -1);
+//    src_L1_Temp=cv::imread(SRC_PATH + "012.bmp", -1);
+//    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
+//    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
+//    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
+   
+>>>>>>> 875722c41bd7027000a04f3ba588acdbd6efe343
 //    //offline-pjn
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
@@ -1909,14 +1930,9 @@ void MainWindow::Dect_Result()
     ui->label_40->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_42->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_44->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_65->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_67->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_69->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_71->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_100->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
 
     if(result_white_1==true)//白底下存在缺陷
     {
@@ -2399,14 +2415,12 @@ void MainWindow::Dect_Result()
         if(Flag_Running_State=="Online")
         ui->label_2->setFixedSize(543,806);
         image2=image2.scaled(ui->label_2->size(),Qt::KeepAspectRatio);
-        //ui->label_2->setScaledContents(true);
         ui->label_2->setAlignment(Qt::AlignCenter);
         ui->label_2->setPixmap(QPixmap::fromImage(image2));
         ui->label_57->setText(" ");
         ui->label_57->setStyleSheet("color:green;font: 44pt;font: 黑体;");
         ui->label_57->setText("OK");
         qualified_num++;
-        //updata_database("合格");
     }
 
     debug_msg("==========================检测结果逻辑判断=============================="+current_date);
@@ -3399,7 +3413,7 @@ void MainWindow::myFunc1()
     current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     debug_msg("白底检测完成"+current_date);
 
-    debug_msg("该节拍是否为良品"+QString::number(result_white_1));
+    debug_msg("该节拍是否为良品" + result_white_1 ?"是":"否");
 
 //    Dect_Result();
 //    emit(Dectect_Result());

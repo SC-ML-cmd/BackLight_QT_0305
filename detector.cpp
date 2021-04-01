@@ -23,9 +23,9 @@ int Whiteprint_Detect_Flag;
 //创建日志打印对象
 ThreadSafelog *logPtr = new ThreadSafelog;
 //创建死灯参数对象
-DeadLightParameter *SDPara = new DeadLightParameter;
+DeadLightParameter *SDPara;
 //创建移位参数对象
-ShiftDefectParameter *YWPara = new ShiftDefectParameter;
+ShiftDefectParameter *YWPara;
 
 void debug_msg1(QVariant msg)
 {
@@ -5309,6 +5309,10 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
 //                                   bitwise_and(TempCeguang0, ~TempImage0, TempCeguang1);
                                    double ceguang1_Out = mean(TempCeguang0, ~TempImage0)[0];
                                    double differ = ceguang1_Out - ceguang1_In;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 875722c41bd7027000a04f3ba588acdbd6efe343
 
                                    if ( (area < 130 && area >= 50 && differ <= 6.6)
                                      || (area < 50 && area >= 10 && differ < 3.1)
@@ -5316,6 +5320,10 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
                                      || (area >= 130)
                                      || (Luminaceth > 11.2 && area > 80)
                                      || (area<50 && area>=10 && differ > 8 && differ <11.2))
+<<<<<<< HEAD
+=======
+
+>>>>>>> 875722c41bd7027000a04f3ba588acdbd6efe343
                                    {
                                        //double area7 = countNonZero(Crop_Image_last);
 
