@@ -81,6 +81,14 @@ LIBS += -L F:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
 #LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 #LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
+#INCLUDEPATH+=D:\MVS\Development\Includes
+#LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
+#LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
+#INCLUDEPATH+=D:\Qt\opencvbulid3.40\include
+#             D:\Qt\opencvbulid3.40\include\opencv
+#             D:\Qt\opencvbulid3.40\include\opencv2
+#LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
+#LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
 #pjn
 #INCLUDEPATH+=D:\MVS\Development\Includes
@@ -213,7 +221,9 @@ SOURCES += \
     detector_choose.cpp \
     excelhepler.cpp \
     history_batchfind.cpp \
-    history_data.cpp
+    history_data.cpp \
+    DAL/deadlightparadao.cpp \
+    DAL/sqlhelp.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -252,7 +262,11 @@ HEADERS += \
     excelhepler.h \
     history_batchfind.h \
     history_data.h \
-    threadsafelog.h
+    threadsafelog.h \
+    Model/deadlightparameter.h \
+    Model/shiftdefectparameter.h \
+    DAL/deadlightparadao.h \
+    DAL/sqlhelp.h
 
 FORMS += \
         mainwindow.ui \

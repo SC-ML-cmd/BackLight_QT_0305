@@ -23,9 +23,9 @@ int Whiteprint_Detect_Flag;
 //创建日志打印对象
 ThreadSafelog *logPtr = new ThreadSafelog;
 //创建死灯参数对象
-DeadLightParameter *SDPara = new DeadLightParameter;
+DeadLightParameter *SDPara;
 //创建移位参数对象
-ShiftDefectParameter *YWPara = new ShiftDefectParameter;
+ShiftDefectParameter *YWPara;
 
 void debug_msg1(QVariant msg)
 {
@@ -731,7 +731,7 @@ bool f_MainCam_PersTransMatCal(InputArray _src, int border_white, int border_bia
     for (vector<int>::size_type i = 0; i < contours.size(); i++)
     {
         double area = contourArea(contours[i]);
-        if (area > 2500000 && area < 5000000)
+        if (area > 250000 && area < 5000000)
         {
             displayError_Areasignal++;
             rect = boundingRect(contours[i]);
@@ -3087,12 +3087,9 @@ bool boom_light(Mat white, Mat* mresult, QString* causecolor)
     //threshold(img_gray, th_resul, 210, 255, CV_THRESH_BINARY);
     //double mean_all = mean(img_gray, th_resul)[0];
     //threshold(img_gray, th_resul, mean_all+20 , 255, CV_THRESH_BINARY);
-    Mat strong_result;
-    Ptr<CLAHE> clahe = createCLAHE(5.0, Size(3, 3));
-    clahe->apply(img_gray, strong_result);
 
     //Mat edge_img = strong_result(Rect(strong_result.cols - 100, 0, 100, strong_result.rows)).clone();
-    Mat edge_img = strong_result(Rect(0, 50, decter_length, strong_result.rows-100)).clone();
+    Mat edge_img = img_gray(Rect(0, 50, decter_length, img_gray.rows-100)).clone();
     medianBlur(edge_img, edge_img, 3);
     Mat a;
     threshold(edge_img, a,100,255, CV_THRESH_BINARY);
@@ -5309,6 +5306,7 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
 //                                   bitwise_and(TempCeguang0, ~TempImage0, TempCeguang1);
                                    double ceguang1_Out = mean(TempCeguang0, ~TempImage0)[0];
                                    double differ = ceguang1_Out - ceguang1_In;
+
 
                                    if ( (area < 130 && area >= 50 && differ <= 6.6)
                                      || (area < 50 && area >= 10 && differ < 3.1)
@@ -8814,8 +8812,8 @@ bool DarkCorner(Mat white,Mat *mresult,QString* causecolor)
 }
 
 /*=========================================================
-* 函 数 名: Light_leakage
-* 功能描述：漏光
+* 函 数 名: Brightedge
+* 功能描述：亮边
 * 函数输入：主彩色相机左右边界外扩后图片
 * 备注说明：2020年9月25日修改
  =========================================================*/

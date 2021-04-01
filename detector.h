@@ -6,8 +6,8 @@
 #include<iostream>
 #include<QString>
 #include "threadsafelog.h"
-#include "deadlightparameter.h"
-#include "shiftdefectparameter.h"
+#include "./Model/deadlightparameter.h"
+#include "./Model/shiftdefectparameter.h"
 #include "global_variable.h"
 
 using namespace cv;
