@@ -1103,33 +1103,14 @@ int MainWindow::detect_offine()
 
 
     //offline_wsc
-    std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\473\\LP_20200927165_473_";
+    std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\478\\_20200927165_478_210";
     src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
     src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
     src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
-<<<<<<< HEAD
-
-=======
->>>>>>> 875722c41bd7027000a04f3ba588acdbd6efe343
 
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
 //      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
 //      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
-
-      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\YW_M_C_001.bmp", -1);
-      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\YW_R_C_001.bmp", -1);
-      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\YW_L_C_001.bmp", -1);
-
-
-<<<<<<< HEAD
-=======
-//      std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\6212\\0311\\huashang1";
-//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
-//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
-//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
-
->>>>>>> 875722c41bd7027000a04f3ba588acdbd6efe343
-
 //      //offline-pjn
 //      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
@@ -1197,17 +1178,6 @@ int MainWindow::detect_offine()
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
 //    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
-
-<<<<<<< HEAD
-=======
-//    src_white1_Temp = cv::imread(SRC_PATH + "212.bmp", -1);
-//    src_R1_Temp=cv::imread(SRC_PATH + "112.bmp", -1);
-//    src_L1_Temp=cv::imread(SRC_PATH + "012.bmp", -1);
-//    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
-//    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
-//    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
-   
->>>>>>> 875722c41bd7027000a04f3ba588acdbd6efe343
 //    //offline-pjn
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
