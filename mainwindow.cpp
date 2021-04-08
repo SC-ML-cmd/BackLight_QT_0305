@@ -1105,11 +1105,12 @@ int MainWindow::detect_offine()
 
 
     //offline_wsc
-    std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\473\\LP_20200927165_473_";
+    std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\478\\_20200927165_478_210";
     src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
     src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
     src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
 
+<<<<<<< HEAD
 
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
 //      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
@@ -1121,6 +1122,11 @@ int MainWindow::detect_offine()
 
 
 
+=======
+//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
+//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
+//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
+>>>>>>> 782e1decfc09c48f70a2c9c398f5652869e8ec43
 //      //offline-pjn
 //      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
@@ -1188,7 +1194,10 @@ int MainWindow::detect_offine()
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
 //    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 782e1decfc09c48f70a2c9c398f5652869e8ec43
 //    //offline-pjn
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);

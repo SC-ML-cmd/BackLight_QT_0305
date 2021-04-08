@@ -72,6 +72,7 @@ INCLUDEPATH+=F:\opencvbulid3.40\include
 LIBS += -L F:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 LIBS += -L F:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 #wsc
+<<<<<<< HEAD
 #INCLUDEPATH+=D:\MVS\Development\Includes
 #LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
 #LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
@@ -91,15 +92,27 @@ LIBS += -L F:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 #LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
 #pjn
+=======
+>>>>>>> 782e1decfc09c48f70a2c9c398f5652869e8ec43
 #INCLUDEPATH+=D:\MVS\Development\Includes
 #LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
 #LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
-#INCLUDEPATH+=D:\opencvbulid3.40\include
-#             D:\opencvbulid3.40\include\opencv
-#             D:\opencvbulid3.40\include\opencv2
+#INCLUDEPATH+=D:\Qt\opencvbulid3.40\include
+#             D:\Qt\opencvbulid3.40\include\opencv
+#             D:\Qt\opencvbulid3.40\include\opencv2
+#LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
+#LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
-#LIBS += -L D:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
-#LIBS += -L D:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
+#pjn
+INCLUDEPATH+=D:\MVS\Development\Includes
+LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
+LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
+INCLUDEPATH+=D:\opencv\opencv\build\include
+             D:\opencv\opencv\build\include\opencv
+             D:\opencv\opencv\build\include\opencv2
+
+LIBS += -L D:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
+LIBS += -L D:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 #郭
 #INCLUDEPATH+=D:\SDK\sdk\MVS\Development\Includes
 #LIBS += D:\SDK\sdk\MVS\Development\Libraries\win64\MvCameraControl.lib
