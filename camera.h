@@ -18,7 +18,7 @@ public:
     // HikvisionSDK camera;
 
      HikvisionSDK *camera=HikvisionSDK::getInstance();
-
+    bool Flag_camera_exposure_finished=true;
 signals:
  void send();
 private slots:

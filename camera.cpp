@@ -382,6 +382,12 @@ void Form_Camera::on_pushButton_Full_Screen_6_clicked()
 {
 
 }
+void delay7(int MSecs)
+{
+    QTime dieTime= QTime::currentTime().addMSecs(MSecs);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 void Form_Camera::on_horizontalSlider_sliderMoved(int position)//滑动
 {
@@ -389,6 +395,7 @@ void Form_Camera::on_horizontalSlider_sliderMoved(int position)//滑动
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_1, "ExposureMode", MV_EXPOSURE_MODE_TIMED);
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_1,"ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
     MV_CC_SetFloatValue(camera->m_hDevHandle_1, "ExposureTime", position);
+    delay7(2000);
     if(Flag_Manual&&!Flag_adap)
     {
         Mean_gray_value=GetMeanGrayValue(1);
@@ -398,10 +405,19 @@ void Form_Camera::on_horizontalSlider_sliderMoved(int position)//滑动
 
 void Form_Camera::on_spinBox_1_valueChanged(int arg1)
 {
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+    MainWindow::debug_msg(current_date+"进入相机调整槽函数");
     ui->horizontalSlider->setValue(arg1);
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_1, "ExposureMode", MV_EXPOSURE_MODE_TIMED);
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_1,"ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
     MV_CC_SetFloatValue(camera->m_hDevHandle_1, "ExposureTime", arg1);
+
+    current_date_time =QDateTime::currentDateTime();
+    current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+    MainWindow::debug_msg(current_date+"相机曝光值设定后");
+    delay7(500);
+    Flag_camera_exposure_finished=true;
     //如果手动曝光功能开启
     if(Flag_Manual&&!Flag_adap)
     {
@@ -416,6 +432,8 @@ void Form_Camera::on_spinBox_2_valueChanged(int arg1)
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_2, "ExposureMode", MV_EXPOSURE_MODE_TIMED);
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_2,"ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
     MV_CC_SetFloatValue(camera->m_hDevHandle_2, "ExposureTime", arg1);
+    delay7(500);
+    Flag_camera_exposure_finished=true;
     //如果手动曝光功能开启
     if(Flag_Manual&&!Flag_adap)
     {
@@ -430,6 +448,8 @@ void Form_Camera::on_horizontalSlider_2_sliderMoved(int position)
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_2, "ExposureMode", MV_EXPOSURE_MODE_TIMED);
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_2,"ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
     MV_CC_SetFloatValue(camera->m_hDevHandle_2, "ExposureTime", position);
+    delay7(500);
+    Flag_camera_exposure_finished=true;
     //如果手动曝光功能开启
     if(Flag_Manual&&!Flag_adap)
     {
@@ -444,6 +464,8 @@ void Form_Camera::on_horizontalSlider_3_sliderMoved(int position)
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_3, "ExposureMode", MV_EXPOSURE_MODE_TIMED);
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_3,"ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
     MV_CC_SetFloatValue(camera->m_hDevHandle_3, "ExposureTime", position);
+    delay7(500);
+    Flag_camera_exposure_finished=true;
     //如果手动曝光功能开启
     if(Flag_Manual&&!Flag_adap)
     {
@@ -458,6 +480,8 @@ void Form_Camera::on_spinBox_3_valueChanged(int arg1)
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_3, "ExposureMode", MV_EXPOSURE_MODE_TIMED);
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_3,"ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
     MV_CC_SetFloatValue(camera->m_hDevHandle_3, "ExposureTime", arg1);
+    delay7(500);
+    Flag_camera_exposure_finished=true;
     //如果手动曝光功能开启
     if(Flag_Manual&&!Flag_adap)
     {
@@ -472,6 +496,7 @@ void Form_Camera::on_spinBox_4_valueChanged(int arg1)
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_4, "ExposureMode", MV_EXPOSURE_MODE_TIMED);
 //    MV_CC_SetEnumValue(camera->m_hDevHandle_4,"ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
     MV_CC_SetFloatValue(camera->m_hDevHandle_4, "ExposureTime", arg1);
+
     //如果手动曝光功能开启
     if(Flag_Manual&&!Flag_adap)
     {
@@ -574,12 +599,6 @@ void Form_Camera::display()
 
 }
 
-void delay7(int MSecs)
-{
-    QTime dieTime= QTime::currentTime().addMSecs(MSecs);
-    while (QTime::currentTime() < dieTime)
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-}
 
 void Form_Camera::on_pushButton_8_clicked() //连接相机设备按钮
 {
@@ -766,6 +785,7 @@ void Form_Camera::on_pushButton_Adaptive_exposure_clicked()
             ui->spinBox_1->setValue(5000);
             ui->spinBox_2->setValue(5000);
             ui->spinBox_3->setValue(5000);
+            delay7(int(2000));
             if(!Flag_ROI_Finished)
             {
                 QMessageBox box(QMessageBox::Warning,"提示","请先在白底下调整曝光值显示出屏幕轮廓，并先进行白底下自校正！",QMessageBox::Ok);
@@ -784,9 +804,9 @@ void Form_Camera::on_pushButton_Adaptive_exposure_clicked()
         ui->comboBox_product_type->setEnabled(false);
         ui->comboBox_Adaptive_exposure_list->setEnabled(false);
         ui->pushButton_Adaptive_exposure->setText("结束自动模式");
-        d1=QtConcurrent::run(this,&Form_Camera::Adaptive_exposure);  //开处理线程
-
-
+        //d1=QtConcurrent::run(this,&Form_Camera::Adaptive_exposure);  //开处理线程
+        //Flag_camera_exposure_finished=true;
+        Adaptive_exposure();
     }
     else
     {
@@ -817,6 +837,7 @@ void Form_Camera::Adaptive_exposure()
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     for(index=0;index<camera->m_stDevList.nDeviceNum;index++)
     {
+
             Set_exposure_value=(int)Set_exposure_value_all[index][Num_background];
             camera->connectCamera(index);//根据相机序列号连接相机
             if(index==0)
@@ -839,78 +860,93 @@ void Form_Camera::Adaptive_exposure()
             }
             Adaptive_exposure_main_ROI(index+1);
 
-
-            Mean_gray_value=-100;
-
+            //Mean_gray_value=-100;
+            Mean_gray_value=GetMeanGrayValue(index+1);
             Left_exposure=100;
             Right_exposure=100000;
             exposure_value_last=exposure_value;
             int Num_Wait=0;
             // 控制函数运行
 
+            current_date_time =QDateTime::currentDateTime();
+            current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
             MainWindow::debug_msg("二分法调整曝光值前"+QString::number(index)+current_date);
             for(Adaptive_Num=0;qAbs(Mean_gray_value-Set_exposure_value)>Range_Error&&Flag_adap==true;Adaptive_Num++)
             {
-                Mean_gray_value=GetMeanGrayValue(index+1);
-                if(qAbs(Mean_gray_value-Set_exposure_value)>Range_Error) //精确到灰度小数点后两位不同才认为曝光值改变
-                {
-                    if(((int)(Mean_gray_value_last*100)!=(int)(Mean_gray_value*100))||Num_Wait>=2)  //曝光设定等待时间一般不会超过4s，防止过曝或过暗，背光源曝光值要低
-                    {
-                        exposure_value=Half_Control(Mean_gray_value,Set_exposure_value,exposure_value);
-                        Num_Wait=0;
-                        MainWindow::debug_msg("二分法后曝光值"+QString::number(exposure_value)+current_date);
-                    }
-                    else
-                    {
-                        Num_Wait++;
-                    }
-                }
-                delay_time=qAbs(exposure_value)*0.003;
-                if(delay_time<=2000) //延时最少2s
-                    delay_time=2000;
-                ui->pushButton_8->setText(QString("%1").arg(delay_time));
-                if(index==0)
-                {
-                    ui->label_c1->setText(QString("%1").arg(Mean_gray_value));
-                    ui->spinBox_1->setValue(int(exposure_value));
-                }
-                if(index==1)
-                {
-                    ui->label_c2->setText(QString("%1").arg(Mean_gray_value));
-                    ui->spinBox_2->setValue(int(exposure_value));
+                if(Flag_camera_exposure_finished==true){
+                    Mean_gray_value=GetMeanGrayValue(index+1);
+                    Flag_camera_exposure_finished=false;
+                    exposure_value=Half_Control(Mean_gray_value,Set_exposure_value,exposure_value);
+                    Num_Wait=0;
+                    current_date_time =QDateTime::currentDateTime();
+                    current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                    MainWindow::debug_msg("二分法后曝光值"+QString::number(exposure_value)+current_date);
 
+                    delay_time=qAbs(exposure_value)*0.003;
+                    if(delay_time<=2000) //延时最少2s
+                        delay_time=2000;
+                    ui->pushButton_8->setText(QString("%1").arg(delay_time));
+
+                    if(index==0)
+                    {
+                        ui->label_c1->setText(QString("%1").arg(Mean_gray_value));
+                        ui->spinBox_1->setValue(int(exposure_value));
+
+                    }
+                    if(index==1)
+                    {
+                        ui->label_c2->setText(QString("%1").arg(Mean_gray_value));
+                        ui->spinBox_2->setValue(int(exposure_value));
+                    }
+                    if(index==2)
+                    {
+                        ui->label_c3->setText(QString("%1").arg(Mean_gray_value));
+                        ui->spinBox_3->setValue(int(exposure_value));
+                    }
+//                    current_date_time =QDateTime::currentDateTime();
+//                    current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+//                    MainWindow::debug_msg(current_date+"开启延时前");
+//                    //delay7(int(delay_time));
+//                    current_date_time =QDateTime::currentDateTime();
+//                    current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+//                    MainWindow::debug_msg(current_date+"开启延时后");
+
+    //                if(index==3)
+    //                {
+    //                    ui->spinBox_4->setValue(int(exposure_value));
+    //                    ui->label_c4->setText(QString("%1").arg(Mean_gray_value));
+    //                }
+    //                if(index==4)
+    //                {
+    //                    ui->spinBox_5->setValue(int(exposure_value));
+    //                    ui->label_c5->setText(QString("%1").arg(Mean_gray_value));
+    //                }
+    //                if(index==5)
+    //                {
+    //                    ui->spinBox_6->setValue(int(exposure_value));
+    //                    ui->label_c6->setText(QString("%1").arg(Mean_gray_value));
+    //                }
+
+                    exposure_value_last=exposure_value;
+                    Mean_gray_value_last=Mean_gray_value;
+                }else{
+                    delay7(50);
                 }
-                if(index==2)
-                {
-                    ui->label_c3->setText(QString("%1").arg(Mean_gray_value));
-                    ui->spinBox_3->setValue(int(exposure_value));
-                }
-//                if(index==3)
-//                {
-//                    ui->spinBox_4->setValue(int(exposure_value));
-//                    ui->label_c4->setText(QString("%1").arg(Mean_gray_value));
-//                }
-//                if(index==4)
-//                {
-//                    ui->spinBox_5->setValue(int(exposure_value));
-//                    ui->label_c5->setText(QString("%1").arg(Mean_gray_value));
-//                }
-//                if(index==5)
-//                {
-//                    ui->spinBox_6->setValue(int(exposure_value));
-//                    ui->label_c6->setText(QString("%1").arg(Mean_gray_value));
-//                }
-                delay7(int(delay_time));
-                exposure_value_last=exposure_value;
-                Mean_gray_value_last=Mean_gray_value;
+
             }
             qDebug()<<"调整次数:"<<Adaptive_Num<<endl;
             qDebug()<<"自适应曝光值:"<<exposure_value<<endl;
+            current_date_time =QDateTime::currentDateTime();
+            current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
             MainWindow::debug_msg("调整 次数:"+QString::number(Adaptive_Num)+current_date);
     }
+    current_date_time =QDateTime::currentDateTime();
+    current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     MainWindow::debug_msg("发送前:"+current_date);
     if(camera->m_stDevList.nDeviceNum!=0)
     {
+        current_date_time =QDateTime::currentDateTime();
+        current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
         MainWindow::debug_msg("发送:"+current_date);
         emit send();
     }

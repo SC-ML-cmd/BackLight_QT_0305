@@ -3106,7 +3106,7 @@ bool boom_light(Mat white, Mat* mresult, QString* causecolor)
     for (vector<int>::size_type i = 0; i < contours.size(); i++)
     {
         double area = contourArea(contours[i]);
-        if (area > 400 && area < 150000)
+        if (area > 200 && area < 150000)
         {
             boundRect[i] = boundingRect(Mat(contours[i]));
             float w = boundRect[i].width;
@@ -3145,13 +3145,13 @@ bool boom_light(Mat white, Mat* mresult, QString* causecolor)
             double intensity = mean_in_gray - mean_out_gray;
             Mat TempImage_Binary;
 
-            if (intensity > 38)
+            if (intensity > 43)
             {
                 result = true;
                 CvPoint top_lef4 = cvPoint(x_1, y_1);
                 CvPoint bottom_right4 = cvPoint(x_2, y_2);
                 rectangle(white, top_lef4, bottom_right4, Scalar(0), 5, 8, 0);
-                //break;
+                break;
             }
         }
     }
@@ -6391,12 +6391,13 @@ bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat* mresult, QStri
                             circle(white_yiwu, p3, 12, Scalar(0, 0, 255), 1, 8, 0);*/
                             string ceghaung = "cegaung:" + to_string(ceguang_th) + " " + "th:" + to_string(defect_areath) + " " /*+ "ceth:" + to_string(coreth) + " "*/ + "area:" + to_string(area) + " " + "stddev:" + to_string(stddev);
                             putText(white_yiwu, ceghaung, Point(30, 30), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1, 8, 0);
+                            break;
                         }
                     }
                     else
                     {
                         //灰度差限制
-                        if (defect_areath >= 4 && spotpeak_temp >= 3 && area <= 30 || area > 30 && defect_areath >= 3 && spotpeak_temp >= 4/*|| defect_areath >= 8|| spotpeak_temp >= 8*/)//这里的参数先写成定值
+                        if (defect_areath >= 4 && spotpeak_temp >= 3.2 && area <= 30 || area > 30 && defect_areath >= 3 && spotpeak_temp >= 4/*|| defect_areath >= 8|| spotpeak_temp >= 8*/)//这里的参数先写成定值
                         {
                             result = true;
                             CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);
@@ -6406,6 +6407,7 @@ bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat* mresult, QStri
                             circle(white_yiwu, p3, 12, Scalar(0, 0, 255), 1, 8, 0);*/
                             string ceghaung = "cegaung:" + to_string(ceguang_th) + " " + "th:" + to_string(defect_areath) + " " /*+ "ceth:" + to_string(coreth) + " "*/ + "area:" + to_string(area) + " " + "stddev:" + to_string(stddev);
                             putText(white_yiwu, ceghaung, Point(30, 30), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 0), 1, 8, 0);
+                            break;
                         }
                     }
                 }
@@ -6766,186 +6768,193 @@ bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat* mresult, QStri
 * 输出：主相机白底下检测结果图和result
 * 其他：
 ======================================================================*/
-bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_white, Mat& right_white)
-{
-    bool result = false;
+   bool Shifting(Mat white, Mat* mresult, QString* causecolor, int num, Mat& left_white, Mat& right_white)
+   {
+       bool result = false;
+       vector<vector<Point>> doubtContours;
+       findContours(left_white, doubtContours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
+       std::sort(doubtContours.begin(), doubtContours.end(), compareContourAreas);
 
-    vector<vector<Point>> doubtContours;
-    findContours(left_white, doubtContours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
-    std::sort(doubtContours.begin(), doubtContours.end(), compareContourAreas);
+       vector<Rect> doubtBoundRect(doubtContours.size());
 
-    vector<Rect> doubtBoundRect(doubtContours.size());
+       for (int i = 0; i < doubtContours.size(); i++)
+       {
+           double area = contourArea(doubtContours[i]); //363
+           doubtBoundRect[i] = boundingRect(Mat(doubtContours[i]));
 
-    for (int i = 0; i < doubtContours.size(); i++)
-    {
-        double area = contourArea(doubtContours[i]); //363
-        doubtBoundRect[i] = boundingRect(Mat(doubtContours[i]));
+           //获取区域中心
+           int centerX = doubtBoundRect[i].tl().x + doubtBoundRect[i].width/2;
+           int centerY = doubtBoundRect[i].tl().y + doubtBoundRect[i].height / 2;
 
-        //获取区域中心
-        int centerX = doubtBoundRect[i].tl().x + doubtBoundRect[i].width/2;
-        int centerY = doubtBoundRect[i].tl().y + doubtBoundRect[i].height / 2;
+           Mat temp_mask = Mat::zeros(white.rows, white.cols, CV_8UC1);
+           drawContours(temp_mask, doubtContours, i, 255, FILLED, 8);
+           //判断边角出现较大像素区域则认定为出现移位
+           if ((centerX < 100 || centerX>2900) && (centerY < 100 || centerY>1400) && (area > YWPara->edgeAreaDownLimit && area < YWPara->edgeAreaUpperLimit)||
+               centerY > 1480 && area>500 && area <5000)
+           {
+               CvPoint top_lef4 = cvPoint(doubtBoundRect[i].tl().x, doubtBoundRect[i].tl().y);
+               CvPoint bottom_right4 = cvPoint(doubtBoundRect[i].br().x, doubtBoundRect[i].br().y);
+               rectangle(left_white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
+               *mresult = left_white;
+               *causecolor = "移位";
+               return true;
+           }
+       }
+       //拷贝一张主相机白底图
+       Mat img_gray = white.clone();
 
-        Mat temp_mask = Mat::zeros(white.rows, white.cols, CV_8UC1);
-        drawContours(temp_mask, doubtContours, i, 255, FILLED, 8);
-        //判断边角出现较大像素区域则认定为出现移位
-        if ((centerX < 100 || centerX>2900) && (centerY < 100 || centerY>1400) && (area > YWPara->edgeAreaDownLimit && area < YWPara->edgeAreaUpperLimit)||
-            centerY > 1480 && area>500 && area <5000)
-        {
-            CvPoint top_lef4 = cvPoint(doubtBoundRect[i].tl().x, doubtBoundRect[i].tl().y);
-            CvPoint bottom_right4 = cvPoint(doubtBoundRect[i].br().x, doubtBoundRect[i].br().y);
-            rectangle(left_white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
-            *mresult = left_white;
-            *causecolor = "移位";
-            return true;
-        }
-    }
+       Mat ad_result, th1, th2, th3, th4, ImageBinary;
 
+       adaptiveThresholdCustom(img_gray, th1, 255, ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 27, 5.5, 1);
+       threshold(img_gray, th4, 80, 255, 0);
 
+       //屏蔽灯口10行
+       th1(Rect(0, 0, 10, th1.rows)) = uchar(0);           //wsc 2021/03/05 防止漏检
+       //创建2400*1100的纯黑模板
+       Mat th_result = Mat::zeros(th1.rows - 2 * 200, th1.cols - 2 * 500, img_gray.type());
+       //将自适应二值化的中间位置2000*1100涂黑
+       th_result.copyTo(th1(Rect(500, 200, th1.cols - 2 * 500, th1.rows - 2 * 200)));
+       vector<vector<Point>> contours;
 
-    //拷贝一张主相机白底图
-    Mat img_gray = white.clone();
+       //二值化操作
+       threshold(img_gray, ImageBinary, 100, 255, CV_THRESH_BINARY);
+       bitwise_and(ImageBinary, th1, th2);
 
-    Mat ad_result, th1, th2, ImageBinary;
+       //涂黑上下
+       th1(Rect(0, 0, th1.cols - 1, YWPara->lightPortShieldWidth)) = uchar(0);
+       th1(Rect(0, th1.rows - 10, th1.cols - 1, 10)) = uchar(0);
 
-    adaptiveThresholdCustom(img_gray, th1, 255, ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 27, 5.5, 1);
-    //屏蔽灯口10行
-    th1(Rect(0, 0, 10, th1.rows)) = uchar(0);           //wsc 2021/03/05 防止漏检
-    //创建2400*1100的纯黑模板
-    Mat th_result = Mat::zeros(th1.rows - 2 * 200, th1.cols - 2 * 500, img_gray.type());
-    //将自适应二值化的中间位置2000*1100涂黑
-    th_result.copyTo(th1(Rect(500, 200, th1.cols - 2 * 500, th1.rows - 2 * 200)));
-    vector<vector<Point>> contours;
+       th1(Rect(0, 0, 100, 100)) = uchar(0);
+       th1(Rect(0, th1.rows - 100, 100, 100)) = uchar(0);
+       th1(Rect(th1.cols - 100, 0, 100, 100)) = uchar(0);
+       th1(Rect(th1.cols - 100, th1.rows - 100, 100, 100)) = uchar(0);
 
-    //二值化操作
-    threshold(img_gray, ImageBinary, 30, 255, CV_THRESH_BINARY);
-    bitwise_and(ImageBinary, th1, th2);
+       bitwise_and(th1, th4, th1);
+       threshold(img_gray, th3, 190, 255, 0);
+       th3(Rect(10, 0, 2990, th3.rows)) = uchar(0);
+       bitwise_or(th1, th3, th1);
 
-    //涂黑上下
-    th1(Rect(0, 0, th1.cols - 1, YWPara->lightPortShieldWidth)) = uchar(0);
-    th1(Rect(0, th1.rows - 10, th1.cols - 1, 10)) = uchar(0);
+       findContours(th1, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
+       std::sort(contours.begin(), contours.end(), compareContourAreas);
 
-    th1(Rect(0, 0, 100, 100)) = uchar(0);
-    th1(Rect(0, th1.rows - 100, 100, 100)) = uchar(0);
-    th1(Rect(th1.cols - 100, 0, 100, 100)) = uchar(0);
-    th1(Rect(th1.cols - 100, th1.rows - 100, 100, 100)) = uchar(0);
+       vector<Rect> boundRect(contours.size());
+       vector<RotatedRect>box(contours.size());
+       Point2f rect[4];
+       for (vector<int>::size_type i = 0; i < contours.size(); i++)
+       {
+           double area = contourArea(contours[i]);
+           Mat temp_mask = Mat::zeros(th1.rows, th1.cols, CV_8UC1);
+           drawContours(temp_mask, contours, i, 255, FILLED, 8);
+           if (area > YWPara->areaDownLimit && area < YWPara->areaUpperLimit)
+           {
+               Mat temp_mask = Mat::zeros(th1.rows, th1.cols, CV_8UC1);
+               drawContours(temp_mask, contours, i, 255, FILLED, 8);
 
+               boundRect[i] = boundingRect(Mat(contours[i]));
 
-    findContours(th1, contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
-    std::sort(contours.begin(), contours.end(), compareContourAreas);
+               cv::Mat tempGray = white(boundRect[i]);
+               cv::Mat meanGray1;
+               cv::Mat stdDev1;
+               cv::meanStdDev(tempGray, meanGray1, stdDev1);
 
-    vector<Rect> boundRect(contours.size());
-    vector<RotatedRect>box(contours.size());
-    Point2f rect[4];
-    for (vector<int>::size_type i = 0; i < contours.size(); i++)
-    {
-        double area = contourArea(contours[i]);
-        Mat temp_mask = Mat::zeros(th1.rows, th1.cols, CV_8UC1);
-        drawContours(temp_mask, contours, i, 255, FILLED, 8);
-        if (area > YWPara->areaDownLimit && area < YWPara->areaUpperLimit)
-        {
-            Mat temp_mask = Mat::zeros(th1.rows, th1.cols, CV_8UC1);
-            drawContours(temp_mask, contours, i, 255, FILLED, 8);
-
-            boundRect[i] = boundingRect(Mat(contours[i]));
-
-            cv::Mat tempGray = white(boundRect[i]);
-            cv::Mat meanGray1;
-            cv::Mat stdDev1;
-            cv::meanStdDev(tempGray, meanGray1, stdDev1);
-
-            //获取当前区域长宽比，用于得到相对于长宽比的标准差
-            double virtualRadio = max(boundRect[i].width / boundRect[i].height, boundRect[i].height / boundRect[i].width);
-            double stddev1 = stdDev1.at<double>(0, 0);    // 65
-            double val = stddev1 / virtualRadio * 9;
-            if (stddev1 >= YWPara->standardDevThres1 && (stddev1 / virtualRadio * 9) >= YWPara->standardDevThres2) //将长宽比相对标准差对应系数改为9
-            {
-                continue;
-            }
+               //获取当前区域长宽比，用于得到相对于长宽比的标准差
+               double virtualRadio = max(boundRect[i].width / boundRect[i].height, boundRect[i].height / boundRect[i].width);
+               double stddev1 = stdDev1.at<double>(0, 0);    // 65
+               double val = stddev1 / virtualRadio * 9;
+               if (stddev1 >= YWPara->standardDevThres1 && (stddev1 / virtualRadio * 9) >= YWPara->standardDevThres2) //将长宽比相对标准差对应系数改为9
+               {
+                   continue;
+               }
 
 
-            box[i] = minAreaRect(Mat(contours[i]));
-            box[i].points(rect);
-            float Width = sqrt(abs(rect[0].x - rect[1].x) * abs(rect[0].x - rect[1].x) + abs(rect[0].y - rect[1].y) * abs(rect[0].y - rect[1].y));
-            float Height = sqrt(abs(rect[1].x - rect[2].x) * abs(rect[1].x - rect[2].x) + abs(rect[1].y - rect[2].y) * abs(rect[1].y - rect[2].y));
-            float w = boundRect[i].width;
-            float h = boundRect[i].height;
-            //            RotatedRect rect = minAreaRect(contours[i]);  //包覆轮廓的最小斜矩形 划伤缺陷有旋转特点
-            int X_1 = boundRect[i].tl().x;//矩形左上角X坐标值
-            int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
-            int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
-            int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
+               box[i] = minAreaRect(Mat(contours[i]));
+               box[i].points(rect);
+               float Width = sqrt(abs(rect[0].x - rect[1].x) * abs(rect[0].x - rect[1].x) + abs(rect[0].y - rect[1].y) * abs(rect[0].y - rect[1].y));
+               float Height = sqrt(abs(rect[1].x - rect[2].x) * abs(rect[1].x - rect[2].x) + abs(rect[1].y - rect[2].y) * abs(rect[1].y - rect[2].y));
+               float w = boundRect[i].width;
+               float h = boundRect[i].height;
+               //            RotatedRect rect = minAreaRect(contours[i]);  //包覆轮廓的最小斜矩形 划伤缺陷有旋转特点
+               int X_1 = boundRect[i].tl().x;//矩形左上角X坐标值
+               int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
+               int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
+               int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
 
-            double HeWid = max(Height / Width, Width / Height);
-            if ((w < 5 && X_1 >= th1.cols - 4) || (w < 5 && X_2 <= 4))
-            {
-                continue;
-            }
+               double HeWid = max(Height / Width, Width / Height);
+               if ((w < 5 && X_1 >= th1.cols - 4) || (w < 5 && X_2 <= 4))
+               {
+                   continue;
+               }
 
-            if (HeWid >= YWPara->lengthWidthRadioULimit && max(Height, Width) >= 40)  // 03/04 wsc HeWid 3.2 -> 10
-            {
-                int border = 25;
-                X_1 = X_1 - border;
-                Y_1 = Y_1 - border;
-                X_2 = X_2 + border;
-                Y_2 = Y_2 + border;
-                if (X_1 < 0)
-                {
-                    X_1 = 0;
-                }
-                if (Y_1 < 0)
-                {
-                    Y_1 = 0;
-                }
-                if (X_2 > th1.cols - 1)
-                {
-                    X_2 = th1.cols - 1;
-                }
-                if (Y_2 > th1.rows - 1)
-                {
-                    Y_2 = th1.rows - 1;
-                }
-                Mat ImageOutBinary;
-                Mat tempImage = ImageBinary(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1));
-                Mat tempBinary1 = temp_mask(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1)).clone();
-                Mat tempBinary2 = th2(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1)).clone();
-                Mat tempGray = img_gray(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1));
+               if (HeWid >= YWPara->lengthWidthRadioULimit && max(Height, Width) >= 40)  // 03/04 wsc HeWid 3.2 -> 10
+               {
+                   int border = 25;
+                   X_1 = X_1 - border;
+                   Y_1 = Y_1 - border;
+                   X_2 = X_2 + border;
+                   Y_2 = Y_2 + border;
+                   if (X_1 < 0)
+                   {
+                       X_1 = 0;
+                   }
+                   if (Y_1 < 0)
+                   {
+                       Y_1 = 0;
+                   }
+                   if (X_2 > th1.cols - 1)
+                   {
+                       X_2 = th1.cols - 1;
+                   }
+                   if (Y_2 > th1.rows - 1)
+                   {
+                       Y_2 = th1.rows - 1;
+                   }
+                   Mat ImageOutBinary;
+                   Mat tempImage = ImageBinary(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1));
+                   Mat tempBinary1 = temp_mask(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1)).clone();
+                   Mat tempBinary2 = th2(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1)).clone();
+                   Mat tempGray = img_gray(Rect(X_1, Y_1, X_2 - X_1, Y_2 - Y_1));
 
-                double mean_all = mean(tempGray, tempImage)[0];
-                threshold(tempGray, ImageOutBinary, mean_all - 10, 255, CV_THRESH_BINARY);
-                double mean_In;
-                mean_In = mean(tempGray, tempBinary1)[0];
-                bitwise_and(ImageOutBinary, ~tempBinary2, tempBinary2);
-                double mean_Out = mean(tempGray, tempBinary2)[0];
-                double differ = mean_Out - mean_In;
-                double MinmeanIn;
-                if (mean_all >= 150)
-                    MinmeanIn = mean_all / 2 + 20;
-                else if (mean_all >= 100)
-                    MinmeanIn = mean_all / 2 + 10;
-                else
-                    MinmeanIn = mean_all / 2;
-                if (((HeWid <= YWPara->lengthWidthRadio && differ >= YWPara->doubtAreaIntensity1)
-                    || (HeWid > YWPara->lengthWidthRadio && differ >= YWPara->doubtAreaIntensity2)) && mean_In >= MinmeanIn)   //日期：2021/3/2 6504:   HeWid :8-->9   differ 13 --> 19
-                {
-                    result = true;
-                    CvPoint top_lef4 = cvPoint(X_1, Y_1);
-                    CvPoint bottom_right4 = cvPoint(X_2, Y_2);
-                    rectangle(white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
-                    break;
-                }
-            }
-        }
-    }
-    if (result == true)
-    {
-        *mresult = white;
-        *causecolor = "移位";
-        result = true;
-        //        imwrite("D:\\result_img_gray.bmp",img_gray);
-        //        imwrite("D:\\result.bmp",white);
-    }
-    return result;
-}
+                   double mean_all = mean(tempGray, tempImage)[0];
+                   threshold(tempGray, ImageOutBinary, mean_all - 10, 255, CV_THRESH_BINARY);
+                   double mean_In;
+                   mean_In = mean(tempGray, tempBinary1)[0];
+                   bitwise_and(ImageOutBinary, ~tempBinary2, tempBinary2);
+                   double mean_Out = mean(tempGray, tempBinary2)[0];
+                   double differ = mean_Out - mean_In;
+                   double MinmeanIn;
+                   if (mean_all >= 150)
+                       MinmeanIn = mean_all / 2 + 20;
+                   else if (mean_all >= 100)
+                       MinmeanIn = mean_all / 2 + 10;
+                   else
+                       MinmeanIn = mean_all / 2;
+                   if (differ < 0)
+                   {
+                       differ = -differ;
+                   }
+                   if (((HeWid <= YWPara->lengthWidthRadio && differ >= YWPara->doubtAreaIntensity1)
+                       || (HeWid > YWPara->lengthWidthRadio && differ >= YWPara->doubtAreaIntensity2)) && mean_In >= MinmeanIn)   //日期：2021/3/2 6504:   HeWid :8-->9   differ 13 --> 19
+                   {
+                       result = true;
+                       CvPoint top_lef4 = cvPoint(X_1, Y_1);
+                       CvPoint bottom_right4 = cvPoint(X_2, Y_2);
+                       rectangle(white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
+                       break;
+                   }
+               }
+           }
+       }
+       if (result == true)
+       {
+           *mresult = white;
+           *causecolor = "移位";
+           result = true;
+           //        imwrite("D:\\result_img_gray.bmp",img_gray);
+           //        imwrite("D:\\result.bmp",white);
+       }
+       return result;
+   }
+
 
 /*=========================================================
 * 函 数 名: GrayDotLeft
@@ -9138,13 +9147,13 @@ bool Brightedge(Mat src_white, Mat photomainwhite,Mat* Mwhite, QString* causecol
             }
         }
         findContours(yuantu, contours, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-        //clock_t start_time = clock();
         for (vector<int>::size_type i = 0; i < contours.size(); i++)
         {
             double area = contourArea(contours[i]);
             if (area > 100)
             {
                 num++;
+                break;
             }
         }
     }

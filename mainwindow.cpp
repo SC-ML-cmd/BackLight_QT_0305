@@ -437,7 +437,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.190";       //版本号
+    QString str_ver ="1.0.34.192";       //版本号
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
@@ -1452,7 +1452,7 @@ int MainWindow::detect()
 
         ui->label_30->setText("读到平台到达");
         //delay(SideLightOpenTime);                 //等待侧光灯打开延时
-        delay_msec(SideLightOpenTime+100);                 //等待侧光灯打开延时
+        delay_msec(SideLightOpenTime);                 //等待侧光灯打开延时
 
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
@@ -1570,7 +1570,7 @@ int MainWindow::detect()
         ui->label_30->setText("侧光完成信号");
 
     //    delay(BoxOpenTime);//打开测试盒点亮为白底屏幕拍照延时
-        delay_msec(BoxOpenTime+100);//打开测试盒点亮为白底屏幕拍照延时
+        delay_msec(BoxOpenTime);//打开测试盒点亮为白底屏幕拍照延时
         //================拍摄白底图像========================
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
