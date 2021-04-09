@@ -5306,10 +5306,6 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
 //                                   bitwise_and(TempCeguang0, ~TempImage0, TempCeguang1);
                                    double ceguang1_Out = mean(TempCeguang0, ~TempImage0)[0];
                                    double differ = ceguang1_Out - ceguang1_In;
-<<<<<<< HEAD
-
-=======
->>>>>>> 782e1decfc09c48f70a2c9c398f5652869e8ec43
 
                                    if ( (area < 130 && area >= 50 && differ <= 6.6)
                                      || (area < 50 && area >= 10 && differ < 3.1)
