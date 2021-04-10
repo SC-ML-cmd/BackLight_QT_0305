@@ -5054,7 +5054,12 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
                       // continue;
                    //}
                    //if ((ceguangth <1.5 && stddev < 50) || (ceguangth <-5 && area>30))
-                   if ((ceguangth_huahen >= 0 && ceguangth_huahen < 1.5 && area <= 50) ||(ceguangth_huahen >= 0 && ceguangth_huahen < 2.3 && area >50)|| (ceguangth_huichen >= 3 && area > 30) || (ceguangth_huichen >= 0 && ceguangth_huichen < 3))
+
+                   if ((ceguangth_huahen >= 0 && ceguangth_huahen < 1.5 && area <= 50)
+                   || (ceguangth_huahen >= 0 && ceguangth_huahen < 2.3 && area >50)
+                   || (ceguangth_huichen >= 3 && area > 30)
+                   || (ceguangth_huichen >= 0 && ceguangth_huichen < 3)
+                   || (ceguangth_huichen >=3 && area>15))
                    {
                        int Secscreen_Expand = 20;
                        int x_lt_sec = X_1 - Secscreen_Expand;
@@ -5312,7 +5317,7 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
                                      || (area > 0 && area < 10 && differ < 1.8)
                                      || (area >= 130)
                                      || (Luminaceth > 11.2 && area > 80)
-                                     || (area<50 && area>=10 && differ > 8 && differ <11.2))
+                                     || (area<50 && area>=10 && differ > 6 && differ <11.2))
                                    {
                                        //double area7 = countNonZero(Crop_Image_last);
 
