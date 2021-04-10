@@ -72,7 +72,6 @@ INCLUDEPATH+=F:\opencvbulid3.40\include
 LIBS += -L F:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 LIBS += -L F:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 #wsc
-<<<<<<< HEAD
 #INCLUDEPATH+=D:\MVS\Development\Includes
 #LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
 #LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
@@ -92,8 +91,6 @@ LIBS += -L F:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 #LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
 #pjn
-=======
->>>>>>> 782e1decfc09c48f70a2c9c398f5652869e8ec43
 #INCLUDEPATH+=D:\MVS\Development\Includes
 #LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
 #LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a

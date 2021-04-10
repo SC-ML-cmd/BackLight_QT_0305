@@ -5306,10 +5306,6 @@ bool heituan(Mat image_white_src,Mat *mresult,QString *causecolor)//颜色检测
 //                                   bitwise_and(TempCeguang0, ~TempImage0, TempCeguang1);
                                    double ceguang1_Out = mean(TempCeguang0, ~TempImage0)[0];
                                    double differ = ceguang1_Out - ceguang1_In;
-<<<<<<< HEAD
-
-=======
->>>>>>> 782e1decfc09c48f70a2c9c398f5652869e8ec43
 
                                    if ( (area < 130 && area >= 50 && differ <= 6.6)
                                      || (area < 50 && area >= 10 && differ < 3.1)
@@ -6038,10 +6034,13 @@ bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat* mresult, QStri
     Mat img_ceguang = ceguang.clone();
     medianBlur(img_gray, img_gray, 3); //中值滤波滤除椒盐噪声,缺点耗时26毫秒 奇数半径越大效果越强
     Mat th_result;
+    Mat th_result1;
     //Mat a;
     //threshold(img_gray, a, 100, 255, CV_THRESH_BINARY);
     //bitwise_and(img_gray, a, img_gray);
     //adaptiveThresholdCustom_whitedot(img_gray, th_result, 255, ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, whitePoint_step, -3, 1);
+    Mat img_top11 = img_gray(Rect(10,10, 2980, 1480));
+    adaptiveThreshold(img_top11, th_result1, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 39, -3);
     adaptiveThreshold(img_gray, th_result, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 39, -3);
     //针对边界位置取原图的边界
     Mat img_top = img_gray(Rect(0, 0, img_gray.cols - 1, 40));
@@ -6086,18 +6085,18 @@ bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat* mresult, QStri
     top_th.copyTo(th_result(Rect(0, 0, th_result.cols - 1, 40)));                    //上边界
     bottom_th.copyTo(th_result(Rect(0, th_result.rows - 40, th_result.cols - 1, 40)));     //下边界
     left_th.copyTo(th_result(Rect(0, 0, 60, th_result.rows - 1)));                   //左边界
-    right_th.copyTo(th_result(Rect(th_result.cols - 40, 0, 40, th_result.rows - 1)));      //右边界
-    img_right_light_th.copyTo(th_result(Rect(img_gray.cols - 15, 0, 15, img_gray.rows - 1)));      //右边界
     img_tl_R_th.copyTo(th_result(Rect(0, 0, 200, 150)));                    //上边界
     img_bl_R_th.copyTo(th_result(Rect(0, 1350, 200, 150)));     //下边界
     img_tr_R_th.copyTo(th_result(Rect(2850, 0, 150, 150)));                   //左边界
     img_br_R_th.copyTo(th_result(Rect(2849, 1349, 150, 150)));      //右边界
-
+    th_result1.copyTo(th_result(Rect(10, 10, 2980, 1480)));
+    right_th.copyTo(th_result(Rect(th_result.cols - 40, 0, 40, th_result.rows - 1)));      //右边界
+    img_right_light_th.copyTo(th_result(Rect(img_gray.cols - 15, 0, 15, img_gray.rows - 1)));      //右边界
     //img_tm_th.copyTo(th_result(Rect(500, 0, 2300, 40)));
     //img_bm_th.copyTo(th_result(Rect(500, 1460, 2300, 40)));
 
-    th_result(Rect(0, 0, 20, th_result.rows)) = uchar(0);            //屏蔽右侧15行，防止灯口误检白点
-    th_result(Rect(th_result.cols - 10, 0, 10, th_result.rows)) = uchar(0);            //屏蔽左侧10行，防止头部亮边误检为白点
+    //th_result(Rect(0, 0, 20, th_result.rows)) = uchar(0);            //屏蔽右侧15行，防止灯口误检白点
+   // th_result(Rect(th_result.cols - 10, 0, 10, th_result.rows)) = uchar(0);            //屏蔽左侧10行，防止头部亮边误检为白点
     //th_result(Rect(0, 0, th_result.cols, 10)) = uchar(0);
     //th_result(Rect(0, th_result.rows - 10, th_result.cols, 10)) = uchar(0);
 
@@ -6400,7 +6399,7 @@ bool WhiteDotLeft(Mat white_yiwu, Mat ceguang, Mat Original, Mat* mresult, QStri
                     else
                     {
                         //灰度差限制
-                        if (defect_areath >= 4 && spotpeak_temp >= 3.2 && area <= 30 || area > 30 && defect_areath >= 3 && spotpeak_temp >= 4/*|| defect_areath >= 8|| spotpeak_temp >= 8*/)//这里的参数先写成定值
+                        if (defect_areath >= 4.2 && spotpeak_temp >= 3.2 && area <= 30 || area > 30 && defect_areath >= 3 && spotpeak_temp >= 4/*|| defect_areath >= 8|| spotpeak_temp >= 8*/)//这里的参数先写成定值
                         {
                             result = true;
                             CvPoint top_lef4 = cvPoint(X_1 - 10, Y_1 - 10);

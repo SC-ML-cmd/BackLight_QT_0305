@@ -880,7 +880,7 @@ void Form_Camera::Adaptive_exposure()
                     Num_Wait=0;
                     current_date_time =QDateTime::currentDateTime();
                     current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
-                    MainWindow::debug_msg("二分法后曝光值"+QString::number(exposure_value)+current_date);
+                    MainWindow::debug_msg("二分法 后曝光值"+QString::number(exposure_value)+current_date);
 
                     delay_time=qAbs(exposure_value)*0.003;
                     if(delay_time<=2000) //延时最少2s
