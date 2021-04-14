@@ -71,16 +71,18 @@ INCLUDEPATH+=F:\opencvbulid3.40\include
 
 LIBS += -L F:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 LIBS += -L F:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
-#wsc
-#INCLUDEPATH+=D:\MVS\Development\Includes
-#LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
-#LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
-#INCLUDEPATH+=D:\Qt\opencvbulid3.40\include
-#             D:\Qt\opencvbulid3.40\include\opencv
-#             D:\Qt\opencvbulid3.40\include\opencv2
 
-#LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
-#LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
+#wsc
+INCLUDEPATH+=D:\MVS\Development\Includes
+LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
+LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
+INCLUDEPATH+=D:\Qt\opencvbulid3.40\include
+             D:\Qt\opencvbulid3.40\include\opencv
+             D:\Qt\opencvbulid3.40\include\opencv2
+
+
+LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
+LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
 
 #INCLUDEPATH+=D:\MVS\Development\Includes
@@ -305,3 +307,11 @@ DISTFILES +=
 
 RESOURCES += \
     resources.qrc
+
+
+LIBS += -lDbghelp
+LIBS += -luser32
+
+# release add debug info
+QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO

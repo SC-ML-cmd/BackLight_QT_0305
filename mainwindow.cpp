@@ -437,9 +437,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.194测试";       //版本号
+
+    QString str_ver ="1.0.34.195";       //版本号
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
+
+    //关闭窗口时，销毁窗口，并发出最后一个窗口关闭的消息
+    setAttribute(Qt::WA_DeleteOnClose, false);
 
     connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::BlockingQueuedConnection);
     connect(this, SIGNAL(write_Modbus_Num(int,int)), this, SLOT(write_Modbus(int,int)), Qt::BlockingQueuedConnection);
@@ -1195,7 +1199,6 @@ int MainWindow::detect_offine()
     src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
     src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
     src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
-
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
 //      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
 //      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
@@ -1205,6 +1208,12 @@ int MainWindow::detect_offine()
 //      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\YW_L_C_001.bmp", -1);
 
 
+
+
+
+//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
+//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
+//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
 
 //      //offline-pjn
 //      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
@@ -3809,7 +3818,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
         if(camera->m_hDevHandle_3)
             camera->closeCamera(camera->m_hDevHandle_3);
 
-        this->destroy(true,true);
+        //接收事件，即可关闭窗口
+        event->accept();
+        //this->destroy(true,true);
     }
     else
     {
