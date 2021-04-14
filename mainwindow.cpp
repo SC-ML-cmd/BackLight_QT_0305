@@ -437,7 +437,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_32->setText(str);//日期时间
 
 
-    QString str_ver ="1.0.34.193";       //版本号
+    QString str_ver ="1.0.34.194测试";       //版本号
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
@@ -862,22 +862,66 @@ bool MainWindow::write_Modbus(int address,int value)//写入PLC
 void MainWindow::read_Modbus(int address)//读取plc
 { 
     try {
+        QDateTime current_date_time =QDateTime::currentDateTime();
+        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg("["+ current_date + "]" + "进入read_Modbus函数");
         if (!modbusDevice)
             return;
         //QModbusDataUnit 存储接收和发送数据的类，数据类型为1bit和16bit
         QModbusDataUnit writeUnit1(QModbusDataUnit::Coils, address, 1);
-        if (auto *reply = modbusDevice->sendReadRequest(writeUnit1, 1))
-        {
-            if (!reply->isFinished()) //eply在回复完成或中止时返回true
+        for(int j=0;j<5;j++){
+            if (auto *reply = modbusDevice->sendReadRequest(writeUnit1, 1))
             {
-                //QModbusReply客户端访问服务器后得到的回复（如客户端读服务器数据时包含数据信息）
-                //QModbusReply这个类存储了来自client的数据
-                connect(reply, &QModbusReply::finished, this, &MainWindow::readReady);
-            }
-            else
-            {
+                for(int Read_num=1;Read_num<10;Read_num++)
+                {
+                    if (!reply->isFinished()) //eply在回复完成或中止时返回true
+                    {
+                        delay_msec(1);
+                    }
+                    else if(reply->isFinished())
+                    {
+                        //readReady();
+                        QDateTime current_date_time1 =QDateTime::currentDateTime();
+                        QString current_date =current_date_time1.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                        debug_msg("["+ current_date + "]" + "reply完成");
+//                        auto reply = qobject_cast<QModbusReply *>(sender());
+//                        if (!reply){
+//                            current_date_time =QDateTime::currentDateTime();
+//                            current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+//                            debug_msg("非reply"+current_date);
+//                            return;
+//                        }
+                        if (reply->error() == QModbusDevice::NoError)
+                        {
+                            //数据从QModbusReply这个类的resuil方法中获取,也就是本程序中的reply->result()
+                            const QModbusDataUnit unit = reply->result();
+                            for (uint i = 0; i < unit.valueCount(); i++)
+                            {
+                                Data_Form_Plc=unit.value(i);
+                                statusBar()->showMessage(tr("读取成功：%1").arg(Data_Form_Plc),300);
+                                delete reply;
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            QDateTime current_date_time =QDateTime::currentDateTime();
+                            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                            debug_msg("["+ current_date + "]" + "reply创建对象创建成功，reply->error()plc相应异常++++++++++++++");
+                            delete reply;
+                        }
+                    }
+                }
+                QDateTime current_date_time =QDateTime::currentDateTime();
+                QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                debug_msg("["+ current_date + "]" + "reply未Finished_10ms");
                 delete reply;
+            }else{
+                QDateTime current_date_time =QDateTime::currentDateTime();
+                QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                debug_msg("["+ current_date + "]" + "reply未创建成功");
             }
+
         }
     } catch(std::exception e)
     {
@@ -903,15 +947,23 @@ void MainWindow::readReady()
 {
     try {
         //QModbusReply这个类存储了来自client的数据,sender()返回发送信号的对象的指针
-        auto reply = qobject_cast<QModbusReply *>(sender());
-        if (!reply)
+        QDateTime current_date_time1 =QDateTime::currentDateTime();
+        QString current_date =current_date_time1.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg("["+ current_date + "]" + "reply完成");
+        QModbusReply *reply = qobject_cast<QModbusReply *>(sender());
+        if (!reply){
+            current_date_time1 =QDateTime::currentDateTime();
+            current_date =current_date_time1.toString("yyyy.MM.dd hh:mm:ss.zzz");
+            debug_msg("非reply"+current_date);
             return;
+        }
         if (reply->error() == QModbusDevice::NoError)
         {
             //数据从QModbusReply这个类的resuil方法中获取,也就是本程序中的reply->result()
             const QModbusDataUnit unit = reply->result();
             for (uint i = 0; i < unit.valueCount(); i++)
             {
+                debug_msg("reply成功");
                 Data_Form_Plc=unit.value(i);
                 statusBar()->showMessage(tr("读取成功：%1").arg(Data_Form_Plc),300);
 
@@ -1019,7 +1071,7 @@ void MainWindow::TimerTimeOut()
         QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
         debug_msg("准备读取拍照位置"+current_date);
         read_Modbus(1600);//位置到达，开测光《拍测光
-        delay(modbus_time);
+        //delay(modbus_time);
 
         if(Data_Form_Plc==1)
         {
@@ -1034,6 +1086,9 @@ void MainWindow::TimerTimeOut()
             detect();//冠华半自动机器3月30日开始修改 该版本可以使用
         }
     }
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+    debug_msg("["+ current_date + "]" + "定时器开始前");
     m_timer.start(50);
 }
 
@@ -1136,15 +1191,11 @@ int MainWindow::detect_offine()
 
 
     //offline_wsc
-    std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\0310\\dibuliangxian1\\_20200927165_2729_";
+    std::string SRC_PATH = "C:\\Users\\Administrator\\Desktop\\tupian\\1351";
     src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
     src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
     src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> a0485a0a80eff5390b074fb65290e30724aa1d56
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
 //      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
 //      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
@@ -1155,14 +1206,6 @@ int MainWindow::detect_offine()
 
 
 
-<<<<<<< HEAD
-=======
-
-//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
-//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
-//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
-
->>>>>>> a0485a0a80eff5390b074fb65290e30724aa1d56
 //      //offline-pjn
 //      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);

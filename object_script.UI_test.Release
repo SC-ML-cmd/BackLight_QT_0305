@@ -28,6 +28,8 @@ release/detector_choose.o
 release/excelhepler.o
 release/history_batchfind.o
 release/history_data.o
+release/deadlightparadao.o
+release/sqlhelp.o
 release/qrc_resources.o
 release/moc_mainwindow.o
 release/moc_camera.o

@@ -895,7 +895,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1000, 974));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 995, 967));
         gridLayout_2 = new QGridLayout(scrollAreaWidgetContents);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -1593,7 +1593,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1275, 22));
+        menuBar->setGeometry(QRect(0, 0, 1275, 26));
         menuBar->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 0);\n"
 "selection-background-color: rgb(150, 150, 150);\n"
 "font: 12pt \"\351\273\221\344\275\223\";\n"
