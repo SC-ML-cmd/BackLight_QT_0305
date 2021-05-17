@@ -3,13 +3,19 @@
 #include <QLoggingCategory>
 #include "dbhelper.h"
 #include<QSharedMemory>
+
+//#define QT_WIN_BUG
+
+#ifdef QT_WIN_BUG
 #include <Dbghelp.h>
 #include <Windows.h>
+#endif
 
 using namespace std;
 QSqlDatabase  db;
 QString  mysql;
 
+#ifdef QT_WIN_BUG
 long  __stdcall CrashInfocallback(_EXCEPTION_POINTERS *pexcp)
 {
     //创建 Dump 文件
@@ -44,7 +50,7 @@ long  __stdcall CrashInfocallback(_EXCEPTION_POINTERS *pexcp)
     }
     return 0;
 }
-
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -57,11 +63,14 @@ int main(int argc, char *argv[])
     QApplication::addLibraryPath("./plugins");
     QApplication a(argc, argv);
 
+#ifdef QT_WIN_BUG
     ::SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)CrashInfocallback);
+#endif
+
     QApplication::addLibraryPath("./plugins");
     connect_mysql();
-    MainWindow w;
-    w.show();
+    MainWindow *w = new MainWindow();
+    w->show();
     return a.exec();
 }
 

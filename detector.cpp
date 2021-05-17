@@ -26,6 +26,7 @@ ThreadSafelog *logPtr = new ThreadSafelog;
 DeadLightParameter *SDPara;
 //创建移位参数对象
 ShiftDefectParameter *YWPara;
+Mat Mresult_1_white;
 
 void debug_msg1(QVariant msg)
 {

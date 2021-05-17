@@ -24,7 +24,7 @@ extern QString causeColor_1_black;
 extern QString causeColor_2_black;
 extern QString causeColor_gray;
 extern Mat Mresult;
-extern Mat Mresult_1_white;
+//Mat Mresult_1_white;
 extern Mat Mresult_2_white;
 extern Mat Mresult_3_white;
 extern Mat Mresult_1_black;
