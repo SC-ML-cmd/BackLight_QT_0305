@@ -274,7 +274,7 @@ Mat M_white_3; //右侧相机透视变换矩阵
 Mat M_black_2;
 Mat M_black_abshow;
 Mat M_abshow_white;
-Mat Mresult_1_white;
+//extern Mat Mresult_1_white;
 Mat Mresult_2_white;
 Mat Mresult_3_white;
 Mat Mresult_1_black;
@@ -436,10 +436,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
 
-    QString str_ver ="1.0.34.179";       //版本号
+    QString str_ver ="1.0.34.209";       //版本号
 
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
+
+    //关闭窗口时，销毁窗口，并发出最后一个窗口关闭的消息
+    setAttribute(Qt::WA_DeleteOnClose, false);
 
     connect(this, SIGNAL(read_Modbus_Num(int)), this, SLOT(read_Modbus(int)), Qt::BlockingQueuedConnection);
     connect(this, SIGNAL(write_Modbus_Num(int,int)), this, SLOT(write_Modbus(int,int)), Qt::BlockingQueuedConnection);
@@ -507,15 +510,334 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::checkIfDone()
+void MainWindow::saveProduct(QString DefectNum[],int DefectNum1)
 {
-//    if (QThreadPool::globalInstance()->activeThreadCount())
-//        QTimer::singleShot(PollTimeout, this, SLOT(checkIfDone()));
-//    else {
+    debug_msg("开始保存函数");
+    if(autoSave==true && SaveSize == true)
+    {
+        QString savePath=imageSavePath;
+        //创建样本图片文件夹
+        QDir *sampleFolder = new QDir;
+        bool isExist = sampleFolder->exists(savePath);
+        if(!isExist)
+        {
+            sampleFolder->mkdir(savePath);
+        }
+        //创建工位拍摄图片子文件夹
+        QDir *takenPictures=new QDir;
+        savePath+="\\station";
+        isExist = takenPictures->exists(savePath);
+        if(!isExist)
+        {
+            takenPictures->mkdir(savePath);
+        }
+        debug_msg("保存缺陷样本文件夹"+ savePath);
 
-//    }
+        //创建以某天命名的子文件夹
+        QDir *dayFolder=new QDir;
+        savePath = savePath + "\\" + product_Lot;
+        isExist=dayFolder->exists(savePath);
+        if(!isExist)
+        {
+            dayFolder->mkdir(savePath);
+        }
+        debug_msg("保存缺陷样本文件夹"+ savePath);
+
+
+        //创建以序号命名的文件夹
+        QDir *numFolder=new QDir;
+        QString serialNum="\\"+QString::number(num7);
+        savePath+=serialNum;
+        isExist=numFolder->exists(savePath);
+        if(!isExist)
+        {
+            numFolder->mkdir(savePath);
+        }
+        markSavePath.clear();
+        markSavePath = savePath.toStdString();
+
+        debug_msg("保存所有样本,当前缺陷类型"+QString::number(DefectNum1,10));
+        if(DefectNum1 == 0)
+        {
+
+            //产品路径
+            QString productPath = savePath + "\\LP_" + product_Lot + "_" +QString::number(num7);
+
+            //侧光主视图
+            string save_ceguang1=(productPath+ "_C0.bmp").toStdString();
+
+            //侧光左视图
+            string save_ceguang_left=(productPath+ "_CL.bmp").toStdString();
+
+            //侧光右视图
+            string save_ceguang_right=(productPath+ "_CR.bmp").toStdString();
+
+            //主相机白底图
+            string save_white1=(productPath+ "_B0.bmp").toStdString();
+
+            //左相机白底图
+            string save_L1=(productPath+ "_BL.bmp").toStdString();
+
+            //右相机白底图
+            string save_R1=(productPath+ "_BR.bmp").toStdString();
+
+
+            imwrite(save_ceguang1, src_ceguang1_Temp);//主相机侧光灯图像
+            imwrite(save_ceguang_left, src_ceguang_left_Temp);//左相机侧光灯图像
+            imwrite(save_ceguang_right, src_ceguang_right_Temp);//右相机侧光图像
+
+            imwrite(save_white1, src_white1_Temp); //主相机白底图
+            imwrite(save_L1, src_L1_Temp);         //左相机白底图
+            imwrite(save_R1, src_R1_Temp);         //右相机侧光图
+
+            string save_qualified_result = "\\qualified_result.bmp";
+            save_qualified_result = savePath.toStdString() + save_qualified_result;
+            imwrite(save_qualified_result, whiteshow1);  //合格结果图
+
+
+            debug_msg("保存所有样本,当前合格结果图路径"+QString::fromStdString(save_qualified_result));
+        }
+        else {
+            debug_msg("保存全部样本,当前缺陷类型"+QString::number(DefectNum1,10));
+
+                QString lack_info="_"+QString::number(DefectNum1)+"_";//存储样品缺陷信息的字符串，最后作为样本命名的一部分输出
+
+                for(int lackNum = 0; lackNum < DefectNum1; lackNum++)
+                {
+
+                    lack_info=lack_info+DefectNum[lackNum];
+
+                }
+                lack_info=lack_info+"_";//缺陷信息更新结束
+
+                QString save_ceguang1_1;
+                string save_ceguang1;
+                save_ceguang1_1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_C0.bmp";//主相机侧光灯图像
+                save_ceguang1_1=savePath+save_ceguang1_1;
+                save_ceguang1=save_ceguang1_1.toStdString();
+
+                QString save_ceguang_left1;
+                string save_ceguang_left;
+                save_ceguang_left1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_CL.bmp";//左相机侧光灯图像
+                save_ceguang_left1 = savePath + save_ceguang_left1;
+                save_ceguang_left=save_ceguang_left1.toStdString();
+
+                QString save_ceguang_right1;
+                string save_ceguang_right;
+                save_ceguang_right1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_CR.bmp";
+                save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+                save_ceguang_right=save_ceguang_right1.toStdString();
+
+                QString save_white1_1;
+                string save_white1;
+                save_white1_1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_B0.bmp";
+                save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+                save_white1=save_white1_1.toStdString();
+
+                QString save_L1_1;
+                string save_L1;
+                save_L1_1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_BL.bmp";
+                save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+                save_L1=save_L1_1.toStdString();
+
+                QString save_R1_1;
+                string save_R1;
+                save_R1_1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_BR.bmp";
+                save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+                save_R1=save_R1_1.toStdString();
+
+                imwrite(save_ceguang1, src_ceguang1_Temp);//主相机侧光灯图像
+                imwrite(save_ceguang_left, src_ceguang_left_Temp);//左相机侧光灯图像
+                imwrite(save_ceguang_right, src_ceguang_right_Temp);//右相机侧光图像
+
+                imwrite(save_white1, src_white1_Temp);//主相机白底图
+                imwrite(save_L1, src_L1_Temp);//左相机白底图
+                imwrite(save_R1, src_R1_Temp);//右相机侧光图
+
+                string save_white_result_1="\\"+lack_info.toStdString()+"white_result_1.bmp";
+                string save_white_result_2="\\"+lack_info.toStdString()+"white_result_2.bmp";
+                string save_white_result_3="\\"+lack_info.toStdString()+"white_result_3.bmp";
+                save_white_result_1=savePath.toStdString()+save_white_result_1;
+                save_white_result_2=savePath.toStdString()+save_white_result_2;
+                save_white_result_3=savePath.toStdString()+save_white_result_3;
+
+
+                debug_msg("保存缺陷样本,当前缺陷信息"+lack_info);
+
+                //如果线程1存在缺陷result_white1
+                if(result_white1==true)
+                {
+                    imwrite(save_white_result_1,Mresult_1_white); //白底1下存在缺陷图
+                    debug_msg("保存缺陷样本文件保存路径1"+QString::fromStdString(save_white_result_1));
+                }
+                //如果线程2存在缺陷result_white1
+                if(result_white2==true)
+                {
+                    imwrite(save_white_result_2,Mresult_2_white); //白底2下存在缺陷图
+                    debug_msg("保存缺陷样本文件保存路径2"+QString::fromStdString(save_white_result_2));
+                }
+                //如果线程3存在缺陷result_white1
+                if(result_white3==true)
+                {
+                    imwrite(save_white_result_3,Mresult_3_white); //白底3下存在缺陷图
+                    debug_msg("保存缺陷样本文件保存路径3"+QString::fromStdString(save_white_result_3));
+                }
+
+            }
+
+        debug_msg("保存全部样本结束");
+    }
+
+    //保存缺陷样本
+    if(autoSave==true && SaveSize==false)
+    {
+        debug_msg("保存缺陷样本,当前缺陷类型"+QString::number(DefectNum1,10));
+        if(DefectNum1 != 0)
+        {
+            debug_msg("保存缺陷样本,当前缺陷类型"+QString::number(DefectNum1,10));
+
+//                QString savePath = imageSavePath;
+
+//                savePath+="\\station";
+//                savePath = savePath + "\\" + product_Lot;
+
+//                QString serialNum="\\"+QString::number(num7);
+//                savePath+=serialNum;
+
+                QString savePath=imageSavePath;
+                //创建样本图片文件夹
+                QDir *sampleFolder = new QDir;
+                bool isExist = sampleFolder->exists(savePath);
+                if(!isExist)
+                {
+                    sampleFolder->mkdir(savePath);
+                }
+                //创建工位拍摄图片子文件夹
+                QDir *takenPictures=new QDir;
+                savePath+="\\station";
+                isExist = takenPictures->exists(savePath);
+                if(!isExist)
+                {
+                    takenPictures->mkdir(savePath);
+                }
+                debug_msg("保存缺陷样本文件夹"+ savePath);
+
+                //创建以某天命名的子文件夹
+                QDir *dayFolder=new QDir;
+                savePath = savePath + "\\" + product_Lot;
+                isExist=dayFolder->exists(savePath);
+                if(!isExist)
+                {
+                    dayFolder->mkdir(savePath);
+                }
+                debug_msg("保存缺陷样本文件夹"+ savePath);
+
+
+                //创建以序号命名的文件夹
+                QDir *numFolder=new QDir;
+                QString serialNum="\\"+QString::number(num7);
+                savePath+=serialNum;
+                isExist=numFolder->exists(savePath);
+                if(!isExist)
+                {
+                    numFolder->mkdir(savePath);
+                }
+//                markSavePath.clear();
+//                markSavePath = savePath.toStdString();
+
+
+                markSavePath.clear();
+                markSavePath = savePath.toStdString();
+
+                QString lack_info="_"+QString::number(DefectNum1)+"_";//存储样品缺陷信息的字符串，最后作为样本命名的一部分输出
+
+                for(int lackNum = 0; lackNum < DefectNum1; lackNum++)
+                {
+
+                    lack_info=lack_info+DefectNum[lackNum];
+
+                }
+                lack_info=lack_info+"_";//缺陷信息更新结束
+
+                QString save_ceguang1_1;
+                string save_ceguang1;
+                save_ceguang1_1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_C0.bmp";//主相机侧光灯图像
+                save_ceguang1_1=savePath+save_ceguang1_1;
+                save_ceguang1=save_ceguang1_1.toStdString();
+
+                QString save_ceguang_left1;
+                string save_ceguang_left;
+                save_ceguang_left1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_CL.bmp";//左相机侧光灯图像
+                save_ceguang_left1 = savePath + save_ceguang_left1;
+                save_ceguang_left=save_ceguang_left1.toStdString();
+
+                QString save_ceguang_right1;
+                string save_ceguang_right;
+                save_ceguang_right1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_CR.bmp";
+                save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+                save_ceguang_right=save_ceguang_right1.toStdString();
+
+                QString save_white1_1;
+                string save_white1;
+                save_white1_1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_B0.bmp";
+                save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+                save_white1=save_white1_1.toStdString();
+
+                QString save_L1_1;
+                string save_L1;
+                save_L1_1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_BL.bmp";
+                save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+                save_L1=save_L1_1.toStdString();
+
+                QString save_R1_1;
+                string save_R1;
+                save_R1_1 = "\\"+lack_info+"_" + product_Lot + "_" +QString::number(num7) + "_BR.bmp";
+                save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+                save_R1=save_R1_1.toStdString();
+
+                imwrite(save_ceguang1, src_ceguang1_Temp);//主相机侧光灯图像
+                imwrite(save_ceguang_left, src_ceguang_left_Temp);//左相机侧光灯图像
+                imwrite(save_ceguang_right, src_ceguang_right_Temp);//右相机侧光图像
+
+                imwrite(save_white1, src_white1_Temp);//主相机白底图
+                imwrite(save_L1, src_L1_Temp);//左相机白底图
+                imwrite(save_R1, src_R1_Temp);//右相机侧光图
+
+                string save_white_result_1="\\"+lack_info.toStdString()+"white_result_1.bmp";
+                string save_white_result_2="\\"+lack_info.toStdString()+"white_result_2.bmp";
+                string save_white_result_3="\\"+lack_info.toStdString()+"white_result_3.bmp";
+                save_white_result_1=savePath.toStdString()+save_white_result_1;
+                save_white_result_2=savePath.toStdString()+save_white_result_2;
+                save_white_result_3=savePath.toStdString()+save_white_result_3;
+
+
+                debug_msg("保存缺陷样本,当前缺陷信息"+lack_info);
+
+                //如果线程1存在缺陷result_white1
+                if(result_white1==true)
+                {
+                    imwrite(save_white_result_1,Mresult_1_white); //白底1下存在缺陷图
+                    debug_msg("保存缺陷样本文件保存路径1"+QString::fromStdString(save_white_result_1));
+                }
+                //如果线程2存在缺陷result_white1
+                if(result_white2==true)
+                {
+                    imwrite(save_white_result_2,Mresult_2_white); //白底2下存在缺陷图
+                    debug_msg("保存缺陷样本文件保存路径2"+QString::fromStdString(save_white_result_2));
+                }
+                //如果线程3存在缺陷result_white1
+                if(result_white3==true)
+                {
+                    imwrite(save_white_result_3,Mresult_3_white); //白底3下存在缺陷图
+                    debug_msg("保存缺陷样本文件保存路径3"+QString::fromStdString(save_white_result_3));
+                }
+
+
+        }
+    }
+                debug_msg("保存缺陷样本完成");
+
 }
-
 /*====================================================================
 * 类型：receiveData
 * 功能：接收用户输入信息槽函数
@@ -541,19 +863,8 @@ void MainWindow::receiveData(QString e,QString a)
     ui->label_69->setText(QString("%1").arg(scratch_num));
     ui->label_40->setText(QString("%1").arg(dengyan_num));
     ui->label_44->setText(QString("%1").arg(liangbian_num));
-//    ui->label_46->setText(QString("%1").arg(biankuang_num));
-//    ui->label_54->setText(QString("%1").arg(anjiao_num));
-//    ui->label_63->setText(QString("%1").arg(shaoliao_num));
     ui->label_65->setText(QString("%1").arg(baodeng_num));
-//    ui->label_45->setText(QString("%1").arg(yiwu_num/test_num)+QString("%"));
-//    ui->label_46->setText(QString("%1").arg(white_num/test_num)+QString("%"));
-//    ui->label_53->setText(QString("%1").arg(mura_num/test_num)+QString("%"));
-//    ui->label_54->setText(QString("%1").arg(dengyan_num/test_num)+QString("%"));
-//    ui->label_62->setText(QString("%1").arg(lackline_num/test_num)+QString("%"));
-//    ui->label_63->setText(QString("%1").arg(liangbian_num/test_num)+QString("%"));
-//    ui->label_66->setText(QString("%1").arg(baodeng_num/test_num)+QString("%"));
-//    ui->label_67->setText(QString("%1").arg(scratch_num/test_num)+QString("%"));
-//    ui->label_74->setText(QString("%1").arg(yiwu_num/test_num)+QString("%"));
+
 
 }
 
@@ -860,24 +1171,82 @@ bool MainWindow::write_Modbus(int address,int value)//写入PLC
 * 其他：
 ======================================================================*/
 void MainWindow::read_Modbus(int address)//读取plc
-{ 
-    if (!modbusDevice)
-        return;
-    //QModbusDataUnit 存储接收和发送数据的类，数据类型为1bit和16bit
-    QModbusDataUnit writeUnit1(QModbusDataUnit::Coils, address, 1);
-    if (auto *reply = modbusDevice->sendReadRequest(writeUnit1, 1))
+{
+    try {
+        QDateTime current_date_time =QDateTime::currentDateTime();
+        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg("["+ current_date + "]" + "进入read_Modbus函数");
+        if (!modbusDevice)
+            return;
+        //QModbusDataUnit 存储接收和发送数据的类，数据类型为1bit和16bit
+        QModbusDataUnit writeUnit1(QModbusDataUnit::Coils, address, 1);
+        for(int j=0;j<5;j++){
+            if (auto *reply = modbusDevice->sendReadRequest(writeUnit1, 1))
+            {
+                for(int Read_num=1; Read_num<= 20;Read_num++)
+                {
+                    if (!reply->isFinished()) //eply在回复完成或中止时返回true
+                    {
+                        delay_msec(1);
+                    }
+                    else if(reply->isFinished())
+                    {
+                        QDateTime current_date_time1 =QDateTime::currentDateTime();
+                        QString current_date =current_date_time1.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                        debug_msg("["+ current_date + "]" + "reply完成");
+                        switch (reply->error()) {
+                         case QModbusDevice::NoError:
+                        {
+                            //数据从QModbusReply这个类的resuil方法中获取,也就是本程序中的reply->result()
+                            const QModbusDataUnit unit = reply->result();
+                            Data_Form_Plc=unit.value(0);
+                            statusBar()->showMessage(tr("读取成功：%1").arg(Data_Form_Plc),300);
+                            delete reply;  //循环代码中有问题，可能出现多次删除的问题，这里只循环一次所以没有问题
+                            return;
+                        }
+                        case QModbusDevice::ConnectionError:
+                        {
+                            //连接中断
+                            QDateTime current_date_time =QDateTime::currentDateTime();
+                            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                            debug_msg("["+ current_date + "]" + "reply创建对象创建成功，reply->error() 异常 连接中断,即将重连");
+                            connectToPLC();
+                            delay(20);
+                            break;
+                        }
+                        default:
+                            //其他异常
+                            QDateTime current_date_time =QDateTime::currentDateTime();
+                            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                            debug_msg("["+ current_date + "]" + "reply创建对象创建成功，reply->error() 其他异常");
+                            break;
+                        }
+                    }
+                }
+                QDateTime current_date_time =QDateTime::currentDateTime();
+                QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                debug_msg("["+ current_date + "]" + "reply未Finished_20ms 0r 出现异常");
+                delete reply;
+                //已经reply 未完成20ms ,出现异常了，等待20ms再次请求
+                delay(20);
+            }else{
+                QDateTime current_date_time =QDateTime::currentDateTime();
+                QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+                debug_msg("["+ current_date + "]" + "reply未创建成功");
+            }
+
+        }
+    } catch(std::exception e)
     {
-        if (!reply->isFinished()) //eply在回复完成或中止时返回true
-        {
-            //QModbusReply客户端访问服务器后得到的回复（如客户端读服务器数据时包含数据信息）
-            //QModbusReply这个类存储了来自client的数据
-            connect(reply, &QModbusReply::finished, this, &MainWindow::readReady);
-        }
-        else
-        {
-            delete reply;
-        }
+        QDateTime current_date_time =QDateTime::currentDateTime();
+        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg(current_date + "发送信号异常" + e.what());
+    }catch (...) {
+        QDateTime current_date_time =QDateTime::currentDateTime();
+        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg(current_date + "发送信号异常");
     }
+
 }
 
 /*====================================================================
@@ -889,70 +1258,91 @@ void MainWindow::read_Modbus(int address)//读取plc
 ======================================================================*/
 void MainWindow::readReady()
 {
-    //QModbusReply这个类存储了来自client的数据,sender()返回发送信号的对象的指针
-    auto reply = qobject_cast<QModbusReply *>(sender());
-    if (!reply)
-        return;
-    if (reply->error() == QModbusDevice::NoError)
-    {
-        //数据从QModbusReply这个类的resuil方法中获取,也就是本程序中的reply->result()
-        const QModbusDataUnit unit = reply->result();
-        for (uint i = 0; i < unit.valueCount(); i++)
-        {
-            Data_Form_Plc=unit.value(i);
-            statusBar()->showMessage(tr("读取成功：%1").arg(Data_Form_Plc),300);
-
+    try {
+        //QModbusReply这个类存储了来自client的数据,sender()返回发送信号的对象的指针
+        QDateTime current_date_time1 =QDateTime::currentDateTime();
+        QString current_date =current_date_time1.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg("["+ current_date + "]" + "reply完成");
+        QModbusReply *reply = qobject_cast<QModbusReply *>(sender());
+        if (!reply){
+            current_date_time1 =QDateTime::currentDateTime();
+            current_date =current_date_time1.toString("yyyy.MM.dd hh:mm:ss.zzz");
+            debug_msg("非reply"+current_date);
+            return;
         }
-    }
-    else if (reply->error() == QModbusDevice::ProtocolError)
+        if (reply->error() == QModbusDevice::NoError)
+        {
+            //数据从QModbusReply这个类的resuil方法中获取,也就是本程序中的reply->result()
+            const QModbusDataUnit unit = reply->result();
+            for (uint i = 0; i < unit.valueCount(); i++)
+            {
+                debug_msg("reply成功");
+                Data_Form_Plc=unit.value(i);
+                statusBar()->showMessage(tr("读取成功：%1").arg(Data_Form_Plc),300);
+
+            }
+        }
+        else if (reply->error() == QModbusDevice::ProtocolError)
+        {
+            statusBar()->showMessage(tr("Read response error: %1 (Mobus exception: 0x%2)").
+                                     arg(reply->errorString()).
+                                     arg(reply->rawResult().exceptionCode(), -1, 16), 100);
+        }
+        else if(reply->error() == QModbusDevice::ReadError)
+        {
+            statusBar()->showMessage(tr("ReadError: %1 (code: 0x%2)").
+                                     arg(reply->errorString()).
+                                     arg(reply->error(), -1, 16), 100);
+        }
+        else if(reply->error() == QModbusDevice::WriteError)
+        {
+            statusBar()->showMessage(tr("WriteError: %1 (code: 0x%2)").
+                                     arg(reply->errorString()).
+                                     arg(reply->error(), -1, 16), 100);
+        }
+        else if(reply->error() == QModbusDevice::ConnectionError)
+        {
+            statusBar()->showMessage(tr("ConnectionError: %1 (code: 0x%2)").
+                                     arg(reply->errorString()).
+                                     arg(reply->error(), -1, 16), 100);
+        }
+        else if(reply->error() == QModbusDevice::ConfigurationError)
+        {
+            statusBar()->showMessage(tr("ConfigurationError: %1 (code: 0x%2)").
+                                     arg(reply->errorString()).
+                                     arg(reply->error(), -1, 16), 100);
+        }
+        else if(reply->error() == QModbusDevice::TimeoutError)
+        {
+            statusBar()->showMessage(tr("TimeoutError: %1 (code: 0x%2)").
+                                     arg(reply->errorString()).
+                                     arg(reply->error(), -1, 16), 100);
+        }
+        else if(reply->error() == QModbusDevice::ReplyAbortedError)
+        {
+            statusBar()->showMessage(tr("ReplyAbortedError: %1 (code: 0x%2)").
+                                     arg(reply->errorString()).
+                                     arg(reply->error(), -1, 16), 100);
+        }
+        else if(reply->error() == QModbusDevice::UnknownError)
+        {
+            statusBar()->showMessage(tr("UnknownError: %1 (code: 0x%2)").
+                                     arg(reply->errorString()).
+                                     arg(reply->error(), -1, 16), 100);
+        }
+        reply->deleteLater();
+
+    } catch(std::exception e)
     {
-        statusBar()->showMessage(tr("Read response error: %1 (Mobus exception: 0x%2)").
-                                 arg(reply->errorString()).
-                                 arg(reply->rawResult().exceptionCode(), -1, 16), 100);
+        QDateTime current_date_time =QDateTime::currentDateTime();
+        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg(current_date + "信号处理异常" + e.what());
+    }catch (...) {
+        QDateTime current_date_time =QDateTime::currentDateTime();
+        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg(current_date + "信号处理处理");
     }
-    else if(reply->error() == QModbusDevice::ReadError)
-    {
-        statusBar()->showMessage(tr("ReadError: %1 (code: 0x%2)").
-                                 arg(reply->errorString()).
-                                 arg(reply->error(), -1, 16), 100);
-    }
-    else if(reply->error() == QModbusDevice::WriteError)
-    {
-        statusBar()->showMessage(tr("WriteError: %1 (code: 0x%2)").
-                                 arg(reply->errorString()).
-                                 arg(reply->error(), -1, 16), 100);
-    }
-    else if(reply->error() == QModbusDevice::ConnectionError)
-    {
-        statusBar()->showMessage(tr("ConnectionError: %1 (code: 0x%2)").
-                                 arg(reply->errorString()).
-                                 arg(reply->error(), -1, 16), 100);
-    }
-    else if(reply->error() == QModbusDevice::ConfigurationError)
-    {
-        statusBar()->showMessage(tr("ConfigurationError: %1 (code: 0x%2)").
-                                 arg(reply->errorString()).
-                                 arg(reply->error(), -1, 16), 100);
-    }
-    else if(reply->error() == QModbusDevice::TimeoutError)
-    {
-        statusBar()->showMessage(tr("TimeoutError: %1 (code: 0x%2)").
-                                 arg(reply->errorString()).
-                                 arg(reply->error(), -1, 16), 100);
-    }
-    else if(reply->error() == QModbusDevice::ReplyAbortedError)
-    {
-        statusBar()->showMessage(tr("ReplyAbortedError: %1 (code: 0x%2)").
-                                 arg(reply->errorString()).
-                                 arg(reply->error(), -1, 16), 100);
-    }
-    else if(reply->error() == QModbusDevice::UnknownError)
-    {
-        statusBar()->showMessage(tr("UnknownError: %1 (code: 0x%2)").
-                                 arg(reply->errorString()).
-                                 arg(reply->error(), -1, 16), 100);
-    }
-    reply->deleteLater();
+
 }
 
 
@@ -990,11 +1380,17 @@ void MainWindow::TimerTimeOut()
 {
     if(F)//判断定时器是否运行,执行定时器触发时需要处理的业务
     {
+        QDateTime current_date_time =QDateTime::currentDateTime();
+        QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+        debug_msg("准备读取拍照位置"+current_date);
         read_Modbus(1600);//位置到达，开测光《拍测光
-        delay(modbus_time);
+        //delay(modbus_time);
 
         if(Data_Form_Plc==1)
         {
+            QDateTime current_date_time =QDateTime::currentDateTime();
+            QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+            debug_msg("读取到plc拍照位置"+current_date);
             Data_Form_Plc=0;
             if(m_timer.isActive())
             {
@@ -1003,6 +1399,9 @@ void MainWindow::TimerTimeOut()
             detect();//冠华半自动机器3月30日开始修改 该版本可以使用
         }
     }
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
+    debug_msg("["+ current_date + "]" + "定时器开始前");
     m_timer.start(50);
 }
 
@@ -1105,19 +1504,25 @@ int MainWindow::detect_offine()
 
 
     //offline_wsc
-    std::string SRC_PATH = "C:\\Users\\wsc\\Desktop\\20200927165\\0323yiwei\\YW\\185";
-//    src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
-//    src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
-//    src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
-
+    std::string SRC_PATH = "C:\\Users\\Administrator\\Desktop\\tupian\\1351";
+    src_ceguang1_Temp = cv::imread(SRC_PATH + "210.bmp", -1);
+    src_ceguang_right_Temp=cv::imread(SRC_PATH + "110.bmp", -1);
+    src_ceguang_left_Temp=cv::imread(SRC_PATH + "010.bmp", -1);
 //      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
 //      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
 //      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
 
-      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\YW_M_C_001.bmp", -1);
-      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\YW_R_C_001.bmp", -1);
-      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\YW_L_C_001.bmp", -1);
+//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\YW_M_C_001.bmp", -1);
+//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\YW_R_C_001.bmp", -1);
+//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\YW_L_C_001.bmp", -1);
 
+
+
+
+
+//      src_ceguang1_Temp = cv::imread(SRC_PATH + "\\src_ceguang1.bmp", -1);
+//      src_ceguang_right_Temp = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
+//      src_ceguang_left_Temp = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
 
 //      //offline-pjn
 //      std::string SRC_PATH = "C:\\Users\\11922\\Desktop\\1\\yiwu1";
@@ -1179,15 +1584,13 @@ int MainWindow::detect_offine()
     //    src_ceguang_right = cv::imread(SRC_PATH + "\\src_ceguang_right.bmp", -1);
     //    src_ceguang_left = cv::imread(SRC_PATH + "\\src_ceguang_left.bmp", -1);
     //offline_wsc
-//    src_white1_Temp = cv::imread(SRC_PATH + "212.bmp", -1);
-//    src_R1_Temp=cv::imread(SRC_PATH + "112.bmp", -1);
-//    src_L1_Temp=cv::imread(SRC_PATH + "012.bmp", -1);
+
+    src_white1_Temp = cv::imread(SRC_PATH + "212.bmp", -1);
+    src_R1_Temp=cv::imread(SRC_PATH + "112.bmp", -1);
+    src_L1_Temp=cv::imread(SRC_PATH + "012.bmp", -1);
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
 //    src_L1_Temp = cv::imread(SRC_PATH + "\\src_L1.bmp", -1);
-    src_white1_Temp = cv::imread(SRC_PATH +"\\YW_M_W_001.bmp", -1);
-    src_R1_Temp = cv::imread(SRC_PATH +"\\YW_R_W_001.bmp", -1);
-    src_L1_Temp = cv::imread(SRC_PATH +"\\YW_L_W_001.bmp", -1);
 //    //offline-pjn
 //    src_white1_Temp = cv::imread(SRC_PATH + "\\src_white1.bmp", -1);
 //    src_R1_Temp = cv::imread(SRC_PATH + "\\src_R1.bmp", -1);
@@ -1298,82 +1701,82 @@ int MainWindow::detect_offine()
 
 //    d1 =QtConcurrent::run(this,&MainWindow::myFunc1);     //开白底检测线程
 
-    if(autoSave==true && SaveSize == true)
-    {
-        debug_msg("保存检测原图像1_DefectNum1 == 0");
-        QString savePath=imageSavePath;
-        //创建样本图片文件夹
-        QDir *sampleFolder = new QDir;
-        bool isExist = sampleFolder->exists(savePath);
-        if(!isExist)
-        {
-            sampleFolder->mkdir(savePath);
-        }
-        //创建工位拍摄图片子文件夹
-        QDir *takenPictures=new QDir;
-        savePath+="\\station";
-        isExist = takenPictures->exists(savePath);
-        if(!isExist)
-        {
-            takenPictures->mkdir(savePath);
-        }
-        //创建以某天命名的子文件夹
-        QDir *dayFolder=new QDir;
-        savePath = savePath + "\\" + product_Lot;
-        isExist=dayFolder->exists(savePath);
-        if(!isExist)
-        {
-            dayFolder->mkdir(savePath);
-        }
-        //创建以序号命名的文件夹
-        QDir *numFolder=new QDir;
-        QString serialNum="\\"+QString::number(num7+1);
-        savePath+=serialNum;
-        isExist=numFolder->exists(savePath);
-        if(!isExist)
-        {
-            numFolder->mkdir(savePath);
-        }
-        markSavePath.clear();
-        markSavePath = savePath.toStdString();
-        QString save_ceguang1_1;
-        string save_ceguang1;
-        save_ceguang1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_210.bmp";//主相机侧光灯图像
-        save_ceguang1_1=savePath+save_ceguang1_1;
-        save_ceguang1=save_ceguang1_1.toStdString();
+//    if(autoSave==true && SaveSize == true)
+//    {
+//        debug_msg("保存检测原图像1_DefectNum1 == 0");
+//        QString savePath=imageSavePath;
+//        //创建样本图片文件夹
+//        QDir *sampleFolder = new QDir;
+//        bool isExist = sampleFolder->exists(savePath);
+//        if(!isExist)
+//        {
+//            sampleFolder->mkdir(savePath);
+//        }
+//        //创建工位拍摄图片子文件夹
+//        QDir *takenPictures=new QDir;
+//        savePath+="\\station";
+//        isExist = takenPictures->exists(savePath);
+//        if(!isExist)
+//        {
+//            takenPictures->mkdir(savePath);
+//        }
+//        //创建以某天命名的子文件夹
+//        QDir *dayFolder=new QDir;
+//        savePath = savePath + "\\" + product_Lot;
+//        isExist=dayFolder->exists(savePath);
+//        if(!isExist)
+//        {
+//            dayFolder->mkdir(savePath);
+//        }
+//        //创建以序号命名的文件夹
+//        QDir *numFolder=new QDir;
+//        QString serialNum="\\"+QString::number(num7+1);
+//        savePath+=serialNum;
+//        isExist=numFolder->exists(savePath);
+//        if(!isExist)
+//        {
+//            numFolder->mkdir(savePath);
+//        }
+//        markSavePath.clear();
+//        markSavePath = savePath.toStdString();
+//        QString save_ceguang1_1;
+//        string save_ceguang1;
+//        save_ceguang1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_210.bmp";//主相机侧光灯图像
+//        save_ceguang1_1=savePath+save_ceguang1_1;
+//        save_ceguang1=save_ceguang1_1.toStdString();
 
-        QString save_ceguang_left1;
-        string save_ceguang_left;
-        save_ceguang_left1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_010.bmp";//左相机侧光灯图像
-        save_ceguang_left1 = savePath + save_ceguang_left1;
-        save_ceguang_left=save_ceguang_left1.toStdString();
+//        QString save_ceguang_left1;
+//        string save_ceguang_left;
+//        save_ceguang_left1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_010.bmp";//左相机侧光灯图像
+//        save_ceguang_left1 = savePath + save_ceguang_left1;
+//        save_ceguang_left=save_ceguang_left1.toStdString();
 
-        QString save_ceguang_right1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_110.bmp";
-        save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
-        string save_ceguang_right=save_ceguang_right1.toStdString();
+//        QString save_ceguang_right1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_110.bmp";
+//        save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+//        string save_ceguang_right=save_ceguang_right1.toStdString();
 
 
-        QString save_white1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_212.bmp";
-        save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
-        string save_white1=save_white1_1.toStdString();
+//        QString save_white1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_212.bmp";
+//        save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+//        string save_white1=save_white1_1.toStdString();
 
-        QString save_L1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_012.bmp";
-        save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
-        string save_L1=save_L1_1.toStdString();
+//        QString save_L1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_012.bmp";
+//        save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+//        string save_L1=save_L1_1.toStdString();
 
-        QString save_R1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_112.bmp";
-        save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
-        string save_R1=save_R1_1.toStdString();
+//        QString save_R1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_112.bmp";
+//        save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+//        string save_R1=save_R1_1.toStdString();
 
-        imwrite(save_ceguang1,src_ceguang1_Temp);//主相机侧光灯图像
-        imwrite(save_ceguang_left,src_ceguang_left_Temp);//左相机侧光灯图像
-        imwrite(save_ceguang_right,src_ceguang_right_Temp);//右相机侧光灯图像
+//        imwrite(save_ceguang1,src_ceguang1_Temp);//主相机侧光灯图像
+//        imwrite(save_ceguang_left,src_ceguang_left_Temp);//左相机侧光灯图像
+//        imwrite(save_ceguang_right,src_ceguang_right_Temp);//右相机侧光灯图像
 
-        imwrite(save_white1,src_white1_Temp);//白底
-        imwrite(save_L1,src_L1_Temp);//左侧相机拍摄白底
-        imwrite(save_R1,src_R1_Temp);//右侧相机拍摄白底
+//        imwrite(save_white1,src_white1_Temp);//白底
+//        imwrite(save_L1,src_L1_Temp);//左侧相机拍摄白底
+//        imwrite(save_R1,src_R1_Temp);//右侧相机拍摄白底
 
-    }
+//    }
 
 //        current_date_time =QDateTime::currentDateTime();
 //        current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
@@ -1450,15 +1853,12 @@ int MainWindow::detect()
         ui->label_30->setText("开始检测");
 
         ui->label_30->setText("读到平台到达");
-        //delay(SideLightOpenTime);                 //等待侧光灯打开延时
         delay_msec(SideLightOpenTime);                 //等待侧光灯打开延时
 
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
         debug_msg("开始获取测光图"+current_date);
 
-    //    ui->label_74->setText(causeColor_1_white);//上边显示清除上次白底的缺陷类型
-    //    ui->label_10->setText("");                //上边显示清除上次的检测结果
         //============================拍摄侧光图片并进行显示================================
         QFuture<cv::Mat> s1 =QtConcurrent::run(camera,&HikvisionSDK::saveImage7, int(1));//开线程左相机拍照侧光
         QFuture<cv::Mat> s2 =QtConcurrent::run(camera,&HikvisionSDK::saveImage7, int(2));//开线程主相机拍照侧光
@@ -1466,13 +1866,6 @@ int MainWindow::detect()
         s1.waitForFinished();
         s2.waitForFinished();
         s3.waitForFinished();
-
-    //    while(!(s1.isFinished()))
-    //        delay(10);
-    //    while(!(s2.isFinished()))
-    //        delay(10);
-    //    while(!(s3.isFinished()))
-    //        delay(10);
 
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
@@ -1521,7 +1914,6 @@ int MainWindow::detect()
         //================通知PLC关闭侧光源打开测试盒============================
         if(write_Modbus(1616,1))//拍照完成1<白
         {
-            //delay(modbus_time);
             Data_Form_Plc=0;
             int i;
             for(i=0;i<=50;i++)
@@ -1698,85 +2090,85 @@ int MainWindow::detect()
            d1FutureWatch.setFuture(d1);
         }
         d1.waitForFinished();
+
+//        //只保存全部样本
+//        if(autoSave==true && SaveSize == true)
+//        {
+//            debug_msg("保存检测原图像1_DefectNum1 == 0");
+//            QString savePath=imageSavePath;
+//            //创建样本图片文件夹
+//            QDir *sampleFolder = new QDir;
+//            bool isExist = sampleFolder->exists(savePath);
+//            if(!isExist)
+//            {
+//                sampleFolder->mkdir(savePath);
+//            }
+//            //创建工位拍摄图片子文件夹
+//            QDir *takenPictures=new QDir;
+//            savePath+="\\station";
+//            isExist = takenPictures->exists(savePath);
+//            if(!isExist)
+//            {
+//                takenPictures->mkdir(savePath);
+//            }
+//            //创建以某天命名的子文件夹
+//            QDir *dayFolder=new QDir;
+//            savePath = savePath + "\\" + product_Lot;
+//            isExist=dayFolder->exists(savePath);
+//            if(!isExist)
+//            {
+//                dayFolder->mkdir(savePath);
+//            }
+//            //创建以序号命名的文件夹
+//            QDir *numFolder=new QDir;
+//            QString serialNum="\\"+QString::number(num7+1);
+//            savePath+=serialNum;
+//            isExist=numFolder->exists(savePath);
+//            if(!isExist)
+//            {
+//                numFolder->mkdir(savePath);
+//            }
+//            markSavePath.clear();
+//            markSavePath = savePath.toStdString();
+//            QString save_ceguang1_1;
+//            string save_ceguang1;
+//            save_ceguang1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_210.bmp";//主相机侧光灯图像
+//            save_ceguang1_1=savePath+save_ceguang1_1;
+//            save_ceguang1=save_ceguang1_1.toStdString();
+
+//            QString save_ceguang_left1;
+//            string save_ceguang_left;
+//            save_ceguang_left1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_010.bmp";//左相机侧光灯图像
+//            save_ceguang_left1 = savePath + save_ceguang_left1;
+//            save_ceguang_left=save_ceguang_left1.toStdString();
+
+//            QString save_ceguang_right1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_110.bmp";
+//            save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+//            string save_ceguang_right=save_ceguang_right1.toStdString();
+
+
+//            QString save_white1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_212.bmp";
+//            save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+//            string save_white1=save_white1_1.toStdString();
+
+//            QString save_L1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_012.bmp";
+//            save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+//            string save_L1=save_L1_1.toStdString();
+
+//            QString save_R1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_112.bmp";
+//            save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+//            string save_R1=save_R1_1.toStdString();
+
+//            imwrite(save_ceguang1,src_ceguang1_Temp);//主相机侧光灯图像
+//            imwrite(save_ceguang_left,src_ceguang_left_Temp);//左相机侧光灯图像
+//            imwrite(save_ceguang_right,src_ceguang_right_Temp);//右相机侧光灯图像
+
+//            imwrite(save_white1,src_white1_Temp);//白底
+//            imwrite(save_L1,src_L1_Temp);//左侧相机拍摄白底
+//            imwrite(save_R1,src_R1_Temp);//右侧相机拍摄白底
+
+//        }
         Dect_Result();
-        //只保存全部样本
-        if(autoSave==true && SaveSize == true)
-        {
-            debug_msg("保存检测原图像1_DefectNum1 == 0");
-            QString savePath=imageSavePath;
-            //创建样本图片文件夹
-            QDir *sampleFolder = new QDir;
-            bool isExist = sampleFolder->exists(savePath);
-            if(!isExist)
-            {
-                sampleFolder->mkdir(savePath);
-            }
-            //创建工位拍摄图片子文件夹
-            QDir *takenPictures=new QDir;
-            savePath+="\\station";
-            isExist = takenPictures->exists(savePath);
-            if(!isExist)
-            {
-                takenPictures->mkdir(savePath);
-            }
-            //创建以某天命名的子文件夹
-            QDir *dayFolder=new QDir;
-            savePath = savePath + "\\" + product_Lot;
-            isExist=dayFolder->exists(savePath);
-            if(!isExist)
-            {
-                dayFolder->mkdir(savePath);
-            }
-            //创建以序号命名的文件夹
-            QDir *numFolder=new QDir;
-            QString serialNum="\\"+QString::number(num7+1);
-            savePath+=serialNum;
-            isExist=numFolder->exists(savePath);
-            if(!isExist)
-            {
-                numFolder->mkdir(savePath);
-            }
-            markSavePath.clear();
-            markSavePath = savePath.toStdString();
-            QString save_ceguang1_1;
-            string save_ceguang1;
-            save_ceguang1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_210.bmp";//主相机侧光灯图像
-            save_ceguang1_1=savePath+save_ceguang1_1;
-            save_ceguang1=save_ceguang1_1.toStdString();
-
-            QString save_ceguang_left1;
-            string save_ceguang_left;
-            save_ceguang_left1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_010.bmp";//左相机侧光灯图像
-            save_ceguang_left1 = savePath + save_ceguang_left1;
-            save_ceguang_left=save_ceguang_left1.toStdString();
-
-            QString save_ceguang_right1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_110.bmp";
-            save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
-            string save_ceguang_right=save_ceguang_right1.toStdString();
-
-
-            QString save_white1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_212.bmp";
-            save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
-            string save_white1=save_white1_1.toStdString();
-
-            QString save_L1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_012.bmp";
-            save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
-            string save_L1=save_L1_1.toStdString();
-
-            QString save_R1_1 = "\\_" + product_Lot + "_" +QString::number(num7+1) + "_112.bmp";
-            save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
-            string save_R1=save_R1_1.toStdString();
-
-            imwrite(save_ceguang1,src_ceguang1_Temp);//主相机侧光灯图像
-            imwrite(save_ceguang_left,src_ceguang_left_Temp);//左相机侧光灯图像
-            imwrite(save_ceguang_right,src_ceguang_right_Temp);//右相机侧光灯图像
-
-            imwrite(save_white1,src_white1_Temp);//白底
-            imwrite(save_L1,src_L1_Temp);//左侧相机拍摄白底
-            imwrite(save_R1,src_R1_Temp);//右侧相机拍摄白底
-
-        }
-
         current_date_time =QDateTime::currentDateTime();
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
         debug_msg("拍照线程结束"+current_date);
@@ -1899,7 +2291,8 @@ void MainWindow::Dect_Result()
     debug_msg("------------------------------------PLC接收到信号后OK or NG +++++++++"+current_date);
     //==========================检测结果逻辑判断==============================
     QString DefectNum[20];
-    int DefectNum1 = 0;
+    int DefectNum1 = 0;//每个样品存在的缺陷数量
+    string quexianliexing[20];//单个样品的缺陷类型汇总
 
     QImage image2;
     QMatrix matrix,matrix1,matrix2,matrix3;
@@ -1910,14 +2303,9 @@ void MainWindow::Dect_Result()
     ui->label_40->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_42->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_44->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_65->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_67->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_69->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
     ui->label_71->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
-//    ui->label_100->setStyleSheet("QLabel{background-color:rgb(255,255,255);}");
 
     if(result_white_1==true)//白底下存在缺陷
     {
@@ -2027,8 +2415,11 @@ void MainWindow::Dect_Result()
         if(causeColor_1_white=="背光异物")
         {
             yiwu_num++;
-            DefectNum[DefectNum1] = "01";
+//            DefectNum[DefectNum1] = "01";
+            DefectNum[DefectNum1] = "BG";
+
             DefectNum1++;
+
             ui->label_34->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_34->setText(QString("%1").arg(yiwu_num));        //异物数目
 
@@ -2059,7 +2450,9 @@ void MainWindow::Dect_Result()
         if(causeColor_2_white=="白点")
         {
             white_num++;
-            DefectNum[DefectNum1] = "02";
+//            DefectNum[DefectNum1] = "02";
+            DefectNum[DefectNum1] = "WD";
+
             DefectNum1++;
             ui->label_36->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_36->setText(QString("%1").arg(white_num));        //异物数目
@@ -2089,7 +2482,9 @@ void MainWindow::Dect_Result()
         if(causeColor_3_white=="白印")
         {
             mura_num++;
-            DefectNum[DefectNum1] = "03";
+//            DefectNum[DefectNum1] = "03";
+            DefectNum[DefectNum1] = "BY";
+
             DefectNum1++;
             ui->label_38->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_38->setText(QString("%1").arg(mura_num));        //异物数目
@@ -2120,7 +2515,9 @@ void MainWindow::Dect_Result()
         if(causeColor_3_white=="移位")
         {
             lackline_num++;
-            DefectNum[DefectNum1] = "10";
+//            DefectNum[DefectNum1] = "10";
+            DefectNum[DefectNum1] = "YW";
+
             DefectNum1++;
             ui->label_42->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_42->setText(QString("%1").arg(lackline_num));        //异物数目
@@ -2150,7 +2547,9 @@ void MainWindow::Dect_Result()
         if(causeColor_1_white=="划伤")
         {
             scratch_num++;
-            DefectNum[DefectNum1] = "04";
+//            DefectNum[DefectNum1] = "04";
+            DefectNum[DefectNum1] = "HS";
+
             DefectNum1++;
             ui->label_69->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_69->setText(QString("%1").arg(scratch_num));        //异物数目
@@ -2180,7 +2579,9 @@ void MainWindow::Dect_Result()
         if(causeColor_3_white=="死灯")
         {
             dengyan_num++;
-            DefectNum[DefectNum1] = "06";
+//            DefectNum[DefectNum1] = "06";
+            DefectNum[DefectNum1] = "SD";
+
             DefectNum1++;
             ui->label_40->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_40->setText(QString("%1").arg(dengyan_num));        //异物数目
@@ -2210,7 +2611,9 @@ void MainWindow::Dect_Result()
         if(causeColor_2_white=="亮边")
         {
             liangbian_num++;
-            DefectNum[DefectNum1] = "06";
+//            DefectNum[DefectNum1] = "06";
+            DefectNum[DefectNum1] = "LB";
+
             DefectNum1++;
             ui->label_44->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_44->setText(QString("%1").arg(liangbian_num));        //异物数目
@@ -2240,7 +2643,9 @@ void MainWindow::Dect_Result()
         if(causeColor_1_white=="漏光")
         {
             louguang_num++;
-            DefectNum[DefectNum1] = "06";
+//            DefectNum[DefectNum1] = "06";
+            DefectNum[DefectNum1] = "LG";
+
             DefectNum1++;
 //            ui->label_44->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
 //            ui->label_44->setText(QString("%1").arg(louguang_num));        //异物数目
@@ -2270,7 +2675,9 @@ void MainWindow::Dect_Result()
         if(causeColor_1_white=="边框")
         {
             biankuang_num++;
-            DefectNum[DefectNum1] = "06";
+//            DefectNum[DefectNum1] = "06";
+            DefectNum[DefectNum1] = "BK";
+
             DefectNum1++;
 //            ui->label_46->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
 //            ui->label_46->setText(QString("%1").arg(biankuang_num));        //边框数目
@@ -2300,7 +2707,9 @@ void MainWindow::Dect_Result()
         if(causeColor_2_white=="暗角")
         {
             anjiao_num++;
-            DefectNum[DefectNum1] = "06";
+//            DefectNum[DefectNum1] = "06";
+            DefectNum[DefectNum1] = "AJ";
+
             DefectNum1++;
 //            ui->label_54->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
 //            ui->label_54->setText(QString("%1").arg(anjiao_num));        //暗角数目
@@ -2330,7 +2739,9 @@ void MainWindow::Dect_Result()
         if(causeColor_3_white=="少料")
         {
             shaoliao_num++;
-            DefectNum[DefectNum1] = "06";
+//            DefectNum[DefectNum1] = "06";
+            DefectNum[DefectNum1] = "SL";
+
             DefectNum1++;
 //            ui->label_63->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
 //            ui->label_63->setText(QString("%1").arg(shaoliao_num));        //少料数目
@@ -2360,7 +2771,7 @@ void MainWindow::Dect_Result()
         if(causeColor_2_white=="爆灯")
         {
             baodeng_num++;
-            DefectNum[DefectNum1] = "06";
+            DefectNum[DefectNum1] = "BD";
             DefectNum1++;
             ui->label_65->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
             ui->label_65->setText(QString("%1").arg(baodeng_num));        //异物数目
@@ -2400,14 +2811,12 @@ void MainWindow::Dect_Result()
         if(Flag_Running_State=="Online")
         ui->label_2->setFixedSize(543,806);
         image2=image2.scaled(ui->label_2->size(),Qt::KeepAspectRatio);
-        //ui->label_2->setScaledContents(true);
         ui->label_2->setAlignment(Qt::AlignCenter);
         ui->label_2->setPixmap(QPixmap::fromImage(image2));
         ui->label_57->setText(" ");
         ui->label_57->setStyleSheet("color:green;font: 44pt;font: 黑体;");
         ui->label_57->setText("OK");
         qualified_num++;
-        //updata_database("合格");
     }
 
     debug_msg("==========================检测结果逻辑判断=============================="+current_date);
@@ -2596,321 +3005,325 @@ void MainWindow::Dect_Result()
     QDateTime currentTime = QDateTime::currentDateTime();
     QString currentDay = currentTime.toString("\\yyyyMMdd");
 
-    if(autoSave==true && SaveSize == true)
-    {
-        if(DefectNum1 == 0)
-        {
-            QString savePath=imageSavePath;
-            savePath+="\\station";
-            savePath = savePath + "\\" + product_Lot;
-            QString serialNum="\\"+QString::number(num7);
-            savePath+=serialNum;
-            markSavePath.clear();
-            markSavePath = savePath.toStdString();
-            QString save_ceguang1_1;
-            string save_ceguang1;
-            save_ceguang1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
-            save_ceguang1_1=savePath+save_ceguang1_1;
-            save_ceguang1=save_ceguang1_1.toStdString();
+//    if(autoSave==true && SaveSize == true)
+//    {
+//        if(DefectNum1 == 0)
+//        {
+//            QString savePath=imageSavePath;
+//            savePath+="\\station";
+//            savePath = savePath + "\\" + product_Lot;
+//            QString serialNum="\\"+QString::number(num7);
+//            savePath+=serialNum;
+//            markSavePath.clear();
+//            markSavePath = savePath.toStdString();
+//            QString save_ceguang1_1;
+//            string save_ceguang1;
+//            save_ceguang1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
+//            save_ceguang1_1=savePath+save_ceguang1_1;
+//            save_ceguang1=save_ceguang1_1.toStdString();
 
-            QString save_ceguang_left1;
-            string save_ceguang_left;
-            save_ceguang_left1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
-            save_ceguang_left1 = savePath + save_ceguang_left1;
-            save_ceguang_left=save_ceguang_left1.toStdString();
+//            QString save_ceguang_left1;
+//            string save_ceguang_left;
+//            save_ceguang_left1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
+//            save_ceguang_left1 = savePath + save_ceguang_left1;
+//            save_ceguang_left=save_ceguang_left1.toStdString();
 
-            QString save_ceguang_right1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
-            save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
-            string save_ceguang_right=save_ceguang_right1.toStdString();
+//            QString save_ceguang_right1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
+//            save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+//            string save_ceguang_right=save_ceguang_right1.toStdString();
 
-            QString save_white1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
-            save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
-            string save_white1=save_white1_1.toStdString();
+//            QString save_white1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
+//            save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+//            string save_white1=save_white1_1.toStdString();
 
-            QString save_L1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
-            save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
-            string save_L1=save_L1_1.toStdString();
+//            QString save_L1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
+//            save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+//            string save_L1=save_L1_1.toStdString();
 
-            QString save_R1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
-            save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
-            string save_R1=save_R1_1.toStdString();
+//            QString save_R1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
+//            save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+//            string save_R1=save_R1_1.toStdString();
 
-            QFile file(save_ceguang1_1);
-            if (file.exists())
-            {
-                Mat temp_Mat = cv::imread(save_ceguang1,-1);
-                save_ceguang1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
-                save_ceguang1_1=savePath+save_ceguang1_1;
-                save_ceguang1=save_ceguang1_1.toStdString();
-                imwrite(save_ceguang1,temp_Mat);//主相机侧光灯图像
-                file.remove();
-            }
-            QFile file1(save_ceguang_left1);
-            if (file1.exists())
-            {
-                Mat temp_Mat = cv::imread(save_ceguang_left,-1);
-                save_ceguang_left1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
-                save_ceguang_left1 = savePath + save_ceguang_left1;
-                save_ceguang_left=save_ceguang_left1.toStdString();
-                imwrite(save_ceguang_left,temp_Mat);//左相机侧光灯图像
-                file1.remove();
-            }
-            QFile file2(save_ceguang_right1);
-            if (file2.exists())
-            {
-                Mat temp_Mat = cv::imread(save_ceguang_right,-1);
-                save_ceguang_right1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
-                save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
-                save_ceguang_right=save_ceguang_right1.toStdString();
-                imwrite(save_ceguang_right,temp_Mat);//左相机侧光灯图像
-                file2.remove();
-            }
+//            QFile file(save_ceguang1_1);
+//            if (file.exists())
+//            {
+//                Mat temp_Mat = cv::imread(save_ceguang1,-1);
+//                save_ceguang1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
+//                save_ceguang1_1=savePath+save_ceguang1_1;
+//                save_ceguang1=save_ceguang1_1.toStdString();
+//                imwrite(save_ceguang1,temp_Mat);//主相机侧光灯图像
+//                file.remove();
+//            }
+//            QFile file1(save_ceguang_left1);
+//            if (file1.exists())
+//            {
+//                Mat temp_Mat = cv::imread(save_ceguang_left,-1);
+//                save_ceguang_left1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
+//                save_ceguang_left1 = savePath + save_ceguang_left1;
+//                save_ceguang_left=save_ceguang_left1.toStdString();
+//                imwrite(save_ceguang_left,temp_Mat);//左相机侧光灯图像
+//                file1.remove();
+//            }
+//            QFile file2(save_ceguang_right1);
+//            if (file2.exists())
+//            {
+//                Mat temp_Mat = cv::imread(save_ceguang_right,-1);
+//                save_ceguang_right1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
+//                save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+//                save_ceguang_right=save_ceguang_right1.toStdString();
+//                imwrite(save_ceguang_right,temp_Mat);//左相机侧光灯图像
+//                file2.remove();
+//            }
 
-            QFile file5(save_white1_1);
-            if (file5.exists())
-            {
-                Mat temp_Mat = cv::imread(save_white1,-1);
-                save_white1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
-                save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
-                save_white1=save_white1_1.toStdString();
-                imwrite(save_white1,temp_Mat);//左相机侧光灯图像
-                file5.remove();
-            }
-            QFile file6(save_L1_1);
-            if (file6.exists())
-            {
-                Mat temp_Mat = cv::imread(save_L1,-1);
-                save_L1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
-                save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
-                save_L1=save_L1_1.toStdString();
-                imwrite(save_L1,temp_Mat);//左相机侧光灯图像
-                file6.remove();
-            }
-            QFile file7(save_R1_1);
-            if (file7.exists())
-            {
-                Mat temp_Mat = cv::imread(save_R1,-1);
-                save_R1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
-                save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
-                save_R1=save_R1_1.toStdString();
-                imwrite(save_R1,temp_Mat);//左相机侧光灯图像
-                file7.remove();
-            }
+//            QFile file5(save_white1_1);
+//            if (file5.exists())
+//            {
+//                Mat temp_Mat = cv::imread(save_white1,-1);
+//                save_white1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
+//                save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+//                save_white1=save_white1_1.toStdString();
+//                imwrite(save_white1,temp_Mat);//左相机侧光灯图像
+//                file5.remove();
+//            }
+//            QFile file6(save_L1_1);
+//            if (file6.exists())
+//            {
+//                Mat temp_Mat = cv::imread(save_L1,-1);
+//                save_L1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
+//                save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+//                save_L1=save_L1_1.toStdString();
+//                imwrite(save_L1,temp_Mat);//左相机侧光灯图像
+//                file6.remove();
+//            }
+//            QFile file7(save_R1_1);
+//            if (file7.exists())
+//            {
+//                Mat temp_Mat = cv::imread(save_R1,-1);
+//                save_R1_1 = "\\LP_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
+//                save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+//                save_R1=save_R1_1.toStdString();
+//                imwrite(save_R1,temp_Mat);//左相机侧光灯图像
+//                file7.remove();
+//            }
 
-            string save_qualified_result="\\qualified_result.bmp";
-            save_qualified_result=savePath.toStdString()+save_qualified_result;
+//            string save_qualified_result="\\qualified_result.bmp";
+//            save_qualified_result=savePath.toStdString()+save_qualified_result;
 
-                imwrite(save_qualified_result,whiteshow1);  //合格结果图
-        }
-        else {
-            for(int lackNum = 0; lackNum < DefectNum1; lackNum++)
-            {
-                QString savePath=imageSavePath;
+//                imwrite(save_qualified_result,whiteshow1);  //合格结果图
+//        }
+//        else {
+//            for(int lackNum = 0; lackNum < DefectNum1; lackNum++)
+//            {
+//                QString savePath=imageSavePath;
 
-                savePath+="\\station";
-                savePath = savePath + "\\" + product_Lot;
+//                savePath+="\\station";
+//                savePath = savePath + "\\" + product_Lot;
 
-                QString serialNum="\\"+QString::number(num7);
-                savePath+=serialNum;
-                markSavePath.clear();
-                markSavePath = savePath.toStdString();
-                QString save_ceguang1_1;
-                string save_ceguang1;
-                save_ceguang1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
-                save_ceguang1_1=savePath+save_ceguang1_1;
-                save_ceguang1=save_ceguang1_1.toStdString();
+//                QString serialNum="\\"+QString::number(num7);
+//                savePath+=serialNum;
+//                markSavePath.clear();
+//                markSavePath = savePath.toStdString();
+//                QString save_ceguang1_1;
+//                string save_ceguang1;
+//                save_ceguang1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
+//                save_ceguang1_1=savePath+save_ceguang1_1;
+//                save_ceguang1=save_ceguang1_1.toStdString();
 
-                QString save_ceguang_left1;
-                string save_ceguang_left;
-                save_ceguang_left1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
-                save_ceguang_left1 = savePath + save_ceguang_left1;
-                save_ceguang_left=save_ceguang_left1.toStdString();
+//                QString save_ceguang_left1;
+//                string save_ceguang_left;
+//                save_ceguang_left1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
+//                save_ceguang_left1 = savePath + save_ceguang_left1;
+//                save_ceguang_left=save_ceguang_left1.toStdString();
 
-                QString save_ceguang_right1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
-                save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
-                string save_ceguang_right=save_ceguang_right1.toStdString();
-
-
-                QString save_white1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
-                save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
-                string save_white1=save_white1_1.toStdString();
-
-                QString save_L1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
-                save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
-                string save_L1=save_L1_1.toStdString();
-
-                QString save_R1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
-                save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
-                string save_R1=save_R1_1.toStdString();
+//                QString save_ceguang_right1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
+//                save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+//                string save_ceguang_right=save_ceguang_right1.toStdString();
 
 
-                QFile file(save_ceguang1_1);
-                if (file.exists())
-                {
-                    Mat temp_Mat = cv::imread(save_ceguang1,-1);
-                    save_ceguang1_1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
-                    save_ceguang1_1=savePath+save_ceguang1_1;
-                    save_ceguang1=save_ceguang1_1.toStdString();
-                    imwrite(save_ceguang1,temp_Mat);//主相机侧光灯图像
-                    file.remove();
-                }
-                QFile file1(save_ceguang_left1);
-                if (file1.exists())
-                {
-                    Mat temp_Mat = cv::imread(save_ceguang_left,-1);
-                    save_ceguang_left1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
-                    save_ceguang_left1 = savePath + save_ceguang_left1;
-                    save_ceguang_left=save_ceguang_left1.toStdString();
-                    imwrite(save_ceguang_left,temp_Mat);//左相机侧光灯图像
-                    file1.remove();
-                }
-                QFile file2(save_ceguang_right1);
-                if (file2.exists())
-                {
-                    Mat temp_Mat = cv::imread(save_ceguang_right,-1);
-                    save_ceguang_right1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
-                    save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
-                    save_ceguang_right=save_ceguang_right1.toStdString();
-                    imwrite(save_ceguang_right,temp_Mat);//左相机侧光灯图像
-                    file2.remove();
-                }
+//                QString save_white1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
+//                save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+//                string save_white1=save_white1_1.toStdString();
 
-                QFile file5(save_white1_1);
-                if (file5.exists())
-                {
-                    Mat temp_Mat = cv::imread(save_white1,-1);
-                    save_white1_1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
-                    save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
-                    save_white1=save_white1_1.toStdString();
-                    imwrite(save_white1,temp_Mat);//左相机侧光灯图像
-                    file5.remove();
-                }
-                QFile file6(save_L1_1);
-                if (file6.exists())
-                {
-                    Mat temp_Mat = cv::imread(save_L1,-1);
-                    save_L1_1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
-                    save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
-                    save_L1=save_L1_1.toStdString();
-                    imwrite(save_L1,temp_Mat);//左相机侧光灯图像
-                    file6.remove();
-                }
-                QFile file7(save_R1_1);
-                if (file7.exists())
-                {
-                    Mat temp_Mat = cv::imread(save_R1,-1);
-                    save_R1_1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
-                    save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
-                    save_R1=save_R1_1.toStdString();
-                    imwrite(save_R1,temp_Mat);//左相机侧光灯图像
-                    file7.remove();
-                }
+//                QString save_L1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
+//                save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+//                string save_L1=save_L1_1.toStdString();
 
-                string save_white_result="\\white_result.bmp";
-                save_white_result=savePath.toStdString()+save_white_result;
+//                QString save_R1_1 = "\\_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
+//                save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+//                string save_R1=save_R1_1.toStdString();
 
-                //如果白底同时存在缺陷
-                if(result_white_1==true)
-                {
-                    imwrite(save_white_result,Mresult_1_white); //白底下存在缺陷图
-                }
 
-            }
-        }
+//                QFile file(save_ceguang1_1);
+//                if (file.exists())
+//                {
+//                    Mat temp_Mat = cv::imread(save_ceguang1,-1);
+//                    save_ceguang1_1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
+//                    save_ceguang1_1=savePath+save_ceguang1_1;
+//                    save_ceguang1=save_ceguang1_1.toStdString();
+//                    imwrite(save_ceguang1,temp_Mat);//主相机侧光灯图像
+//                    file.remove();
+//                }
+//                QFile file1(save_ceguang_left1);
+//                if (file1.exists())
+//                {
+//                    Mat temp_Mat = cv::imread(save_ceguang_left,-1);
+//                    save_ceguang_left1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
+//                    save_ceguang_left1 = savePath + save_ceguang_left1;
+//                    save_ceguang_left=save_ceguang_left1.toStdString();
+//                    imwrite(save_ceguang_left,temp_Mat);//左相机侧光灯图像
+//                    file1.remove();
+//                }
+//                QFile file2(save_ceguang_right1);
+//                if (file2.exists())
+//                {
+//                    Mat temp_Mat = cv::imread(save_ceguang_right,-1);
+//                    save_ceguang_right1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
+//                    save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+//                    save_ceguang_right=save_ceguang_right1.toStdString();
+//                    imwrite(save_ceguang_right,temp_Mat);//左相机侧光灯图像
+//                    file2.remove();
+//                }
 
-    }
+//                QFile file5(save_white1_1);
+//                if (file5.exists())
+//                {
+//                    Mat temp_Mat = cv::imread(save_white1,-1);
+//                    save_white1_1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
+//                    save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+//                    save_white1=save_white1_1.toStdString();
+//                    imwrite(save_white1,temp_Mat);//左相机侧光灯图像
+//                    file5.remove();
+//                }
+//                QFile file6(save_L1_1);
+//                if (file6.exists())
+//                {
+//                    Mat temp_Mat = cv::imread(save_L1,-1);
+//                    save_L1_1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
+//                    save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+//                    save_L1=save_L1_1.toStdString();
+//                    imwrite(save_L1,temp_Mat);//左相机侧光灯图像
+//                    file6.remove();
+//                }
+//                QFile file7(save_R1_1);
+//                if (file7.exists())
+//                {
+//                    Mat temp_Mat = cv::imread(save_R1,-1);
+//                    save_R1_1 = "\\"+DefectNum[lackNum]+"_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
+//                    save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+//                    save_R1=save_R1_1.toStdString();
+//                    imwrite(save_R1,temp_Mat);//左相机侧光灯图像
+//                    file7.remove();
+//                }
 
-    //保存缺陷样本
-    if(autoSave==true && SaveSize==false)
-    {
-        debug_msg("保存检测原图像2");
-        if(DefectNum1 != 0)
-        {
-            debug_msg("保存检测原图像2_DefectNum1 != 0");
-            for(int lackNum = 0; lackNum < DefectNum1; lackNum++)
-            {
-                QString savePath=imageSavePath;
-                //创建样本图片文件夹
-                QDir *sampleFolder = new QDir;
-                bool isExist = sampleFolder->exists(savePath);
-                if(!isExist)
-                {
-                    sampleFolder->mkdir(savePath);
-                }
-                //创建工位拍摄图片子文件夹
-                QDir *takenPictures=new QDir;
-                savePath+="\\station";
-                isExist = takenPictures->exists(savePath);
-                if(!isExist)
-                {
-                    takenPictures->mkdir(savePath);
-                }
-                //创建以某天命名的子文件夹
-                QDir *dayFolder=new QDir;
-                savePath = savePath + "\\" + product_Lot;
-                isExist=dayFolder->exists(savePath);
-                if(!isExist)
-                {
-                    dayFolder->mkdir(savePath);
-                }
-                //创建以序号命名的文件夹
-                QDir *numFolder=new QDir;
-                QString serialNum="\\"+QString::number(num7);
-                savePath+=serialNum;
-                isExist=numFolder->exists(savePath);
-                if(!isExist)
-                {
-                    numFolder->mkdir(savePath);
-                }
-                markSavePath.clear();
-                markSavePath = savePath.toStdString();
+//                string save_white_result="\\white_result.bmp";
+//                save_white_result=savePath.toStdString()+save_white_result;
 
-                QString save_ceguang1_1;
-                string save_ceguang1;
-                save_ceguang1_1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
-                save_ceguang1_1=savePath+save_ceguang1_1;
-                save_ceguang1=save_ceguang1_1.toStdString();
+//                //如果白底同时存在缺陷
+//                if(result_white_1==true)
+//                {
+//                    imwrite(save_white_result,Mresult_1_white); //白底下存在缺陷图
+//                }
 
-                QString save_ceguang_left1;
-                string save_ceguang_left;
-                save_ceguang_left1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
-                save_ceguang_left1 = savePath + save_ceguang_left1;
-                save_ceguang_left=save_ceguang_left1.toStdString();
+//            }
+//        }
 
-                QString save_ceguang_right1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
-                save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
-                string save_ceguang_right=save_ceguang_right1.toStdString();
+//    }
 
-                QString save_white1_1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
-                save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
-                string save_white1=save_white1_1.toStdString();
+//    //保存缺陷样本
+//    if(autoSave==true && SaveSize==false)
+//    {
+//        debug_msg("保存检测原图像2");
+//        if(DefectNum1 != 0)
+//        {
+//            debug_msg("保存检测原图像2_DefectNum1 != 0");
+//            for(int lackNum = 0; lackNum < DefectNum1; lackNum++)
+//            {
+//                QString savePath=imageSavePath;
+//                //创建样本图片文件夹
+//                QDir *sampleFolder = new QDir;
+//                bool isExist = sampleFolder->exists(savePath);
+//                if(!isExist)
+//                {
+//                    sampleFolder->mkdir(savePath);
+//                }
+//                //创建工位拍摄图片子文件夹
+//                QDir *takenPictures=new QDir;
+//                savePath+="\\station";
+//                isExist = takenPictures->exists(savePath);
+//                if(!isExist)
+//                {
+//                    takenPictures->mkdir(savePath);
+//                }
+//                //创建以某天命名的子文件夹
+//                QDir *dayFolder=new QDir;
+//                savePath = savePath + "\\" + product_Lot;
+//                isExist=dayFolder->exists(savePath);
+//                if(!isExist)
+//                {
+//                    dayFolder->mkdir(savePath);
+//                }
+//                //创建以序号命名的文件夹
+//                QDir *numFolder=new QDir;
+//                QString serialNum="\\"+QString::number(num7);
+//                savePath+=serialNum;
+//                isExist=numFolder->exists(savePath);
+//                if(!isExist)
+//                {
+//                    numFolder->mkdir(savePath);
+//                }
+//                markSavePath.clear();
+//                markSavePath = savePath.toStdString();
 
-                QString save_L1_1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
-                save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
-                string save_L1=save_L1_1.toStdString();
+//                QString save_ceguang1_1;
+//                string save_ceguang1;
+//                save_ceguang1_1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_210.bmp";//主相机侧光灯图像
+//                save_ceguang1_1=savePath+save_ceguang1_1;
+//                save_ceguang1=save_ceguang1_1.toStdString();
 
-                QString save_R1_1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
-                save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
-                string save_R1=save_R1_1.toStdString();
+//                QString save_ceguang_left1;
+//                string save_ceguang_left;
+//                save_ceguang_left1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_010.bmp";//左相机侧光灯图像
+//                save_ceguang_left1 = savePath + save_ceguang_left1;
+//                save_ceguang_left=save_ceguang_left1.toStdString();
 
-                imwrite(save_ceguang1,src_ceguang1);//主相机侧光灯图像
-                imwrite(save_ceguang_left,src_ceguang_left);//左相机侧光灯图像
-                imwrite(save_ceguang_right,src_ceguang_right);//右相机侧光灯图像
-                imwrite(save_white1,src_white1);//白底
-                imwrite(save_L1,src_L1);//左侧相机拍摄白底
-                imwrite(save_R1,src_R1);//右侧相机拍摄白底
+//                QString save_ceguang_right1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_110.bmp";
+//                save_ceguang_right1 = savePath + save_ceguang_right1;//右相机侧光灯图像
+//                string save_ceguang_right=save_ceguang_right1.toStdString();
 
-                string save_white_result="\\white_result.bmp";
-                save_white_result=savePath.toStdString()+save_white_result;
+//                QString save_white1_1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_212.bmp";
+//                save_white1_1 = savePath + save_white1_1 ;//主黑白相机白底
+//                string save_white1=save_white1_1.toStdString();
 
-                //如果黑白底同时存在缺陷
-                if(result_white_1==true)
-                {
-                    imwrite(save_white_result,Mresult_1_white); //白底下存在缺陷图
-                }
-            }
-        }
-    }
+//                QString save_L1_1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_012.bmp";
+//                save_L1_1 = savePath + save_L1_1 ;//左侧相机拍摄白底
+//                string save_L1=save_L1_1.toStdString();
+
+//                QString save_R1_1 = "\\" + DefectNum[DefectNum1] +"_" + product_Lot + "_" +QString::number(num7) + "_112.bmp";
+//                save_R1_1 = savePath + save_R1_1;//右侧相机拍摄白底
+//                string save_R1=save_R1_1.toStdString();
+
+//                imwrite(save_ceguang1,src_ceguang1);//主相机侧光灯图像
+//                imwrite(save_ceguang_left,src_ceguang_left);//左相机侧光灯图像
+//                imwrite(save_ceguang_right,src_ceguang_right);//右相机侧光灯图像
+//                imwrite(save_white1,src_white1);//白底
+//                imwrite(save_L1,src_L1);//左侧相机拍摄白底
+//                imwrite(save_R1,src_R1);//右侧相机拍摄白底
+
+//                string save_white_result="\\white_result.bmp";
+//                save_white_result=savePath.toStdString()+save_white_result;
+
+//                //如果黑白底同时存在缺陷
+//                if(result_white_1==true)
+//                {
+//                    imwrite(save_white_result,Mresult_1_white); //白底下存在缺陷图
+//                }
+//            }
+//        }
+//    }
+
+
+
+    saveProduct(DefectNum,DefectNum1);
 
     Flag_Dec_Complete=true;
 
@@ -3186,11 +3599,6 @@ void MainWindow::myFunc1()
         white_biankuang=toushi_white(src_white1,M_biankuang,-1,pixel_num,1500);
 
         ceguang1=toushi_white(src_ceguang1,M_white_1,-1,pixel_num,1500);                 //透视变换校正后的黑白测光图
-        //imwrite("D:\\white1.bmp",white1);
-        //imwrite("D:\\ceguang1.bmp",ceguang1);
-//        cvtColor(white1,white1,CV_BGR2GRAY);
-//        cvtColor(ceguang1,ceguang1,CV_BGR2GRAY);
-//        cvtColor(white_biankuang,white_biankuang,CV_BGR2GRAY);
 
         //RoiWhite_Arcangle_Abshow(src_white1, -2, 0, 70, &M_white_abshow, &M_black_abshow, &M_louguang_abshow, 1);//主黑白相机白底显异ROI变换矩阵
         white_abshow = toushi_white(src_white1, M_white_abshow, -1, pixel_num, 1500);                     //透视变换校正后的黑白白底图
@@ -3366,25 +3774,48 @@ void MainWindow::myFunc1()
     while(!(Flag_White1_Finish==true&&Flag_White2_Finish==true&&Flag_White3_Finish==true))
     {
         delay(modbus_time);
-        if(result_white1 == true)
-        {
-            Watcher_White2.cancel();
-            Watcher_White3.cancel();
-            break;
-        }
-        if(result_white2 == true)
-        {
-            Watcher_White1.cancel();
-            Watcher_White3.cancel();
-            break;
-        }
-        if(result_white3 == true)
-        {
-            Watcher_White1.cancel();
-            Watcher_White2.cancel();
-            break;
-        }
+//        if(result_white1 == true)
+//        {
+//            Watcher_White2.cancel();
+//            Watcher_White3.cancel();
+//            break;
+//        }
+//        if(result_white2 == true)
+//        {
+//            Watcher_White1.cancel();
+//            Watcher_White3.cancel();
+//            break;
+//        }
+//        if(result_white3 == true)
+//        {
+//            Watcher_White1.cancel();
+//            Watcher_White2.cancel();
+//            break;
+//        }
     }
+
+//    while(!(Flag_White1_Finish==true&&Flag_White2_Finish==true&&Flag_White3_Finish==true))
+//    {
+//        delay(modbus_time);
+//        if(result_white1 == true)
+//        {
+//            Watcher_White2.cancel();
+//            Watcher_White3.cancel();
+//            break;
+//        }
+//        if(result_white2 == true)
+//        {
+//            Watcher_White1.cancel();
+//            Watcher_White3.cancel();
+//            break;
+//        }
+//        if(result_white3 == true)
+//        {
+//            Watcher_White1.cancel();
+//            Watcher_White2.cancel();
+//            break;
+//        }
+//    }
 
     //白底下检测函数进行检测，之前预留双工位，现在保留单工位
     //result_white_1=white_defect(white1,ceL1,ceR1,whitecolor,ceguang1,Src_BackImage,Src_BackCeGuang,Src_FrontImage,Src_FrontCeGuang,LeftCeGuang,RightCeGuang,1,white_abshow,ceL1_Enlarge,ceR1_Enlarge,white_biankuang,LeftCeGuang_enlarge,RightCeGuang_enlarge);
@@ -3400,7 +3831,7 @@ void MainWindow::myFunc1()
     current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
     debug_msg("白底检测完成"+current_date);
 
-    debug_msg("该节拍是否为良品"+QString::number(result_white_1));
+    debug_msg("该节拍是否为良品" + result_white_1 ?"是":"否");
 
 //    Dect_Result();
 //    emit(Dectect_Result());
@@ -3472,7 +3903,7 @@ void MainWindow::White_Thread2(QList <Mat> img_white2)
 * 其他：
 ======================================================================*/
 void MainWindow::White_Thread3(QList <Mat> img_white3)
-{  
+{
     Mat white_abshow1=img_white3.at(0);
     Mat mainfilter=img_white3.at(1);
 
@@ -3711,6 +4142,7 @@ void MainWindow::on_label_10_linkActivated(const QString &link)
 =========================================================*/
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    //throw 1;
     QMessageBox *messageBox = new QMessageBox(this);
     messageBox->setStyleSheet("font: 9pt;background-color:rgb(230 ,230, 230)");
     messageBox->setIcon(QMessageBox::Warning);
@@ -3731,7 +4163,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
         if(camera->m_hDevHandle_3)
             camera->closeCamera(camera->m_hDevHandle_3);
 
-        this->destroy(true,true);
+        //接收事件，即可关闭窗口
+        event->accept();
+        //this->destroy(true,true);
     }
     else
     {

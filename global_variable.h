@@ -74,6 +74,8 @@ extern int yiwu_sec_area_lower;
 extern int yiwu_sec_area_upper;
 extern double  yiwu_lighth;
 
+
+
 extern double white_gray_lower;
 extern int black_gray_upper;
 

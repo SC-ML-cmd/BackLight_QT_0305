@@ -24,6 +24,8 @@ extern HWND appwnd3;
 extern HWND appwnd4;
 extern HWND appwnd5;
 extern HWND appwnd6;
+extern Mat Mresult_1_white;
+
 namespace Ui {
 class MainWindow;
 }
@@ -62,6 +64,12 @@ public:
     //PLC连接函数
     bool connectToPLC();
     void checkIfDone();
+    //保存图片方法（异步实现）
+    void saveProduct(QString DefectNum[],int DefectNum1);
+
+//    //成员变量
+//    QString DefectNum[20];
+//    int DefectNum1 = 0;
 
 
 signals:

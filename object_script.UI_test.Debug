@@ -28,6 +28,8 @@ debug/detector_choose.o
 debug/excelhepler.o
 debug/history_batchfind.o
 debug/history_data.o
+debug/deadlightparadao.o
+debug/sqlhelp.o
 debug/qrc_resources.o
 debug/moc_mainwindow.o
 debug/moc_camera.o

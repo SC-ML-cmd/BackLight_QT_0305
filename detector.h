@@ -6,10 +6,16 @@
 #include<iostream>
 #include<QString>
 #include "threadsafelog.h"
-
+#include "./Model/deadlightparameter.h"
+#include "./Model/shiftdefectparameter.h"
+#include "global_variable.h"
 
 using namespace cv;
 using namespace std;
+
+extern DeadLightParameter *SDPara;
+extern ShiftDefectParameter *YWPara;
+
 extern QString causeColor;
 extern QString causeColor_1_white;
 extern QString causeColor_2_white;
@@ -18,7 +24,7 @@ extern QString causeColor_1_black;
 extern QString causeColor_2_black;
 extern QString causeColor_gray;
 extern Mat Mresult;
-extern Mat Mresult_1_white;
+//Mat Mresult_1_white;
 extern Mat Mresult_2_white;
 extern Mat Mresult_3_white;
 extern Mat Mresult_1_black;

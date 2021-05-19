@@ -72,9 +72,6 @@
 #LIBS += -L F:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 #LIBS += -L F:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
-
-
-
 #wsc
 INCLUDEPATH+=E:\01Software\01MVS\MVS\Development\Includes
 LIBS += E:\01Software\01MVS\MVS\Development\Libraries\win64\MvCameraControl.lib
@@ -93,6 +90,28 @@ LIBS += -L E:\01Software\02OpenCV\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 #             D:\Qt\opencvbulid3.40\include\opencv
 #             D:\Qt\opencvbulid3.40\include\opencv2
 
+
+#LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
+#LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
+#ZZH
+#INCLUDEPATH+=F:\MVS\Development\Includes
+#LIBS += F:\MVS\Development\Libraries\win64\MvCameraControl.lib
+#LIBS += F:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
+
+#INCLUDEPATH+=E:\opencvbulid3.40\include
+#             E:\opencvbulid3.40\include\opencv
+#             E:\opencvbulid3.40\include\opencv2
+
+#LIBS += -L E:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
+#LIBS += -L E:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
+
+#INCLUDEPATH+=D:\MVS\Development\Includes
+#LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
+#LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
+#INCLUDEPATH+=D:\Qt\opencvbulid3.40\include
+#             D:\Qt\opencvbulid3.40\include\opencv
+#             D:\Qt\opencvbulid3.40\include\opencv2
+
 #LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 #LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
@@ -100,9 +119,9 @@ LIBS += -L E:\01Software\02OpenCV\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 #INCLUDEPATH+=D:\MVS\Development\Includes
 #LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
 #LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
-#INCLUDEPATH+=D:\opencvbulid3.40\include
-#             D:\opencvbulid3.40\include\opencv
-#             D:\opencvbulid3.40\include\opencv2
+#INCLUDEPATH+=D:\opencv\opencv\build\include
+#             D:\opencv\opencv\build\include\opencv
+#             D:\opencv\opencv\build\include\opencv2
 
 #LIBS += -L D:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 #LIBS += -L D:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
@@ -227,7 +246,9 @@ SOURCES += \
     detector_choose.cpp \
     excelhepler.cpp \
     history_batchfind.cpp \
-    history_data.cpp
+    history_data.cpp \
+    DAL/deadlightparadao.cpp \
+    DAL/sqlhelp.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -266,7 +287,11 @@ HEADERS += \
     excelhepler.h \
     history_batchfind.h \
     history_data.h \
-    threadsafelog.h
+    threadsafelog.h \
+    Model/deadlightparameter.h \
+    Model/shiftdefectparameter.h \
+    DAL/deadlightparadao.h \
+    DAL/sqlhelp.h
 
 FORMS += \
         mainwindow.ui \
@@ -303,3 +328,11 @@ DISTFILES +=
 
 RESOURCES += \
     resources.qrc
+
+
+#LIBS += -lDbghelp
+#LIBS += -luser32
+
+## release add debug info
+#QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+#QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
