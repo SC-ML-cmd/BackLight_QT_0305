@@ -560,15 +560,9 @@ void MainWindow::saveProduct(QString DefectNum[],int DefectNum1)
         debug_msg("保存所有样本,当前缺陷类型"+QString::number(DefectNum1,10));
         if(DefectNum1 == 0)
         {
-//            QString savePath=imageSavePath;
-//            QString serialNum = "\\"+QString::number(num7);
-//            //保存路径
-//            savePath += "\\station\\" + product_Lot + serialNum;
+
             //产品路径
             QString productPath = savePath + "\\LP_" + product_Lot + "_" +QString::number(num7);
-
-//            markSavePath.clear();
-//            markSavePath = savePath.toStdString();
 
             //侧光主视图
             string save_ceguang1=(productPath+ "_C0.bmp").toStdString();
@@ -606,17 +600,6 @@ void MainWindow::saveProduct(QString DefectNum[],int DefectNum1)
         }
         else {
             debug_msg("保存全部样本,当前缺陷类型"+QString::number(DefectNum1,10));
-
-//                QString savePath = imageSavePath;
-
-//                savePath+="\\station";
-//                savePath = savePath + "\\" + product_Lot;
-
-//                QString serialNum="\\"+QString::number(num7);
-//                savePath+=serialNum;
-
-//                markSavePath.clear();
-//                markSavePath = savePath.toStdString();
 
                 QString lack_info="_"+QString::number(DefectNum1)+"_";//存储样品缺陷信息的字符串，最后作为样本命名的一部分输出
 

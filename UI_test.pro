@@ -72,7 +72,17 @@
 #LIBS += -L F:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 #LIBS += -L F:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
-##wsc
+#wsc
+INCLUDEPATH+=E:\01Software\01MVS\MVS\Development\Includes
+LIBS += E:\01Software\01MVS\MVS\Development\Libraries\win64\MvCameraControl.lib
+LIBS += E:\01Software\01MVS\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
+INCLUDEPATH+=E:\01Software\02OpenCV\opencvbulid3.40\include
+             E:\01Software\02OpenCV\opencvbulid3.40\include\opencv
+             E:\01Software\02OpenCV\opencvbulid3.40\include\opencv2
+
+LIBS += -L E:\01Software\02OpenCV\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
+LIBS += -L E:\01Software\02OpenCV\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
+
 #INCLUDEPATH+=D:\MVS\Development\Includes
 #LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
 #LIBS += D:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
@@ -84,16 +94,16 @@
 #LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
 #LIBS += -L D:\Qt\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 #ZZH
-INCLUDEPATH+=F:\MVS\Development\Includes
-LIBS += F:\MVS\Development\Libraries\win64\MvCameraControl.lib
-LIBS += F:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
+#INCLUDEPATH+=F:\MVS\Development\Includes
+#LIBS += F:\MVS\Development\Libraries\win64\MvCameraControl.lib
+#LIBS += F:\MVS\Development\Libraries\win64\C++Builder\MvCameraControlBC.a
 
-INCLUDEPATH+=E:\opencvbulid3.40\include
-             E:\opencvbulid3.40\include\opencv
-             E:\opencvbulid3.40\include\opencv2
+#INCLUDEPATH+=E:\opencvbulid3.40\include
+#             E:\opencvbulid3.40\include\opencv
+#             E:\opencvbulid3.40\include\opencv2
 
-LIBS += -L E:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
-LIBS += -L E:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
+#LIBS += -L E:\opencvbulid3.40\x64\mingw\bin\libopencv_*.dll
+#LIBS += -L E:\opencvbulid3.40\x64\mingw\lib\libopencv_*.a
 
 #INCLUDEPATH+=D:\MVS\Development\Includes
 #LIBS += D:\MVS\Development\Libraries\win64\MvCameraControl.lib
