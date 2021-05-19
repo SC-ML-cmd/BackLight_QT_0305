@@ -436,12 +436,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str = time.toString("yyyy-MM-dd");
     ui->label_32->setText(str);//日期时间
 
-
-<<<<<<< HEAD
     QString str_ver ="1.0.34.179";       //版本号
-=======
-    QString str_ver ="1.0.34.176";       //版本号
->>>>>>> 48047cd646e678690bc1ab10343ce2737f810eb2
+
 
     this->setWindowTitle("背光源缺陷检测系统"+str_ver);
 
