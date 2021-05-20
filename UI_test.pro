@@ -248,7 +248,8 @@ SOURCES += \
     history_batchfind.cpp \
     history_data.cpp \
     DAL/deadlightparadao.cpp \
-    DAL/sqlhelp.cpp
+    DAL/sqlhelp.cpp \
+    Model/product.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -291,7 +292,8 @@ HEADERS += \
     Model/deadlightparameter.h \
     Model/shiftdefectparameter.h \
     DAL/deadlightparadao.h \
-    DAL/sqlhelp.h
+    DAL/sqlhelp.h \
+    Model/product.h
 
 FORMS += \
         mainwindow.ui \

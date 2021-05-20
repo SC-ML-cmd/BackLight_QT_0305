@@ -12,6 +12,7 @@
 #include<hikvisionsdk.h>
 #include<save_images.h>
 #include "threadsafelog.h"
+#include "./Model/product.h"
 
 class QModbusClient;
 extern QString production_lot_code;
@@ -37,6 +38,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    //产品队列
+    QQueue<Product*> productQueue;
     //bool write_Modbus(int address,int value);
     bool write_Modbus(int address,int value,QModbusClient *modbusDevice_temp);
     void readReady();
@@ -44,6 +47,9 @@ public:
     //void read_Modbus(int address);
     void InitTimer();
     void display();
+    void takePicture();
+    //吸附检测
+    void adsorptionTest();
     int detect();
     int detect_offine();
     void myFunc1();//,cv::Mat* ceL_1,cv::Mat* ceR_1,cv::Mat* ceL_2,cv::Mat* ceR_2
@@ -82,11 +88,13 @@ signals:
     void Dectect_Result();
 
 public slots:
-    void read_Modbus(int address);
+    // 读取返回的结果
+    int read_Modbus(int address);
     bool write_Modbus(int address,int value);
     void TimerTimeOut();
     void Restart_Timer();
-    void Dect_Result();
+    void Dect_Result(bool resultSum, bool thread1Result, bool thread2Result, bool thread3Result,
+                                Mat* resultImg1, Mat* resultImg2, Mat* resultImg3, QString thread1ResStr, QString thread2ResStr, QString thread3ResStr);
     void White1_Thread_Finish();
     void White2_Thread_Finish();
     void White3_Thread_Finish();

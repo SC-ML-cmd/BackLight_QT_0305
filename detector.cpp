@@ -9515,8 +9515,6 @@ bool white_defect1(Mat white,Mat mainfilter,Mat leftfilter,Mat rightfilter,Mat c
             current_date_time =QDateTime::currentDateTime();
             current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
             debug_msg1("划伤检测完毕"+current_date);
-            // 划伤检测完成
-            //qDebug()<<"划伤检测完成,检测结果为" + QString::number(result);
         }
     }
     catch (const std::exception& e)
@@ -9538,20 +9536,6 @@ bool white_defect1(Mat white,Mat mainfilter,Mat leftfilter,Mat rightfilter,Mat c
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
         debug_msg1(current_date + "划伤算法异常 +++++++++++++++++++++++++++");
     }
-
-    //==========================漏光检测==============================
-    if(result==false&&Light_leakage_Checked)
-    {
-//        result=Light_leakage(mainfilter,ceguang,&Mresult_1_white,&causeColor_1_white);
-
-    }
-
-    //==========================变形检测==============================
-    if(result==false&&Frame_Checked)
-    {
-//        result = Frame(biankuangfilter, &Mresult_1_white, &causeColor_1_white);
-    }
-
     return result;
 }
 
@@ -9624,19 +9608,6 @@ bool white_defect2(Mat white,Mat mainfilter,Mat ceguang,Mat biankuangfilter,Mat 
         current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz");
         debug_msg1(current_date + "CV亮边|白点算法异常 +++++++++++++++++++++++++++");
     }
-    //==========================暗角检测==============================
-    if(result==false&&DarkCorner_Checked)
-    {
-//        switch(num)
-//        {
-//        case 1:result=DarkCorner(mainfilter,&Mresult_2_white,&causeColor_2_white);
-//            break;
-//        case 2:result=DarkCorner(mainfilter,&Mresult_2_white,&causeColor_2_white);
-//            break;
-//        }
-    }
-//    if(result == false)
-//        result=BoomDead_light(mainfilter,ceguang,&Mresult_2_white,&causeColor_2_white);
 
     return result;
 }
